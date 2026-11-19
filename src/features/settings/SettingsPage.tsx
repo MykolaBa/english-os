@@ -13,7 +13,8 @@ import {
   TextField,
 } from '@/components/ui'
 import { useT } from '@/i18n'
-import { CEFR_LEVELS, type CefrLevel } from '@/lib/db/types'
+import { CEFR_LEVELS } from '@/lib/db/types'
+import { parseOneOf } from '@/lib/guards'
 import {
   formatBytes,
   getStorageInfo,
@@ -103,13 +104,21 @@ export default function SettingsPage() {
                 label={s.currentLevel}
                 options={LEVEL_OPTIONS}
                 value={settings.currentLevel}
-                onChange={(e) => settings.update({ currentLevel: e.target.value as CefrLevel })}
+                onChange={(e) =>
+                  settings.update({
+                    currentLevel: parseOneOf(CEFR_LEVELS, e.target.value) ?? settings.currentLevel,
+                  })
+                }
               />
               <SelectField
                 label={s.targetLevel}
                 options={LEVEL_OPTIONS}
                 value={settings.targetLevel}
-                onChange={(e) => settings.update({ targetLevel: e.target.value as CefrLevel })}
+                onChange={(e) =>
+                  settings.update({
+                    targetLevel: parseOneOf(CEFR_LEVELS, e.target.value) ?? settings.targetLevel,
+                  })
+                }
               />
             </div>
           </div>

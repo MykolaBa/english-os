@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 import { PageHeader, Skeleton } from '@/components/ui'
 import { useT } from '@/i18n'
 import { useSettings } from '@/stores/settingsStore'
@@ -17,7 +18,15 @@ import styles from './Dashboard.module.scss'
 export default function DashboardPage() {
   const data = useDashboardData()
   const t = useT()
-  const { displayName, currentLevel, targetLevel, dailyXpGoal } = useSettings()
+  // Subscribe only to the fields this page shows (not the whole settings store).
+  const { displayName, currentLevel, targetLevel, dailyXpGoal } = useSettings(
+    useShallow((s) => ({
+      displayName: s.displayName,
+      currentLevel: s.currentLevel,
+      targetLevel: s.targetLevel,
+      dailyXpGoal: s.dailyXpGoal,
+    })),
+  )
 
   // Captured once per visit so the header doesn't change on every re-render.
   const [now] = useState(() => new Date())

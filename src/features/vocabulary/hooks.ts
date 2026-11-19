@@ -17,8 +17,10 @@ export function useCollections(): Collection[] | undefined {
     const all = await db.collections.toArray()
     const seed = all
       .filter((c) => c.source === 'seed')
-      .sort((a, b) => (STARTER_ORDER.get(a.id) ?? 99) - (STARTER_ORDER.get(b.id) ?? 99))
-    const user = all.filter((c) => c.source === 'user').sort((a, b) => a.name.localeCompare(b.name))
+      .toSorted((a, b) => (STARTER_ORDER.get(a.id) ?? 99) - (STARTER_ORDER.get(b.id) ?? 99))
+    const user = all
+      .filter((c) => c.source === 'user')
+      .toSorted((a, b) => a.name.localeCompare(b.name))
     return [...seed, ...user]
   }, [])
 }

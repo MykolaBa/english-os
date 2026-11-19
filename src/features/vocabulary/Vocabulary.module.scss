@@ -160,6 +160,9 @@
   gap: var(--space-4);
   padding: var(--space-4) 0;
   border-bottom: 1px solid var(--border);
+  // Long lists: the browser skips layout/paint for rows that are off-screen.
+  content-visibility: auto;
+  contain-intrinsic-size: auto 72px;
 
   &:last-child {
     border-bottom: none;

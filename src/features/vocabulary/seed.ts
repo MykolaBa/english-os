@@ -4,6 +4,7 @@ import {
   STARTER_WORDS,
 } from '@/content/vocabulary/starterWords'
 import { db } from '@/lib/db/db'
+import { isStringArray } from '@/lib/guards'
 import type { Collection, Word } from '@/lib/db/types'
 import { createInitialSrs, normalizeTerm } from './model'
 
@@ -77,10 +78,12 @@ export function buildStarterData(now: number): { collections: Collection[]; word
  */
 export async function seedStarterVocabulary(now = Date.now()): Promise<number> {
   return db.transaction('rw', db.words, db.collections, db.meta, async () => {
-    const version = ((await db.meta.get(META_VERSION))?.value as number | undefined) ?? 0
+    const storedVersion = (await db.meta.get(META_VERSION))?.value
+    const version = typeof storedVersion === 'number' ? storedVersion : 0
     if (version >= STARTER_VOCABULARY_VERSION) return 0
 
-    const seenIds = new Set(((await db.meta.get(META_IDS))?.value as string[] | undefined) ?? [])
+    const storedIds = (await db.meta.get(META_IDS))?.value
+    const seenIds = new Set(isStringArray(storedIds) ? storedIds : [])
     const { collections, words } = buildStarterData(now)
 
     const newCollections = collections.filter((c) => !seenIds.has(c.id))

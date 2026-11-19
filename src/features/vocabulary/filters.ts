@@ -1,6 +1,12 @@
 import { CEFR_LEVELS, type CefrLevel, type Word, type WordStatus } from '@/lib/db/types'
+import { parseOneOf } from '@/lib/guards'
 
-export const WORD_STATUSES: readonly WordStatus[] = ['new', 'learning', 'reviewing', 'mastered']
+export const WORD_STATUSES = [
+  'new',
+  'learning',
+  'reviewing',
+  'mastered',
+] as const satisfies readonly WordStatus[]
 export const WORD_SORTS = ['newest', 'oldest', 'az', 'za', 'due', 'hardest'] as const
 export type WordSort = (typeof WORD_SORTS)[number]
 
@@ -53,37 +59,33 @@ export function filterWords(words: Word[], f: WordFilters): Word[] {
 
 const byTerm = (a: Word, b: Word) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' })
 
-/** Returns a new sorted array; the input is not mutated. */
+/** Returns a new sorted array (`toSorted`); the input is never mutated. */
 export function sortWords(words: Word[], sort: WordSort): Word[] {
-  const list = [...words]
   switch (sort) {
     case 'newest':
-      return list.sort((a, b) => b.createdAt - a.createdAt)
+      return words.toSorted((a, b) => b.createdAt - a.createdAt)
     case 'oldest':
-      return list.sort((a, b) => a.createdAt - b.createdAt)
+      return words.toSorted((a, b) => a.createdAt - b.createdAt)
     case 'az':
-      return list.sort(byTerm)
+      return words.toSorted(byTerm)
     case 'za':
-      return list.sort((a, b) => byTerm(b, a))
+      return words.toSorted((a, b) => byTerm(b, a))
     case 'due':
-      return list.sort((a, b) => a.srs.dueAt - b.srs.dueAt)
+      return words.toSorted((a, b) => a.srs.dueAt - b.srs.dueAt)
     case 'hardest':
-      return list.sort((a, b) => b.srs.incorrectCount - a.srs.incorrectCount || byTerm(a, b))
+      return words.toSorted((a, b) => b.srs.incorrectCount - a.srs.incorrectCount || byTerm(a, b))
   }
 }
 
 /** Reads filters from URL search params, ignoring anything invalid. */
 export function filtersFromParams(params: URLSearchParams): WordFilters {
-  const status = params.get('status')
-  const level = params.get('level')
-  const sort = params.get('sort')
   return {
     query: params.get('q') ?? '',
     collectionId: params.get('collection'),
-    status: WORD_STATUSES.includes(status as WordStatus) ? (status as WordStatus) : null,
-    level: CEFR_LEVELS.includes(level as CefrLevel) ? (level as CefrLevel) : null,
+    status: parseOneOf(WORD_STATUSES, params.get('status')),
+    level: parseOneOf(CEFR_LEVELS, params.get('level')),
     favoritesOnly: params.get('fav') === '1',
-    sort: WORD_SORTS.includes(sort as WordSort) ? (sort as WordSort) : 'newest',
+    sort: parseOneOf(WORD_SORTS, params.get('sort')) ?? 'newest',
   }
 }
 

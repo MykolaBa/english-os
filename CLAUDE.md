@@ -83,5 +83,19 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 - AI features: only when explicitly requested, behind a service interface, never with keys
   in the frontend.
 
+## Project skills (`.claude/skills/`)
+- `vercel-react-best-practices` — performance rules. This is a client-only Vite SPA: skip
+  the `server-*` and Next.js-specific rules (`next/dynamic`, RSC, `after()`); lazy routes are
+  `React.lazy` in `router.tsx`. Applied so far: app init in `main.tsx` (not an effect),
+  `toSorted()`, narrow store selectors (`useShallow`), `content-visibility` on long lists,
+  `useDeferredValue` for search.
+- `vercel-composition-patterns` — prefer composition/explicit variants over boolean props
+  that change behavior; React 19: no `forwardRef` (ref is a prop), `use()` over `useContext`.
+- `typescript-advanced-types` — no `as` casts on untrusted values (URL params, `<select>`,
+  DB `meta`): use the guards in `src/lib/guards.ts` (`parseOneOf`, `isOneOf`). Option lists
+  are `as const satisfies readonly T[]` so they double as runtime lists and literal types.
+- Zustand: select only what a component uses (`useSettings((s) => s.x)` or `useShallow`);
+  keep actions in the store; persisted state is versioned (`version` in `persist`).
+
 ## Status
 See `docs/ROADMAP.md` — update it when a phase/feature is completed.

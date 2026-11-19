@@ -1,13 +1,8 @@
 import { useId, useState, type FormEvent } from 'react'
 import { Button, Chip, Dialog, SelectField, TextAreaField, TextField } from '@/components/ui'
 import { useT } from '@/i18n'
-import {
-  CEFR_LEVELS,
-  type CefrLevel,
-  type Collection,
-  type PartOfSpeech,
-  type Word,
-} from '@/lib/db/types'
+import { CEFR_LEVELS, type Collection, type Word } from '@/lib/db/types'
+import { parseOneOf } from '@/lib/guards'
 import { toast } from '@/stores/toastStore'
 import {
   EMPTY_DRAFT,
@@ -156,13 +151,13 @@ export function WordFormDialog({
             label={f.partOfSpeech}
             options={posOptions}
             value={draft.partOfSpeech}
-            onChange={(e) => set('partOfSpeech', e.target.value as PartOfSpeech | '')}
+            onChange={(e) => set('partOfSpeech', parseOneOf(PARTS_OF_SPEECH, e.target.value) ?? '')}
           />
           <SelectField
             label={f.level}
             options={levelOptions}
             value={draft.level}
-            onChange={(e) => set('level', e.target.value as CefrLevel | '')}
+            onChange={(e) => set('level', parseOneOf(CEFR_LEVELS, e.target.value) ?? '')}
           />
           <TextField
             label={f.phonetic}

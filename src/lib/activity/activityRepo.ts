@@ -20,7 +20,7 @@ export function getRecentActivity(limit = 8): Promise<ActivityEvent[]> {
 /** All distinct days with at least one activity (cheap: reads only the index). */
 export async function getActiveDays(): Promise<DayKey[]> {
   const keys = await db.activity.orderBy('day').uniqueKeys()
-  return keys as DayKey[]
+  return keys.filter((key): key is DayKey => typeof key === 'string')
 }
 
 export function sumXp(events: ActivityEvent[]): number {

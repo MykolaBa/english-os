@@ -21,7 +21,7 @@ export function computeCurrentStreak(
 
 /** Longest run of consecutive days anywhere in history. */
 export function computeLongestStreak(activeDays: Iterable<DayKey>): number {
-  const sorted = [...new Set(activeDays)].sort()
+  const sorted = [...new Set(activeDays)].toSorted()
   let longest = 0
   let current = 0
   let prev: DayKey | undefined

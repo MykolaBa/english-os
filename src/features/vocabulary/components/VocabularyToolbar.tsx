@@ -2,14 +2,9 @@ import { Search, Star, X } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Button, Chip } from '@/components/ui'
 import { useT } from '@/i18n'
-import { CEFR_LEVELS, type CefrLevel, type WordStatus } from '@/lib/db/types'
-import {
-  hasActiveFilters,
-  WORD_SORTS,
-  WORD_STATUSES,
-  type WordFilters,
-  type WordSort,
-} from '../filters'
+import { CEFR_LEVELS } from '@/lib/db/types'
+import { parseOneOf } from '@/lib/guards'
+import { hasActiveFilters, WORD_SORTS, WORD_STATUSES, type WordFilters } from '../filters'
 import styles from '../Vocabulary.module.scss'
 
 interface ToolbarProps {
@@ -59,7 +54,7 @@ export function VocabularyToolbar({ filters, onChange, onClear }: ToolbarProps) 
         <CompactSelect
           label={v.filters.status}
           value={filters.status ?? ''}
-          onChange={(value) => onChange({ status: (value || null) as WordStatus | null })}
+          onChange={(value) => onChange({ status: parseOneOf(WORD_STATUSES, value) })}
         >
           <option value="">{v.filters.anyStatus}</option>
           {WORD_STATUSES.map((s) => (
@@ -71,7 +66,7 @@ export function VocabularyToolbar({ filters, onChange, onClear }: ToolbarProps) 
         <CompactSelect
           label={v.filters.level}
           value={filters.level ?? ''}
-          onChange={(value) => onChange({ level: (value || null) as CefrLevel | null })}
+          onChange={(value) => onChange({ level: parseOneOf(CEFR_LEVELS, value) })}
         >
           <option value="">{v.filters.anyLevel}</option>
           {CEFR_LEVELS.map((l) => (
@@ -83,7 +78,7 @@ export function VocabularyToolbar({ filters, onChange, onClear }: ToolbarProps) 
         <CompactSelect
           label={v.filters.sort}
           value={filters.sort}
-          onChange={(value) => onChange({ sort: value as WordSort })}
+          onChange={(value) => onChange({ sort: parseOneOf(WORD_SORTS, value) ?? 'newest' })}
         >
           {WORD_SORTS.map((s) => (
             <option key={s} value={s}>

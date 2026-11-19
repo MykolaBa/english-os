@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import type { CefrLevel, PartOfSpeech, SrsState, Word } from '@/lib/db/types'
+import { parseOneOf } from '@/lib/guards'
 
-export const PARTS_OF_SPEECH: readonly PartOfSpeech[] = [
+export const PARTS_OF_SPEECH = [
   'noun',
   'verb',
   'adjective',
@@ -13,7 +14,7 @@ export const PARTS_OF_SPEECH: readonly PartOfSpeech[] = [
   'conjunction',
   'pronoun',
   'other',
-]
+] as const satisfies readonly PartOfSpeech[]
 
 /** A word that has never been reviewed. The review session (phase 3) moves it forward. */
 export function createInitialSrs(now: number): SrsState {
@@ -85,7 +86,8 @@ export const wordDraftSchema = z.object({
   translation: z.string().trim().min(1, 'translationRequired').max(300),
 })
 
-export type WordDraftErrorKey = 'termRequired' | 'translationRequired'
+const DRAFT_ERROR_KEYS = ['termRequired', 'translationRequired'] as const
+export type WordDraftErrorKey = (typeof DRAFT_ERROR_KEYS)[number]
 export type WordDraftErrors = Partial<Record<'term' | 'translation', WordDraftErrorKey>>
 
 export function validateDraft(draft: WordDraft): WordDraftErrors {
@@ -95,7 +97,7 @@ export function validateDraft(draft: WordDraft): WordDraftErrors {
   for (const issue of result.error.issues) {
     const field = issue.path[0]
     if (field === 'term' || field === 'translation') {
-      errors[field] ??= issue.message as WordDraftErrorKey
+      errors[field] ??= parseOneOf(DRAFT_ERROR_KEYS, issue.message) ?? 'termRequired'
     }
   }
   return errors
