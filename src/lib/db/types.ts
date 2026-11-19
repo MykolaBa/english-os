@@ -113,8 +113,11 @@ export interface ActivityEvent {
   day: string
   xp: number
   durationSec?: number
-  /** Human-readable summary for the "Recent activity" feed. */
-  label: string
+  /**
+   * What the event is about, e.g. the word for `word_added`. Stored language-neutral:
+   * the feed builds the sentence from `type` + `subject` in the current UI language.
+   */
+  subject: string
   refId?: string
 }
 

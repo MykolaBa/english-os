@@ -5,8 +5,7 @@ professional and IT/frontend English. Single user, used daily on desktop **and p
 
 The owner is learning React/TypeScript while building this. Act as developer **and mentor**:
 build in small, working increments; for each feature briefly explain what/why/which files/
-key concepts/how to test. Don't dump huge explanations. Interface text is English; learning
-explanations and translations are Ukrainian. Chat with the owner in Ukrainian.
+key concepts/how to test. Don't dump huge explanations. Chat with the owner in Ukrainian.
 
 ## Stack
 React 19 · TypeScript (strict) · Vite · SCSS modules · React Router (`react-router`) ·
@@ -35,8 +34,20 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 - **Pure logic** (SRS scheduling, streaks, plans, quiz scoring) lives in plain functions with
   unit tests next to them (`*.test.ts`).
 - **Navigation**: `src/app/navigation.ts` is the single source for sidebar, mobile nav and
-  routes. Implemented pages are registered in `PAGES` in `src/app/router.tsx`; others show the
+  routes (labels come from `t.nav.items[id]`). Implemented pages are registered in `PAGES` in `src/app/router.tsx`; others show the
   roadmap placeholder. Pages are lazy-loaded default exports.
+
+## Languages (i18n)
+- The interface is bilingual: English (default) and Ukrainian, switched in Settings
+  (`uiLanguage`). **Never hardcode UI text in components** — add it to `src/i18n/en.ts`
+  and `src/i18n/uk.ts` (same shape, enforced by the `Dictionary` type) and read it via
+  `const t = useT()`. Outside components use `getT()`.
+- Parameterized strings are functions (`t.vocabulary.subtitle(n)`); Ukrainian plurals use
+  the 3-form `plural()` helper in `uk.ts`. Dates/numbers: pass `t.locale` to Intl/helpers.
+- Learning content (words, examples, lessons) stays English with Ukrainian translations,
+  regardless of the interface language. Mark it with `lang="en"` / `lang="uk"`.
+- Don't store translated sentences in the DB (e.g. activity events store `type` + `subject`;
+  the UI builds the sentence).
 
 ## Design system
 - Tokens are CSS variables in `src/styles/_tokens.scss` (dark default, light, system). Never
@@ -52,9 +63,11 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 
 ## Conventions
 - Components ≤ ~150 lines; split widgets into `components/`. Named exports except lazy pages.
+- Dialogs: mark the first field with `data-autofocus` (not `autoFocus`).
 - Empty, loading and error states for every data view. Confirm destructive actions
   (`ConfirmDialog`), report results with `toast`.
 - Ukrainian translations must be accurate; prefer fewer, high-quality content items.
+- `src/content` is excluded from Prettier: keep content compact (one entry per line).
 - AI features: only when explicitly requested, behind a service interface, never with keys
   in the frontend.
 

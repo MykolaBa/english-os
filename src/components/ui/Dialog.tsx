@@ -15,6 +15,8 @@ interface DialogProps {
 }
 
 /**
+ * Mark the field that should receive focus on open with `data-autofocus`.
+ *
  * Built on the native <dialog> element: it gives us focus trapping, Esc-to-close
  * and correct screen-reader semantics for free, without a UI library.
  */
@@ -34,7 +36,12 @@ export function Dialog({
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
-    if (open && !dialog.open) dialog.showModal()
+    if (open && !dialog.open) {
+      dialog.showModal()
+      // Native dialogs focus the first focusable element (the close button); prefer the
+      // field marked with data-autofocus so the user can start typing immediately.
+      dialog.querySelector<HTMLElement>('[data-autofocus]')?.focus()
+    }
     if (!open && dialog.open) dialog.close()
   }, [open])
 

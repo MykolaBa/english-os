@@ -16,7 +16,8 @@ src/
     storage/           Persistent-storage helpers
     date.ts, id.ts, cx.ts
   stores/              Zustand stores: settings (localStorage), toasts
-  content/             (phase 2+) static learning content as typed modules
+  i18n/                UI dictionaries (en.ts, uk.ts) + useT()
+  content/             Static learning content as typed modules (starter vocabulary, …)
   styles/              _tokens.scss, _mixins.scss, global.scss
 ```
 
@@ -34,6 +35,17 @@ src/
 - **localStorage (Zustand persist)**: lightweight settings only.
 - **Code (`src/content`)**: grammar lessons, texts, prompts — versioned with git, never
   duplicated on startup, and fixable by editing a file.
+
+## Interface language
+`useT()` returns the dictionary for the current `uiLanguage` setting. `uk.ts` is typed as
+`Dictionary` (the shape of `en.ts`), so a missing or misspelled key fails the build. Strings
+with parameters are functions, which also handles plural rules per language.
+
+## Starter content
+`src/content/vocabulary/starterWords.ts` is imported by `seedStarterVocabulary()` on every
+start. It runs in one transaction, checks a content version in the `meta` table, and records
+every seed id ever inserted — so it never duplicates, never overwrites edits and never
+re-adds words the user deleted. To ship more words: append entries and bump the version.
 
 ## Why these choices
 - **Dexie over raw IndexedDB**: typed tables, indexes, schema versioning/migrations, and

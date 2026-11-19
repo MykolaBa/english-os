@@ -1,4 +1,11 @@
-import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react'
+import {
+  useId,
+  type ButtonHTMLAttributes,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from 'react'
 import { cx } from '@/lib/cx'
 import styles from './Field.module.scss'
 
@@ -138,5 +145,58 @@ export function Segmented<T extends string>({
         ))}
       </div>
     </div>
+  )
+}
+
+interface TextAreaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label: string
+  hint?: ReactNode
+  error?: string
+}
+
+export function TextAreaField({
+  label,
+  hint,
+  error,
+  className,
+  id,
+  rows = 3,
+  ...rest
+}: TextAreaFieldProps) {
+  const autoId = useId()
+  const fieldId = id ?? autoId
+  return (
+    <FieldShell label={label} hint={hint} error={error} id={fieldId}>
+      <textarea
+        id={fieldId}
+        rows={rows}
+        className={cx(styles.control, styles.textarea, error && styles.invalid, className)}
+        aria-invalid={!!error}
+        aria-describedby={hint || error ? `${fieldId}-msg` : undefined}
+        {...rest}
+      />
+    </FieldShell>
+  )
+}
+
+interface ChipProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange'> {
+  selected: boolean
+  icon?: ReactNode
+  count?: number
+}
+
+/** Toggle pill (filters, multi-select). Exposes its state via aria-pressed. */
+export function Chip({ selected, icon, count, className, children, ...rest }: ChipProps) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      className={cx(styles.chip, selected && styles.chipSelected, className)}
+      {...rest}
+    >
+      {icon}
+      <span className={styles.chipLabel}>{children}</span>
+      {count !== undefined && <span className={styles.chipCount}>{count}</span>}
+    </button>
   )
 }

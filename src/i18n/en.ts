@@ -159,8 +159,18 @@ export const en = {
     },
   },
 
+  /** Feed sentences per activity type (keys mirror `ActivityType`). */
   activity: {
-    wordAdded: (term: string) => `Added “${term}”`,
+    word_added: (s: string) => `Added “${s}”`,
+    review: (s: string) => `Reviewed “${s}”`,
+    review_session: (s: string) => `Review session · ${s}`,
+    grammar_lesson: (s: string) => `Grammar lesson · ${s}`,
+    quiz: (s: string) => `Quiz · ${s}`,
+    reading: (s: string) => `Reading · ${s}`,
+    listening: (s: string) => `Listening · ${s}`,
+    speaking: (s: string) => `Speaking · ${s}`,
+    writing: (s: string) => `Writing · ${s}`,
+    it_english: (s: string) => `IT English · ${s}`,
   },
 
   status: {

@@ -6,7 +6,7 @@ import { formatRelative } from '@/lib/date'
 import styles from '../Dashboard.module.scss'
 
 export function RecentActivity({ events }: { events: ActivityEvent[] }) {
-  const { locale, dashboard, common } = useT()
+  const { locale, dashboard, common, activity } = useT()
   return (
     <Card>
       <CardHeader icon={<History />} title={dashboard.recent.title} />
@@ -21,7 +21,7 @@ export function RecentActivity({ events }: { events: ActivityEvent[] }) {
         <ul className={styles.feed}>
           {events.map((e) => (
             <li key={e.id} className={styles.feedItem}>
-              <span className={styles.feedLabel}>{e.label}</span>
+              <span className={styles.feedLabel}>{activity[e.type](e.subject)}</span>
               <span className={styles.feedMeta}>
                 {e.xp > 0 && <Badge tone="accent">+{e.xp} XP</Badge>}
                 <time dateTime={new Date(e.at).toISOString()}>

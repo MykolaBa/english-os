@@ -169,7 +169,16 @@ export const uk: Dictionary = {
   },
 
   activity: {
-    wordAdded: (term: string) => `Додано «${term}»`,
+    word_added: (s: string) => `Додано «${s}»`,
+    review: (s: string) => `Повторено «${s}»`,
+    review_session: (s: string) => `Сесія повторення · ${s}`,
+    grammar_lesson: (s: string) => `Урок граматики · ${s}`,
+    quiz: (s: string) => `Тест · ${s}`,
+    reading: (s: string) => `Читання · ${s}`,
+    listening: (s: string) => `Аудіювання · ${s}`,
+    speaking: (s: string) => `Говоріння · ${s}`,
+    writing: (s: string) => `Письмо · ${s}`,
+    it_english: (s: string) => `IT English · ${s}`,
   },
 
   status: {
