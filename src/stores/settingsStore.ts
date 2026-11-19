@@ -1,6 +1,7 @@
+import { z } from 'zod'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { CefrLevel } from '@/lib/db/types'
+import { CEFR_LEVELS, type CefrLevel } from '@/lib/db/types'
 import { DEFAULT_SRS_CONFIG, type SrsConfig } from '@/lib/srs/scheduler'
 
 export type ThemePreference = 'dark' | 'light' | 'system'
@@ -58,3 +59,40 @@ export const useSettings = create<SettingsState>()(
     { name: 'englishos:settings', version: 1 },
   ),
 )
+
+/** Field-by-field schema for settings coming from outside (a backup file). */
+const settingsFields = {
+  displayName: z.string().max(40),
+  currentLevel: z.enum(CEFR_LEVELS),
+  targetLevel: z.enum(CEFR_LEVELS),
+  dailyXpGoal: z.number().int().min(1).max(1000),
+  theme: z.enum(['dark', 'light', 'system']),
+  uiLanguage: z.enum(['en', 'uk']),
+  showTranslations: z.boolean(),
+  autoPronounce: z.boolean(),
+  newWordsPerDay: z.number().int().min(0).max(200),
+  srs: z.object({
+    againMinutes: z.number().positive().max(1440),
+    hardDays: z.number().positive().max(365),
+    goodDays: z.number().positive().max(365),
+    easyDays: z.number().positive().max(365),
+  }),
+  reviewMode: z.enum(REVIEW_MODES),
+} satisfies { [K in keyof Settings]: z.ZodType<Settings[K]> }
+
+/** Keeps only valid known fields — one bad value doesn't discard the rest. */
+export function sanitizeSettings(raw: unknown): Partial<Settings> {
+  if (typeof raw !== 'object' || raw === null) return {}
+  const result: Record<string, unknown> = {}
+  for (const [key, schema] of Object.entries(settingsFields)) {
+    const parsed = schema.safeParse((raw as Record<string, unknown>)[key])
+    if (parsed.success) result[key] = parsed.data
+  }
+  return result as Partial<Settings>
+}
+
+/** The persisted settings, without the store's actions. */
+export function currentSettings(): Settings {
+  const { update: _update, reset: _reset, ...settings } = useSettings.getState()
+  return settings
+}

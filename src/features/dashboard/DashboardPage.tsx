@@ -64,12 +64,14 @@ export default function DashboardPage() {
               dueCount: data.dueCount,
               todayXp: data.todayXp,
               dailyXpGoal,
+              backupDue: data.backupDue,
             })}
             context={{
               dueCount: data.dueCount,
               newWords: data.newWords,
               todayXp: data.todayXp,
               dailyXpGoal,
+              backupDays: data.backupDue?.days ?? null,
             }}
           />
           <WeeklyActivity week={data.week} goal={dailyXpGoal} />

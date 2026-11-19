@@ -8,13 +8,25 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 1 | Foundation: design tokens, themes, layout (sidebar / bottom nav / drawer), UI kit, DB schema, activity log, dashboard on live data, settings | ✅ Done |
 | 2 | Vocabulary: CRUD, search/filter/sort, collections, favorites, word detail page, ~100 seeded words, pronunciation (speechSynthesis) + Ukrainian interface | ✅ Done |
 | 3 | Review: SRS algorithm (SM-2-lite, tested), flashcard session (Again/Hard/Good/Easy), typing mode, review logs, XP | ✅ Done |
-| 4 | Dashboard polish, JSON backup/restore, CSV/JSON vocabulary import/export (zod-validated), deploy as PWA | ⏳ Next |
-| 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | |
+| 4 | Dashboard polish, JSON backup/restore, CSV/JSON vocabulary import/export (zod-validated), deploy as PWA | ✅ Done (deploy pending: hosting not chosen) |
+| 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | ⏳ Next |
 | 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | |
 | 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | |
 | 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | |
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
+
+## Done in phase 4
+- Backup: one JSON file with all tables and settings; every row validated by zod schemas
+  (`lib/db/schemas.ts`, kept in sync with the types via `satisfies`) before anything is written;
+  restore is a single transaction and offers to download the current data first
+- Settings from a backup are applied field by field, so one bad value doesn't drop the rest
+- Vocabulary import from CSV (header in English or Ukrainian, `,` `;` or tab, BOM, quotes) or
+  JSON; a preview shows new words, skipped duplicates, rows with problems (by line) and new
+  collections before anything is saved; imported words earn no XP
+- Vocabulary export to CSV (opens in Excel with Cyrillic and IPA intact) or JSON, all words or
+  the current filtered view
+- Backup reminder in today's plan when there is progress and no backup for 14+ days
 
 ## Done in phase 3
 - `lib/srs/scheduler.ts`: simplified SM-2 — configurable first intervals (10 min / 1 / 3 / 7 d),

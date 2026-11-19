@@ -112,6 +112,11 @@ export const en = {
       studyDaysHint: 'Days with any practice',
     },
     plan: {
+      backupTitle: 'Back up your progress',
+      backupDetail: (days: number | null) =>
+        days === null
+          ? 'You haven’t made a backup yet. It takes one tap.'
+          : `Your last backup was ${days} days ago.`,
       title: 'Today’s plan',
       progress: (done: number, total: number) => `${done} of ${total} done`,
       addWordsTitle: 'Add your first words',
@@ -403,6 +408,69 @@ export const en = {
     },
   },
 
+  backup: {
+    title: 'Backup',
+    description:
+      'Everything lives in this browser. Keep a copy, so a cleared browser or a new phone doesn’t cost you your progress.',
+    export: 'Download backup',
+    restore: 'Restore from file',
+    last: (when: string | null) => (when ? `Last backup ${when}.` : 'No backup yet.'),
+    exported: 'Backup downloaded',
+    restoreTitle: 'Replace your data with this backup?',
+    restoreText: (date: string, words: number, reviews: number) =>
+      `This backup from ${date} has ${words} ${plural(words, 'word', 'words')} and ${reviews} ${plural(reviews, 'review', 'reviews')}. Everything currently in EnglishOS will be replaced.`,
+    saveFirst: 'Download current data first',
+    restoreConfirm: 'Restore',
+    restored: 'Backup restored',
+    problems: {
+      invalidJson: 'This file isn’t valid JSON.',
+      notBackup: 'This file isn’t an EnglishOS backup.',
+      newerFormat: 'This backup comes from a newer version of EnglishOS. Update the app first.',
+      invalidData: 'The backup is damaged, so nothing was changed.',
+    },
+    tooLarge: 'The file is larger than 10 MB.',
+  },
+
+  transfer: {
+    import: 'Import',
+    export: 'Export',
+    importTitle: 'Import words',
+    importDescription:
+      'From a CSV or JSON file. Columns such as “word” and “translation” are recognised in English or Ukrainian.',
+    chooseFile: 'Choose file',
+    formatHint: 'A CSV like “word,translation,example”, or a file exported from EnglishOS.',
+    unreadable: 'No words found in this file. It needs a word column and a translation column.',
+    planAdd: (n: number) => `${n} new ${plural(n, 'word', 'words')} will be added.`,
+    planNothing: 'There is nothing new to add.',
+    planDuplicates: (n: number) =>
+      `${n} ${plural(n, 'word is', 'words are')} already in your vocabulary and will be skipped.`,
+    planInvalid: (n: number) => `${n} ${plural(n, 'row', 'rows')} can’t be imported:`,
+    problem: {
+      missingTerm: (line: number) => `line ${line} has no word`,
+      missingTranslation: (line: number) => `line ${line} has no translation`,
+    },
+    planCollections: (names: string) => `New collections will be created: ${names}.`,
+    importConfirm: (n: number) => `Import ${n} ${plural(n, 'word', 'words')}`,
+    imported: (n: number) => `${n} ${plural(n, 'word', 'words')} imported`,
+    otherFile: 'Choose another file',
+    exportTitle: 'Export words',
+    exportDescription:
+      'Download your words to edit them in a spreadsheet or move them to another app.',
+    format: 'Format',
+    formats: {
+      csv: { title: 'CSV', hint: 'Opens in Excel, Numbers or Google Sheets.' },
+      json: {
+        title: 'JSON',
+        hint: 'Keeps lists and collections exactly. Best for importing back.',
+      },
+    },
+    scope: 'Words',
+    scopeAll: (n: number) => `All words (${n})`,
+    scopeVisible: (n: number) => `Current view (${n})`,
+    download: 'Download',
+    exportedToast: (n: number) => `${n} ${plural(n, 'word', 'words')} exported`,
+  },
+
   settings: {
     title: 'Settings',
     subtitle: 'Preferences are stored on this device.',
@@ -437,7 +505,6 @@ export const en = {
     declinedToast: 'Browser declined',
     declinedText: 'Install the app or use it more often — browsers grant this to trusted sites.',
     used: 'Used',
-    backupSoon: 'Backup, restore and CSV import/export arrive in phase 4.',
     about: 'About',
     version: 'Version',
     mode: 'Mode',

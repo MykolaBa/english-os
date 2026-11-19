@@ -1,11 +1,13 @@
 import { useDeferredValue, useEffect, useMemo, useState } from 'react'
-import { BookOpen, Plus, SearchX } from 'lucide-react'
+import { BookOpen, Download, Plus, SearchX, Upload } from 'lucide-react'
 import { Button, Card, ConfirmDialog, EmptyState, PageHeader, Skeleton } from '@/components/ui'
 import { useT } from '@/i18n'
 import type { Collection } from '@/lib/db/types'
 import { toast } from '@/stores/toastStore'
 import { CollectionBar } from './components/CollectionBar'
 import { CollectionFormDialog } from './components/CollectionFormDialog'
+import { ExportDialog } from './components/ExportDialog'
+import { ImportDialog } from './components/ImportDialog'
 import { VocabularyToolbar } from './components/VocabularyToolbar'
 import { WordEntry } from './components/WordEntry'
 import { WordFormDialog } from './components/WordFormDialog'
@@ -26,6 +28,8 @@ export default function VocabularyPage() {
   const [addOpen, setAddOpen] = useState(() => params.get('add') === '1')
   const [addKey, setAddKey] = useState(0) // remounts the form so it starts empty
   const [collectionOpen, setCollectionOpen] = useState(false)
+  const [importOpen, setImportOpen] = useState(false)
+  const [exportOpen, setExportOpen] = useState(false)
   const [toDelete, setToDelete] = useState<Collection | null>(null)
 
   const openAdd = () => {
@@ -68,9 +72,19 @@ export default function VocabularyPage() {
         title={v.title}
         description={words ? v.subtitle(total) : undefined}
         actions={
-          <Button variant="primary" icon={<Plus />} onClick={openAdd}>
-            {v.addWord}
-          </Button>
+          <>
+            <Button variant="ghost" icon={<Upload />} onClick={() => setImportOpen(true)}>
+              {t.transfer.import}
+            </Button>
+            {total > 0 && (
+              <Button variant="ghost" icon={<Download />} onClick={() => setExportOpen(true)}>
+                {t.transfer.export}
+              </Button>
+            )}
+            <Button variant="primary" icon={<Plus />} onClick={openAdd}>
+              {v.addWord}
+            </Button>
+          </>
         }
       />
 
@@ -130,6 +144,16 @@ export default function VocabularyPage() {
           onClose={() => setAddOpen(false)}
           collections={collections}
           defaultCollectionId={filters.collectionId}
+        />
+      )}
+      {importOpen && <ImportDialog open onClose={() => setImportOpen(false)} />}
+      {exportOpen && words && collections && (
+        <ExportDialog
+          open
+          onClose={() => setExportOpen(false)}
+          all={words}
+          visible={visible}
+          collections={collections}
         />
       )}
       {collectionOpen && (

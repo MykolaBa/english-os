@@ -11,6 +11,7 @@ export interface PlanContext {
   newWords: number
   todayXp: number
   dailyXpGoal: number
+  backupDays: number | null
 }
 
 function stepText(step: PlanStep, ctx: PlanContext, t: Dictionary['dashboard']['plan']) {
@@ -25,6 +26,8 @@ function stepText(step: PlanStep, ctx: PlanContext, t: Dictionary['dashboard']['
         : [t.reviewTitle(ctx.dueCount), t.reviewDetail(estimateReviewMinutes(ctx.dueCount))]
     case 'new-words':
       return [t.newWordsTitle, t.newWordsDetail(ctx.newWords)]
+    case 'backup':
+      return [t.backupTitle, t.backupDetail(ctx.backupDays)]
     case 'goal':
       return [
         t.goalTitle(ctx.dailyXpGoal),

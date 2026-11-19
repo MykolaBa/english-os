@@ -23,6 +23,7 @@ import {
 } from '@/lib/storage/persistence'
 import { useSettings, type ThemePreference, type UiLanguage } from '@/stores/settingsStore'
 import { toast } from '@/stores/toastStore'
+import { BackupSection } from './components/BackupSection'
 import styles from './Settings.module.scss'
 
 const LEVEL_OPTIONS = CEFR_LEVELS.map((l) => ({ value: l, label: l }))
@@ -207,7 +208,7 @@ export default function SettingsPage() {
               <dd>{storage?.usageBytes !== undefined ? formatBytes(storage.usageBytes) : '—'}</dd>
             </div>
           </dl>
-          <p className={styles.note}>{s.backupSoon}</p>
+          <BackupSection />
         </Card>
 
         <Card>

@@ -526,3 +526,107 @@
     }
   }
 }
+
+// ---------- Import / export ----------
+.dropzone {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-4);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  text-align: center;
+
+  > svg {
+    width: 28px;
+    height: 28px;
+    color: var(--accent);
+  }
+
+  p {
+    max-width: 40ch;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+}
+
+.importPlan {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.fileName {
+  font-weight: 500;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.planMain {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.problems {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-5);
+}
+
+.exportForm {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.options {
+  display: grid;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  cursor: pointer;
+
+  & + & {
+    margin-top: -1px;
+  }
+
+  &:first-child {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+
+  input {
+    margin-top: 3px;
+    accent-color: var(--accent);
+  }
+
+  > span {
+    display: grid;
+    gap: 2px;
+  }
+}
+
+.optionOn {
+  position: relative;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  background: var(--accent-soft);
+}
+
+.optionTitle {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.optionHint {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}

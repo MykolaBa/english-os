@@ -122,6 +122,9 @@ export const uk: Dictionary = {
       studyDaysHint: 'Дні з будь-якою практикою',
     },
     plan: {
+      backupTitle: 'Збережи резервну копію',
+      backupDetail: (n: number | null) =>
+        n === null ? 'Копії ще немає. Це один дотик.' : `Остання копія була ${n} ${days(n)} тому.`,
       title: 'План на сьогодні',
       progress: (done: number, total: number) => `Виконано ${done} з ${total}`,
       addWordsTitle: 'Додай перші слова',
@@ -412,6 +415,71 @@ export const uk: Dictionary = {
     },
   },
 
+  backup: {
+    title: 'Резервна копія',
+    description:
+      'Усі дані живуть у цьому браузері. Зберігай копію, щоб очищений браузер чи новий телефон не забрали твій прогрес.',
+    export: 'Завантажити копію',
+    restore: 'Відновити з файлу',
+    last: (when: string | null) => (when ? `Остання копія ${when}.` : 'Копії ще немає.'),
+    exported: 'Копію завантажено',
+    restoreTitle: 'Замінити дані цією копією?',
+    restoreText: (date: string, n: number, reviews: number) =>
+      `У копії від ${date}: ${n} ${words(n)} і ${reviews} ${plural(reviews, 'повторення', 'повторення', 'повторень')}. Усе, що зараз є в EnglishOS, буде замінено.`,
+    saveFirst: 'Спершу завантажити поточні дані',
+    restoreConfirm: 'Відновити',
+    restored: 'Копію відновлено',
+    problems: {
+      invalidJson: 'Це не коректний JSON-файл.',
+      notBackup: 'Це не резервна копія EnglishOS.',
+      newerFormat: 'Копію зроблено новішою версією EnglishOS. Спершу онови застосунок.',
+      invalidData: 'Копія пошкоджена, тому нічого не змінено.',
+    },
+    tooLarge: 'Файл більший за 10 МБ.',
+  },
+
+  transfer: {
+    import: 'Імпорт',
+    export: 'Експорт',
+    importTitle: 'Імпорт слів',
+    importDescription:
+      'З файлу CSV або JSON. Стовпці на кшталт «слово» і «переклад» розпізнаються англійською та українською.',
+    chooseFile: 'Обрати файл',
+    formatHint: 'CSV на зразок «word,translation,example» або файл, експортований з EnglishOS.',
+    unreadable: 'У файлі не знайдено слів. Потрібні стовпці зі словом і перекладом.',
+    planAdd: (n: number) =>
+      `Буде додано ${n} ${plural(n, 'нове слово', 'нові слова', 'нових слів')}.`,
+    planNothing: 'Нового для додавання немає.',
+    planDuplicates: (n: number) =>
+      `${n} ${plural(n, 'слово вже є', 'слова вже є', 'слів уже є')} у словнику, їх буде пропущено.`,
+    planInvalid: (n: number) =>
+      `${n} ${plural(n, 'рядок', 'рядки', 'рядків')} не вдасться імпортувати:`,
+    problem: {
+      missingTerm: (line: number) => `рядок ${line}: немає слова`,
+      missingTranslation: (line: number) => `рядок ${line}: немає перекладу`,
+    },
+    planCollections: (names: string) => `Буде створено нові колекції: ${names}.`,
+    importConfirm: (n: number) => `Імпортувати ${n} ${words(n)}`,
+    imported: (n: number) => `Імпортовано ${n} ${words(n)}`,
+    otherFile: 'Обрати інший файл',
+    exportTitle: 'Експорт слів',
+    exportDescription:
+      'Завантаж слова, щоб редагувати їх у таблиці або перенести в інший застосунок.',
+    format: 'Формат',
+    formats: {
+      csv: { title: 'CSV', hint: 'Відкривається в Excel, Numbers або Google Таблицях.' },
+      json: {
+        title: 'JSON',
+        hint: 'Точно зберігає списки й колекції. Найкраще для імпорту назад.',
+      },
+    },
+    scope: 'Слова',
+    scopeAll: (n: number) => `Усі слова (${n})`,
+    scopeVisible: (n: number) => `Поточний вигляд (${n})`,
+    download: 'Завантажити',
+    exportedToast: (n: number) => `Експортовано ${n} ${words(n)}`,
+  },
+
   settings: {
     title: 'Налаштування',
     subtitle: 'Налаштування зберігаються на цьому пристрої.',
@@ -447,7 +515,6 @@ export const uk: Dictionary = {
     declinedText:
       'Встанови застосунок або користуйся ним частіше — браузери дають це довіреним сайтам.',
     used: 'Використано',
-    backupSoon: 'Резервні копії, відновлення та імпорт/експорт CSV з’являться на етапі 4.',
     about: 'Про застосунок',
     version: 'Версія',
     mode: 'Режим',

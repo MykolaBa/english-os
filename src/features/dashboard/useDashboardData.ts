@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db/db'
+import { getLastBackupAt } from '@/features/backup/backup'
 import { groupFeed, type FeedItem } from '@/lib/activity/feed'
 import type { Word } from '@/lib/db/types'
 import {
@@ -29,6 +30,8 @@ export interface DashboardData {
   totalStudyDays: number
   week: DayActivity[]
   recent: FeedItem[]
+  /** Non-null when a backup is overdue (progress exists, last backup missing or 14+ days old). */
+  backupDue: { days: number | null } | null
 }
 
 /**
@@ -72,6 +75,11 @@ async function loadDashboard(): Promise<DashboardData> {
       getRecentActivity(80),
       findSpotlight(),
     ])
+  const [lastBackupAt, reviewCount] = await Promise.all([getLastBackupAt(), db.reviewLogs.count()])
+  const backupDays =
+    lastBackupAt === null ? null : Math.floor((Date.now() - lastBackupAt) / 86_400_000)
+  const backupDue =
+    reviewCount > 0 && (backupDays === null || backupDays >= 14) ? { days: backupDays } : null
 
   const xpByDay = new Map<DayKey, number>()
   for (const e of weekEvents) xpByDay.set(e.day, (xpByDay.get(e.day) ?? 0) + e.xp)
@@ -89,6 +97,7 @@ async function loadDashboard(): Promise<DashboardData> {
     totalStudyDays: activeDays.length,
     week: lastDays(7).map((day) => ({ day, xp: xpByDay.get(day) ?? 0 })),
     recent: groupFeed(recent, 6),
+    backupDue,
   }
 }
 

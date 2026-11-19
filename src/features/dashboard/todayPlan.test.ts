@@ -19,6 +19,14 @@ describe('buildTodayPlan', () => {
   })
 })
 
+describe('backup reminder', () => {
+  it('adds a backup step only when one is due', () => {
+    const base = { totalWords: 10, dueCount: 0, todayXp: 0, dailyXpGoal: 50 }
+    expect(buildTodayPlan(base).some((s) => s.id === 'backup')).toBe(false)
+    expect(buildTodayPlan({ ...base, backupDue: { days: null } }).at(-1)?.id).toBe('backup')
+  })
+})
+
 describe('estimateReviewMinutes', () => {
   it('never returns less than a minute', () => {
     expect(estimateReviewMinutes(1)).toBe(1)

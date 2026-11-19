@@ -1,4 +1,4 @@
-export type PlanStepId = 'add-words' | 'set-goal' | 'review' | 'new-words' | 'goal'
+export type PlanStepId = 'add-words' | 'set-goal' | 'review' | 'new-words' | 'goal' | 'backup'
 
 /** Text is resolved in the UI via i18n, so this stays pure data (and easy to test). */
 export interface PlanStep {
@@ -12,6 +12,8 @@ export interface PlanInput {
   dueCount: number
   todayXp: number
   dailyXpGoal: number
+  /** Set when a backup is overdue; `days` is null when there has never been one. */
+  backupDue?: { days: number | null } | null
 }
 
 /**
@@ -23,6 +25,7 @@ export function buildTodayPlan({
   dueCount,
   todayXp,
   dailyXpGoal,
+  backupDue,
 }: PlanInput): PlanStep[] {
   if (totalWords === 0) {
     return [
@@ -34,6 +37,7 @@ export function buildTodayPlan({
     { id: 'review', to: '/review', done: dueCount === 0 },
     { id: 'new-words', to: '/vocabulary', done: false },
     { id: 'goal', to: '/review', done: todayXp >= dailyXpGoal },
+    ...(backupDue ? [{ id: 'backup' as const, to: '/settings', done: false }] : []),
   ]
 }
 
