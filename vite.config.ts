@@ -17,8 +17,8 @@ export default defineConfig({
         name: 'EnglishOS',
         short_name: 'EnglishOS',
         description: 'Personal English learning platform',
-        theme_color: '#0b0d12',
-        background_color: '#0b0d12',
+        theme_color: '#131628',
+        background_color: '#131628',
         display: 'standalone',
         start_url: '/',
         icons: [

@@ -3,8 +3,11 @@
 
 :root {
   // Typography
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  // Interface voice. Onest is drawn with full Cyrillic, so Ukrainian looks native.
+  --font-sans: 'Onest', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // The English language itself — headwords, IPA, examples — is set in a reading serif.
+  --font-serif: 'Literata', 'Iowan Old Style', Georgia, serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.8125rem;
@@ -14,6 +17,7 @@
   --text-xl: 1.5rem;
   --text-2xl: 1.875rem;
   --text-3xl: 2.375rem;
+  --text-display: clamp(2.5rem, 6vw + 1rem, 4.25rem);
 
   // Spacing (4px grid)
   --space-1: 0.25rem;
@@ -27,10 +31,11 @@
   --space-12: 3rem;
 
   // Radii
+  // Radius follows hierarchy: controls < cards < the page's main panel.
   --radius-sm: 6px;
-  --radius-md: 10px;
+  --radius-md: 9px;
   --radius-lg: 14px;
-  --radius-xl: 20px;
+  --radius-xl: 24px;
   --radius-full: 999px;
 
   // Motion
@@ -46,75 +51,73 @@
   --bottom-nav-height: 64px;
 
   // Accents (shared by both themes)
-  --violet: #8b7cf8;
-  --blue: #5b8def;
-  --teal: #2dd4bf;
-  --gradient-brand: linear-gradient(135deg, #8b7cf8 0%, #5b8def 55%, #2dd4bf 100%);
-
-  // Learning statuses
-  --status-new: #5b8def;
-  --status-learning: #f5b84b;
-  --status-reviewing: #8b7cf8;
-  --status-mastered: #34d399;
+  --violet: #9b8cff;
+  --blue: #6c9bff;
+  --teal: #43d6c3;
+  // Reserved for the logo mark only — not a decorative wash.
+  --gradient-brand: linear-gradient(135deg, #9b8cff 0%, #6c9bff 55%, #43d6c3 100%);
 }
 
 @mixin dark-theme {
   color-scheme: dark;
-  --bg: #0b0d12;
-  --bg-elevated: #0f1218;
-  --surface: #13161d;
-  --surface-2: #191d26;
-  --surface-3: #222734;
-  --surface-hover: rgba(255, 255, 255, 0.04);
-  --border: rgba(255, 255, 255, 0.07);
-  --border-strong: rgba(255, 255, 255, 0.13);
+  // Ink: a deep blue-violet night, not a tinted black.
+  --bg: #131628;
+  --bg-elevated: #171a2f;
+  --surface: #1b1f36;
+  --surface-2: #22273f;
+  --surface-3: #2b3050;
+  --surface-hover: rgba(236, 234, 246, 0.05);
+  --border: rgba(236, 234, 246, 0.08);
+  --border-strong: rgba(236, 234, 246, 0.15);
 
-  --text: #e9ebf1;
-  --text-muted: #a0a6b6;
-  --text-subtle: #6c7387;
+  // Paper: the text colour, a faintly lavender white.
+  --text: #eceaf6;
+  --text-muted: #a9abc6;
+  --text-subtle: #7477a0;
 
-  --accent: #8b7cf8;
-  --accent-hover: #9d90fa;
-  --accent-soft: rgba(139, 124, 248, 0.14);
-  --accent-contrast: #0b0d12;
+  --accent: #9b8cff;
+  --accent-hover: #ada0ff;
+  --accent-soft: rgba(155, 140, 255, 0.16);
+  --accent-contrast: #131628;
 
-  --success: #34d399;
-  --success-soft: rgba(52, 211, 153, 0.13);
-  --warning: #f5b84b;
-  --warning-soft: rgba(245, 184, 75, 0.13);
-  --danger: #f87171;
-  --danger-soft: rgba(248, 113, 113, 0.13);
-  --info: #5b8def;
-  --info-soft: rgba(91, 141, 239, 0.14);
+  --success: #43d6c3;
+  --success-soft: rgba(67, 214, 195, 0.14);
+  --warning: #f2bd5c;
+  --warning-soft: rgba(242, 189, 92, 0.14);
+  --danger: #ff8a8a;
+  --danger-soft: rgba(255, 138, 138, 0.14);
+  --info: #6c9bff;
+  --info-soft: rgba(108, 155, 255, 0.16);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
-  --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
-  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px rgba(139, 124, 248, 0.6);
+  --shadow-sm: 0 1px 2px rgba(6, 7, 20, 0.45);
+  --shadow-md: 0 10px 28px -10px rgba(6, 7, 20, 0.65);
+  --shadow-lg: 0 28px 64px -16px rgba(6, 7, 20, 0.8);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px rgba(155, 140, 255, 0.7);
 }
 
 @mixin light-theme {
   color-scheme: light;
-  --bg: #f6f7fb;
+  // Cool paper, matching the ink of the dark theme.
+  --bg: #f3f3fa;
   --bg-elevated: #ffffff;
   --surface: #ffffff;
-  --surface-2: #f3f4f8;
-  --surface-3: #e9ebf2;
+  --surface-2: #eeeef7;
+  --surface-3: #e3e3f0;
   --surface-hover: rgba(15, 20, 40, 0.04);
   --border: rgba(15, 20, 40, 0.08);
   --border-strong: rgba(15, 20, 40, 0.15);
 
-  --text: #151824;
-  --text-muted: #555c70;
-  --text-subtle: #8a90a2;
+  --text: #191b34;
+  --text-muted: #55587a;
+  --text-subtle: #8689a8;
 
-  --accent: #6d5ce8;
-  --accent-hover: #5d4bdc;
-  --accent-soft: rgba(109, 92, 232, 0.1);
+  --accent: #6a58e6;
+  --accent-hover: #5a47d9;
+  --accent-soft: rgba(106, 88, 230, 0.1);
   --accent-contrast: #ffffff;
 
-  --success: #0f9f6e;
-  --success-soft: rgba(15, 159, 110, 0.1);
+  --success: #0e9384;
+  --success-soft: rgba(14, 147, 132, 0.1);
   --warning: #c27c0e;
   --warning-soft: rgba(194, 124, 14, 0.1);
   --danger: #dc3c3c;

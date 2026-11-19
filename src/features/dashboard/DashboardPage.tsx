@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Badge, PageHeader, Skeleton } from '@/components/ui'
+import { PageHeader, Skeleton } from '@/components/ui'
 import { useT } from '@/i18n'
 import { useSettings } from '@/stores/settingsStore'
-import { DailyGoalCard } from './components/DailyGoalCard'
 import { LevelJourney } from './components/LevelJourney'
 import { QuickActions } from './components/QuickActions'
 import { RecentActivity } from './components/RecentActivity'
 import { StatTiles } from './components/StatTiles'
+import { TodayEntry } from './components/TodayEntry'
 import { TodayPlan } from './components/TodayPlan'
 import { WeeklyActivity } from './components/WeeklyActivity'
 import { greetingFor } from './greeting'
@@ -26,33 +26,24 @@ export default function DashboardPage() {
 
   return (
     <>
-      <PageHeader
-        eyebrow={
-          <>
-            <span className={styles.date}>{date}</span>
-            <Badge tone="accent">{currentLevel}</Badge>
-          </>
-        }
-        title={greeting}
-        description={t.dashboard.subtitle}
-      />
+      <PageHeader title={greeting} description={<span className={styles.date}>{date}</span>} />
 
       {!data ? (
         <div className={styles.grid}>
-          <Skeleton className={styles.spanAll} height={220} />
-          <Skeleton className={styles.spanAll} height={110} />
+          <Skeleton className={styles.spanAll} height={360} />
+          <Skeleton className={styles.spanAll} height={96} />
           <Skeleton height={240} />
           <Skeleton height={240} />
         </div>
       ) : (
         <div className={styles.grid}>
           <div className={styles.spanAll}>
-            <DailyGoalCard
-              todayXp={data.todayXp}
-              goal={dailyXpGoal}
+            <TodayEntry
+              word={data.spotlight}
               dueCount={data.dueCount}
               newWords={data.newWords}
-              totalWords={data.totalWords}
+              todayXp={data.todayXp}
+              goal={dailyXpGoal}
             />
           </div>
           <div className={styles.spanAll}>

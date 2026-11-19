@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db/db'
-import type { ActivityEvent } from '@/lib/db/types'
+import type { ActivityEvent, Word } from '@/lib/db/types'
 import {
   getActiveDays,
   getActivitySince,
@@ -18,6 +18,8 @@ export interface DayActivity {
 export interface DashboardData {
   totalWords: number
   newWords: number
+  /** The word the dashboard opens with: the most overdue review, else the newest unlearned word. */
+  spotlight: Word | null
   masteredWords: number
   dueCount: number
   todayXp: number
@@ -40,10 +42,25 @@ function countDue(now = Date.now()): Promise<number> {
     .count()
 }
 
+async function findSpotlight(now = Date.now()): Promise<Word | null> {
+  const due = await db.words
+    .where('srs.dueAt')
+    .belowOrEqual(now)
+    .filter((w) => w.srs.status !== 'new')
+    .first()
+  if (due) return due
+  const fresh = await db.words
+    .orderBy('createdAt')
+    .reverse()
+    .filter((w) => w.srs.status === 'new')
+    .first()
+  return fresh ?? null
+}
+
 async function loadDashboard(): Promise<DashboardData> {
   const weekStart = startOfDay(addDays(new Date(), -6)).getTime()
 
-  const [totalWords, newWords, masteredWords, dueCount, weekEvents, activeDays, recent] =
+  const [totalWords, newWords, masteredWords, dueCount, weekEvents, activeDays, recent, spotlight] =
     await Promise.all([
       db.words.count(),
       db.words.where('srs.status').equals('new').count(),
@@ -52,6 +69,7 @@ async function loadDashboard(): Promise<DashboardData> {
       getActivitySince(weekStart),
       getActiveDays(),
       getRecentActivity(6),
+      findSpotlight(),
     ])
 
   const xpByDay = new Map<DayKey, number>()
@@ -61,6 +79,7 @@ async function loadDashboard(): Promise<DashboardData> {
   return {
     totalWords,
     newWords,
+    spotlight,
     masteredWords,
     dueCount,
     todayXp: sumXp(weekEvents.filter((e) => e.day === today)),

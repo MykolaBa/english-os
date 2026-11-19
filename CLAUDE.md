@@ -53,8 +53,20 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 - Tokens are CSS variables in `src/styles/_tokens.scss` (dark default, light, system). Never
   hardcode colors/radii/spacing in components — use tokens. Mixins in `_mixins.scss`
   (`up(md)`, `focus-ring`, `card-surface`, `truncate`).
-- Look: calm premium dashboard (Linear/Notion-like), violet/blue/teal accents used sparingly,
-  subtle motion, no clutter, no childish gamification.
+- Concept: **a personal dictionary**. The most characteristic object is the dictionary entry
+  (headword, IPA, part of speech in italics, sense, example). Screens open with real content
+  (e.g. the dashboard opens with the next word to learn), not with stat widgets.
+- Type roles: **Onest** (`--font-sans`, full Cyrillic) is the interface voice; **Literata**
+  (`--font-serif`) is the English language itself — headwords, IPA, definitions, examples.
+  Never set IPA in monospace.
+- Palette: Ink `#131628` background (not tinted black), Paper `#ECEAF6` text, Violet
+  `#9B8CFF` primary, Teal `#43D6C3` success/mastered, Blue `#6C9BFF` new/info.
+  `--gradient-brand` is for the logo only — no decorative gradient washes.
+- Spend boldness in one place per screen; keep the rest quiet. Avoid generic tells:
+  ALL-CAPS labels/eyebrows, `A · B · C` meta strings (write a sentence), `→` in buttons,
+  rows of identical cards (prefer one surface with dividers, or a list), entrance animations
+  on every page (one orchestrated moment at most; motion that answers user actions is fine).
+- Copy: sentence case, active verbs, the action keeps its name through the flow.
 - Mobile-first: test at ~390px. Bottom nav (`mobilePrimary` items) + drawer on < 1024px.
   Inputs use 16px font on mobile (prevents iOS zoom). Respect safe-area insets.
 - Accessibility: semantic elements, labels, `aria-*` on custom controls, visible focus,

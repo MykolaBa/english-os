@@ -10,6 +10,7 @@ import {
   ConfirmDialog,
   EmptyState,
   Skeleton,
+  SpeakButton,
 } from '@/components/ui'
 import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
@@ -17,7 +18,6 @@ import { formatDate, formatRelative } from '@/lib/date'
 import { useSettings } from '@/stores/settingsStore'
 import { toast } from '@/stores/toastStore'
 import { CollectionIcon } from './components/CollectionIcon'
-import { SpeakButton } from './components/SpeakButton'
 import { StatusBadge } from './components/StatusBadge'
 import { WordFormDialog } from './components/WordFormDialog'
 import { useCollections, useWord } from './hooks'
@@ -149,7 +149,9 @@ export default function WordDetailPage() {
               {word.definition && (
                 <div className={styles.detailBlock}>
                   <h3 className={styles.blockTitle}>{d.definition}</h3>
-                  <p lang="en">{word.definition}</p>
+                  <p className={styles.definition} lang="en">
+                    {word.definition}
+                  </p>
                 </div>
               )}
               {word.example && (

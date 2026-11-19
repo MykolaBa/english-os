@@ -16,7 +16,7 @@ export function useDocumentSync() {
       (theme === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches)
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', isLight ? '#f6f7fb' : '#0b0d12')
+      ?.setAttribute('content', isLight ? '#f3f3fa' : '#131628')
   }, [theme])
 
   useEffect(() => {

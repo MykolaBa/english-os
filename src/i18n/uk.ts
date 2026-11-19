@@ -1,6 +1,6 @@
 import type { Dictionary } from './en'
 
-/** Ukrainian plural forms: 1 слово · 2–4 слова · 5+ слів (11–14 → слів). */
+/** Ukrainian plural forms: 1 слово, 2–4 слова, 5+ слів (11–14 → слів). */
 const plural = (n: number, one: string, few: string, many: string) => {
   const mod10 = n % 10
   const mod100 = n % 100
@@ -93,25 +93,21 @@ export const uk: Dictionary = {
       afternoon: 'Добрий день',
       evening: 'Добрий вечір',
     },
-    subtitle: 'Маленькі кроки щодня. Ось де ти зараз.',
     goal: {
-      kicker: 'Ціль на сьогодні',
-      ringLabel: 'Прогрес денної цілі',
-      ofXp: (goal: number) => `з ${goal} XP`,
-      emptyTitle: 'Почнімо збирати словник',
-      emptyText: 'Додай кілька слів, які хочеш запам’ятати. EnglishOS сам запланує повторення.',
-      reachedTitle: 'Денну ціль досягнуто',
-      reachedText: 'Чудова регулярність. Усе понад це — бонус, не перевтомлюйся.',
-      dueTitle: (n: number) => `${n} ${words(n)} чекають на повторення`,
-      newTitle: (n: number) =>
-        `${n} ${plural(n, 'нове слово', 'нові слова', 'нових слів')} до вивчення`,
-      keepGoingTitle: 'Тримай темп',
-      remainingText: (xp: number) =>
-        `Ще ${xp} XP сьогодні. Зазвичай вистачає однієї сесії повторення.`,
+      reasonDue: 'Час повторити',
+      reasonNew: 'Нове слово до вивчення',
+      reasonDone: 'Денну ціль досягнуто. Ще одне слово — за бажанням',
+      meterLabel: 'Денна ціль',
+      meter: (xp: number, goal: number) => `${xp} з ${goal} XP сьогодні`,
+      emptyTitle: 'Почни з кількох слів, які хочеш запам’ятати',
+      emptyText: 'EnglishOS планує повторення для кожного доданого слова, щоб воно запам’яталося.',
       addWords: 'Додати слова',
       startReview: 'Почати повторення',
-      practice: 'Практика',
-      grammar: 'Граматика',
+      startLearning: 'Почати вчити',
+      openWord: 'Відкрити слово',
+      moreDue: (n: number) => `Ще ${n} ${words(n)} до повторення`,
+      moreNew: (n: number) =>
+        `${n} ${plural(n, 'нове слово чекає', 'нові слова чекають', 'нових слів чекають')}`,
     },
     tiles: {
       streak: 'Серія',
@@ -146,7 +142,7 @@ export const uk: Dictionary = {
     },
     week: {
       title: 'Цей тиждень',
-      summary: (xp: number, d: number) => `${xp} XP · ${d}/7 активних днів`,
+      summary: (xp: number, d: number) => `${xp} XP за тиждень, активних днів: ${d} з 7`,
       chartLabel: 'XP за день, останні 7 днів',
     },
     recent: {
@@ -156,6 +152,7 @@ export const uk: Dictionary = {
     },
     journey: {
       title: 'Шлях за рівнями',
+      range: (from: string, to: string) => `Від ${from} до ${to}`,
       you: 'Ти',
       goal: 'Ціль',
     },
@@ -171,14 +168,14 @@ export const uk: Dictionary = {
   activity: {
     word_added: (s: string) => `Додано «${s}»`,
     review: (s: string) => `Повторено «${s}»`,
-    review_session: (s: string) => `Сесія повторення · ${s}`,
-    grammar_lesson: (s: string) => `Урок граматики · ${s}`,
-    quiz: (s: string) => `Тест · ${s}`,
-    reading: (s: string) => `Читання · ${s}`,
-    listening: (s: string) => `Аудіювання · ${s}`,
-    speaking: (s: string) => `Говоріння · ${s}`,
-    writing: (s: string) => `Письмо · ${s}`,
-    it_english: (s: string) => `IT English · ${s}`,
+    review_session: (s: string) => `Сесія повторення: ${s}`,
+    grammar_lesson: (s: string) => `Урок граматики: ${s}`,
+    quiz: (s: string) => `Тест: ${s}`,
+    reading: (s: string) => `Читання: ${s}`,
+    listening: (s: string) => `Аудіювання: ${s}`,
+    speaking: (s: string) => `Говоріння: ${s}`,
+    writing: (s: string) => `Письмо: ${s}`,
+    it_english: (s: string) => `IT English: ${s}`,
   },
 
   status: {
@@ -323,7 +320,7 @@ export const uk: Dictionary = {
     goalLabel: 'Денна ціль XP',
     goalHint: '≈1 XP за картку; уроки й тести дають більше.',
     goalOption: (xp: number) =>
-      `${xp} XP${xp === 20 ? ' · легко' : xp === 50 ? ' · стандартно' : xp === 120 ? ' · інтенсивно' : ''}`,
+      `${xp} XP${xp === 20 ? ' (легко)' : xp === 50 ? ' (стандартно)' : xp === 120 ? ' (інтенсивно)' : ''}`,
     appearance: 'Вигляд і навчання',
     language: 'Мова інтерфейсу',
     languageHint: 'Навчальний контент (слова, приклади) завжди залишається англійською.',
@@ -349,7 +346,7 @@ export const uk: Dictionary = {
     about: 'Про застосунок',
     version: 'Версія',
     mode: 'Режим',
-    modeValue: 'Локально · без акаунта · без трекінгу',
+    modeValue: 'Дані на цьому пристрої. Без акаунта й трекінгу',
     reset: 'Скинути налаштування',
     resetTitle: 'Скинути налаштування?',
     resetText:

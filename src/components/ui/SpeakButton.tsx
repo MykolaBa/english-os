@@ -1,5 +1,5 @@
 import { Volume2 } from 'lucide-react'
-import { Button } from '@/components/ui'
+import { Button } from './Button'
 import { useT } from '@/i18n'
 import { isSpeechSupported, speak } from '@/lib/speech'
 

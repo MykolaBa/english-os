@@ -7,7 +7,7 @@ import { toast } from '@/stores/toastStore'
 import { CollectionBar } from './components/CollectionBar'
 import { CollectionFormDialog } from './components/CollectionFormDialog'
 import { VocabularyToolbar } from './components/VocabularyToolbar'
-import { WordCard } from './components/WordCard'
+import { WordEntry } from './components/WordEntry'
 import { WordFormDialog } from './components/WordFormDialog'
 import { filterWords, sortWords } from './filters'
 import { useCollections, useWords } from './hooks'
@@ -75,11 +75,7 @@ export default function VocabularyPage() {
       />
 
       {loading ? (
-        <div className={styles.grid}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <Skeleton key={i} height={118} />
-          ))}
-        </div>
+        <Skeleton height={480} />
       ) : total === 0 ? (
         <Card padding="lg">
           <EmptyState
@@ -118,11 +114,11 @@ export default function VocabularyPage() {
               />
             </Card>
           ) : (
-            <div className={styles.grid}>
+            <ul className={styles.list}>
               {visible.map((word) => (
-                <WordCard key={word.id} word={word} />
+                <WordEntry key={word.id} word={word} />
               ))}
-            </div>
+            </ul>
           )}
         </>
       )}

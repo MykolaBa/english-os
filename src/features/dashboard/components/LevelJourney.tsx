@@ -19,7 +19,7 @@ export function LevelJourney({ current, target }: { current: CefrLevel; target: 
       <CardHeader
         icon={<Mountain />}
         title={t.title}
-        description={`${current} → ${target}`}
+        description={t.range(current, target)}
         action={
           <Link to="/settings" className={styles.subtleLink}>
             {common.edit}
