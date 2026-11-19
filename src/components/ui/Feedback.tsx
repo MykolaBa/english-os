@@ -1,12 +1,14 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import { cx } from '@/lib/cx'
+import { useT } from '@/i18n'
 import { Button } from './Button'
 import { EmptyState } from './EmptyState'
 import styles from './Feedback.module.scss'
 
-export function Spinner({ label = 'Loading' }: { label?: string }) {
-  return <span className={styles.spinner} role="status" aria-label={label} />
+export function Spinner({ label }: { label?: string }) {
+  const t = useT()
+  return <span className={styles.spinner} role="status" aria-label={label ?? t.common.loading} />
 }
 
 export function PageLoader() {
@@ -22,12 +24,13 @@ export function Skeleton({ className, height }: { className?: string; height?: n
 }
 
 export function ErrorState({ message, onRetry }: { message?: string; onRetry?: () => void }) {
+  const t = useT()
   return (
     <EmptyState
       icon={<TriangleAlert />}
-      title="Something went wrong"
-      description={message ?? 'An unexpected error occurred. Your data is safe.'}
-      action={onRetry && <Button onClick={onRetry}>Try again</Button>}
+      title={t.errors.title}
+      description={message ?? t.errors.description}
+      action={onRetry && <Button onClick={onRetry}>{t.common.tryAgain}</Button>}
     />
   )
 }

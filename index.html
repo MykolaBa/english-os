@@ -20,7 +20,10 @@
       // Apply the saved theme before first paint to avoid a flash of the wrong theme.
       try {
         const saved = JSON.parse(localStorage.getItem('englishos:settings') || '{}')
-        if (saved.state && saved.state.theme) document.documentElement.dataset.theme = saved.state.theme
+        if (saved.state && saved.state.theme)
+          document.documentElement.dataset.theme = saved.state.theme
+        if (saved.state && saved.state.uiLanguage)
+          document.documentElement.lang = saved.state.uiLanguage
       } catch {}
     </script>
   </head>

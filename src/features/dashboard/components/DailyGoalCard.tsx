@@ -1,59 +1,70 @@
 import { ArrowRight, Plus, Repeat } from 'lucide-react'
 import { ButtonLink, Card, ProgressRing } from '@/components/ui'
+import { useT } from '@/i18n'
 import styles from '../Dashboard.module.scss'
 
 interface DailyGoalCardProps {
   todayXp: number
   goal: number
   dueCount: number
+  newWords: number
   totalWords: number
 }
 
-export function DailyGoalCard({ todayXp, goal, dueCount, totalWords }: DailyGoalCardProps) {
-  const progress = goal > 0 ? todayXp / goal : 0
+export function DailyGoalCard({
+  todayXp,
+  goal,
+  dueCount,
+  newWords,
+  totalWords,
+}: DailyGoalCardProps) {
+  const t = useT().dashboard.goal
   const reached = todayXp >= goal
 
-  const headline =
+  const [headline, sub] =
     totalWords === 0
-      ? 'Let’s build your vocabulary'
+      ? [t.emptyTitle, t.emptyText]
       : reached
-        ? 'Daily goal reached'
-        : dueCount > 0
-          ? `${dueCount} ${dueCount === 1 ? 'word is' : 'words are'} waiting for review`
-          : 'Keep the momentum going'
-
-  const sub =
-    totalWords === 0
-      ? 'Add a few words you want to remember. EnglishOS will schedule reviews so they stick.'
-      : reached
-        ? 'Great consistency. Anything extra today is a bonus — don’t burn out.'
-        : `Earn ${goal - todayXp} more XP today. One review session is usually enough.`
+        ? [t.reachedTitle, t.reachedText]
+        : [
+            dueCount > 0
+              ? t.dueTitle(dueCount)
+              : newWords > 0
+                ? t.newTitle(newWords)
+                : t.keepGoingTitle,
+            t.remainingText(goal - todayXp),
+          ]
 
   return (
     <Card className={styles.goalCard} padding="lg">
       <div className={styles.goalGlow} aria-hidden />
-      <ProgressRing value={progress} label="Daily goal progress" size={132} stroke={11}>
+      <ProgressRing
+        value={goal > 0 ? todayXp / goal : 0}
+        label={t.ringLabel}
+        size={132}
+        stroke={11}
+      >
         <div>
           <div className={styles.ringValue}>{todayXp}</div>
-          <div className={styles.ringLabel}>of {goal} XP</div>
+          <div className={styles.ringLabel}>{t.ofXp(goal)}</div>
         </div>
       </ProgressRing>
       <div className={styles.goalText}>
-        <p className={styles.kicker}>Today’s goal</p>
+        <p className={styles.kicker}>{t.kicker}</p>
         <h2 className={styles.goalHeadline}>{headline}</h2>
         <p className={styles.goalSub}>{sub}</p>
         <div className={styles.goalActions}>
           {totalWords === 0 ? (
             <ButtonLink to="/vocabulary" variant="primary" size="lg" icon={<Plus />}>
-              Add words
+              {t.addWords}
             </ButtonLink>
           ) : (
             <ButtonLink to="/review" variant="primary" size="lg" icon={<Repeat />}>
-              {dueCount > 0 ? 'Start review' : 'Practice'}
+              {dueCount > 0 ? t.startReview : t.practice}
             </ButtonLink>
           )}
           <ButtonLink to="/grammar" variant="ghost" size="lg">
-            Grammar <ArrowRight />
+            {t.grammar} <ArrowRight />
           </ButtonLink>
         </div>
       </div>

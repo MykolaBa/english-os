@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 import type { CefrLevel } from '@/lib/db/types'
 
 export type ThemePreference = 'dark' | 'light' | 'system'
+export type UiLanguage = 'en' | 'uk'
 
 export interface Settings {
   displayName: string
@@ -11,6 +12,8 @@ export interface Settings {
   /** Daily XP goal. ~1 XP per reviewed card, more for lessons/quizzes. */
   dailyXpGoal: number
   theme: ThemePreference
+  /** Interface language. Learning content stays English regardless. */
+  uiLanguage: UiLanguage
   showTranslations: boolean
   /** Speak words aloud automatically on flashcards (Web Speech API). */
   autoPronounce: boolean
@@ -22,6 +25,7 @@ export const DEFAULT_SETTINGS: Settings = {
   targetLevel: 'B2',
   dailyXpGoal: 50,
   theme: 'dark',
+  uiLanguage: 'en',
   showTranslations: true,
   autoPronounce: false,
 }

@@ -1,24 +1,26 @@
 import { BookOpen, BrainCircuit, Code, Repeat, Zap } from 'lucide-react'
 import { Link } from 'react-router'
 import { Card, CardHeader } from '@/components/ui'
+import { useT } from '@/i18n'
 import styles from '../Dashboard.module.scss'
 
 const ACTIONS = [
-  { to: '/vocabulary', label: 'Add a word', icon: BookOpen },
-  { to: '/review', label: 'Review cards', icon: Repeat },
-  { to: '/grammar', label: 'Grammar lesson', icon: BrainCircuit },
-  { to: '/it-english', label: 'IT interview', icon: Code },
-]
+  { to: '/vocabulary?add=1', key: 'addWord', icon: BookOpen },
+  { to: '/review', key: 'review', icon: Repeat },
+  { to: '/grammar', key: 'grammar', icon: BrainCircuit },
+  { to: '/it-english', key: 'interview', icon: Code },
+] as const
 
 export function QuickActions() {
+  const t = useT().dashboard.quick
   return (
     <Card>
-      <CardHeader icon={<Zap />} title="Quick actions" />
+      <CardHeader icon={<Zap />} title={t.title} />
       <div className={styles.quick}>
-        {ACTIONS.map(({ to, label, icon: Icon }) => (
-          <Link key={to} to={to} className={styles.quickItem}>
+        {ACTIONS.map(({ to, key, icon: Icon }) => (
+          <Link key={key} to={to} className={styles.quickItem}>
             <Icon aria-hidden />
-            <span>{label}</span>
+            <span>{t[key]}</span>
           </Link>
         ))}
       </div>

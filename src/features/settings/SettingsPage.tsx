@@ -12,6 +12,7 @@ import {
   Switch,
   TextField,
 } from '@/components/ui'
+import { useT } from '@/i18n'
 import { CEFR_LEVELS, type CefrLevel } from '@/lib/db/types'
 import {
   formatBytes,
@@ -19,18 +20,17 @@ import {
   requestPersistentStorage,
   type StorageInfo,
 } from '@/lib/storage/persistence'
-import { useSettings, type ThemePreference } from '@/stores/settingsStore'
+import { useSettings, type ThemePreference, type UiLanguage } from '@/stores/settingsStore'
 import { toast } from '@/stores/toastStore'
 import styles from './Settings.module.scss'
 
 const LEVEL_OPTIONS = CEFR_LEVELS.map((l) => ({ value: l, label: l }))
-const GOAL_OPTIONS = [20, 30, 50, 80, 120].map((xp) => ({
-  value: String(xp),
-  label: `${xp} XP${xp === 20 ? ' · light' : xp === 50 ? ' · regular' : xp === 120 ? ' · intense' : ''}`,
-}))
+const GOALS = [20, 30, 50, 80, 120]
 
 export default function SettingsPage() {
   const settings = useSettings()
+  const t = useT()
+  const s = t.settings
   const [storage, setStorage] = useState<StorageInfo | null>(null)
   const [confirmReset, setConfirmReset] = useState(false)
 
@@ -41,38 +41,72 @@ export default function SettingsPage() {
   const askPersistence = async () => {
     const granted = await requestPersistentStorage()
     setStorage(await getStorageInfo())
-    if (granted) toast.success('Persistent storage enabled')
-    else
-      toast.info(
-        'Browser declined',
-        'Install the app or use it more often — browsers grant this to trusted sites.',
-      )
+    if (granted) toast.success(s.protectedToast)
+    else toast.info(s.declinedToast, s.declinedText)
   }
 
   return (
     <>
-      <PageHeader title="Settings" description="Preferences are stored on this device." />
+      <PageHeader title={s.title} description={s.subtitle} />
 
       <div className={styles.grid}>
         <Card>
-          <CardHeader icon={<User />} title="Profile" />
+          <CardHeader icon={<Palette />} title={s.appearance} />
+          <div className={styles.fields}>
+            <Segmented<UiLanguage>
+              label={s.language}
+              value={settings.uiLanguage}
+              onChange={(uiLanguage) => settings.update({ uiLanguage })}
+              options={[
+                { value: 'en', label: 'English' },
+                { value: 'uk', label: 'Українська' },
+              ]}
+            />
+            <p className={styles.hint}>{s.languageHint}</p>
+            <Segmented<ThemePreference>
+              label={s.theme}
+              value={settings.theme}
+              onChange={(theme) => settings.update({ theme })}
+              options={[
+                { value: 'dark', label: s.themeDark, icon: <Moon /> },
+                { value: 'light', label: s.themeLight, icon: <Sun /> },
+                { value: 'system', label: s.themeSystem, icon: <Monitor /> },
+              ]}
+            />
+            <Switch
+              label={s.showTranslations}
+              description={s.showTranslationsHint}
+              checked={settings.showTranslations}
+              onChange={(showTranslations) => settings.update({ showTranslations })}
+            />
+            <Switch
+              label={s.autoPronounce}
+              description={s.autoPronounceHint}
+              checked={settings.autoPronounce}
+              onChange={(autoPronounce) => settings.update({ autoPronounce })}
+            />
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader icon={<User />} title={s.profile} />
           <div className={styles.fields}>
             <TextField
-              label="Your name"
-              placeholder="How should we greet you?"
+              label={s.name}
+              placeholder={s.namePlaceholder}
               value={settings.displayName}
               maxLength={40}
               onChange={(e) => settings.update({ displayName: e.target.value })}
             />
             <div className={styles.row}>
               <SelectField
-                label="Current level"
+                label={s.currentLevel}
                 options={LEVEL_OPTIONS}
                 value={settings.currentLevel}
                 onChange={(e) => settings.update({ currentLevel: e.target.value as CefrLevel })}
               />
               <SelectField
-                label="Target level"
+                label={s.targetLevel}
                 options={LEVEL_OPTIONS}
                 value={settings.targetLevel}
                 onChange={(e) => settings.update({ targetLevel: e.target.value as CefrLevel })}
@@ -82,92 +116,54 @@ export default function SettingsPage() {
         </Card>
 
         <Card>
-          <CardHeader
-            icon={<Target />}
-            title="Daily goal"
-            description="A goal you can keep on a busy day works best."
+          <CardHeader icon={<Target />} title={s.goalTitle} description={s.goalDescription} />
+          <SelectField
+            label={s.goalLabel}
+            hint={s.goalHint}
+            options={GOALS.map((xp) => ({ value: String(xp), label: s.goalOption(xp) }))}
+            value={String(settings.dailyXpGoal)}
+            onChange={(e) => settings.update({ dailyXpGoal: Number(e.target.value) })}
           />
-          <div className={styles.fields}>
-            <SelectField
-              label="Daily XP goal"
-              hint="≈1 XP per reviewed card; lessons and quizzes give more."
-              options={GOAL_OPTIONS}
-              value={String(settings.dailyXpGoal)}
-              onChange={(e) => settings.update({ dailyXpGoal: Number(e.target.value) })}
-            />
-          </div>
         </Card>
 
         <Card>
-          <CardHeader icon={<Palette />} title="Appearance & learning" />
-          <div className={styles.fields}>
-            <Segmented<ThemePreference>
-              label="Theme"
-              value={settings.theme}
-              onChange={(theme) => settings.update({ theme })}
-              options={[
-                { value: 'dark', label: 'Dark', icon: <Moon /> },
-                { value: 'light', label: 'Light', icon: <Sun /> },
-                { value: 'system', label: 'System', icon: <Monitor /> },
-              ]}
-            />
-            <Switch
-              label="Show Ukrainian translations"
-              description="Translations and explanations in learning content."
-              checked={settings.showTranslations}
-              onChange={(showTranslations) => settings.update({ showTranslations })}
-            />
-            <Switch
-              label="Pronounce words automatically"
-              description="Uses your device’s built-in voice on flashcards."
-              checked={settings.autoPronounce}
-              onChange={(autoPronounce) => settings.update({ autoPronounce })}
-            />
-          </div>
-        </Card>
-
-        <Card>
-          <CardHeader
-            icon={<Database />}
-            title="Data & storage"
-            description="All learning data stays in this browser."
-          />
+          <CardHeader icon={<Database />} title={s.data} description={s.dataDescription} />
           <dl className={styles.facts}>
             <div>
-              <dt>Persistent storage</dt>
+              <dt>{s.persistent}</dt>
               <dd>
                 {storage?.persisted ? (
-                  <Badge tone="success">Protected</Badge>
+                  <Badge tone="success">{s.protected}</Badge>
                 ) : (
                   <Button size="sm" onClick={askPersistence}>
-                    Protect my data
+                    {s.protect}
                   </Button>
                 )}
               </dd>
             </div>
             <div>
-              <dt>Used</dt>
+              <dt>{s.used}</dt>
               <dd>{storage?.usageBytes !== undefined ? formatBytes(storage.usageBytes) : '—'}</dd>
             </div>
           </dl>
-          <p className={styles.note}>Backup, restore and CSV import/export arrive in phase 4.</p>
+          <p className={styles.note}>{s.backupSoon}</p>
         </Card>
 
         <Card>
-          <CardHeader icon={<Info />} title="About" />
+          <CardHeader icon={<Info />} title={s.about} />
           <dl className={styles.facts}>
             <div>
-              <dt>Version</dt>
+              <dt>{s.version}</dt>
               <dd>{__APP_VERSION__}</dd>
             </div>
             <div>
-              <dt>Mode</dt>
-              <dd>Local-first · no account · no tracking</dd>
+              <dt>{s.mode}</dt>
+              <dd>{s.modeValue}</dd>
             </div>
           </dl>
           <div className={styles.resetRow}>
             <Button variant="ghost" size="sm" onClick={() => setConfirmReset(true)}>
-              Reset preferences
+              {s.reset}
             </Button>
           </div>
         </Card>
@@ -175,15 +171,15 @@ export default function SettingsPage() {
 
       <ConfirmDialog
         open={confirmReset}
-        title="Reset preferences?"
-        description="Name, level, goal and theme return to defaults. Your words and progress are not affected."
-        confirmLabel="Reset"
+        title={s.resetTitle}
+        description={s.resetText}
+        confirmLabel={s.resetConfirm}
         danger
         onCancel={() => setConfirmReset(false)}
         onConfirm={() => {
           settings.reset()
           setConfirmReset(false)
-          toast.success('Preferences reset')
+          toast.success(t.settings.resetDone)
         }}
       />
     </>

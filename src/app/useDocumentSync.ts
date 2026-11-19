@@ -1,9 +1,14 @@
 import { useEffect } from 'react'
 import { useSettings } from '@/stores/settingsStore'
 
-/** Mirrors the theme preference onto <html data-theme> where the CSS tokens pick it up. */
-export function useThemeSync() {
+/**
+ * Mirrors preferences onto <html>: `data-theme` for the CSS tokens and `lang` for
+ * screen readers, hyphenation and the browser's built-in translation prompt.
+ */
+export function useDocumentSync() {
   const theme = useSettings((s) => s.theme)
+  const language = useSettings((s) => s.uiLanguage)
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     const isLight =
@@ -13,4 +18,8 @@ export function useThemeSync() {
       .querySelector('meta[name="theme-color"]')
       ?.setAttribute('content', isLight ? '#f6f7fb' : '#0b0d12')
   }, [theme])
+
+  useEffect(() => {
+    document.documentElement.lang = language
+  }, [language])
 }

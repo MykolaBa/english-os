@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Badge, PageHeader, Skeleton } from '@/components/ui'
+import { useT } from '@/i18n'
 import { useSettings } from '@/stores/settingsStore'
 import { DailyGoalCard } from './components/DailyGoalCard'
 import { LevelJourney } from './components/LevelJourney'
@@ -15,28 +16,25 @@ import styles from './Dashboard.module.scss'
 
 export default function DashboardPage() {
   const data = useDashboardData()
+  const t = useT()
   const { displayName, currentLevel, targetLevel, dailyXpGoal } = useSettings()
 
   // Captured once per visit so the header doesn't change on every re-render.
   const [now] = useState(() => new Date())
-  const date = now.toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  })
-  const greeting = `${greetingFor(now)}${displayName ? `, ${displayName}` : ''}`
+  const date = now.toLocaleDateString(t.locale, { weekday: 'long', month: 'long', day: 'numeric' })
+  const greeting = `${t.dashboard.greeting[greetingFor(now)]}${displayName ? `, ${displayName}` : ''}`
 
   return (
     <>
       <PageHeader
         eyebrow={
           <>
-            {date}
+            <span className={styles.date}>{date}</span>
             <Badge tone="accent">{currentLevel}</Badge>
           </>
         }
         title={greeting}
-        description="Small steps every day. Here’s where you are."
+        description={t.dashboard.subtitle}
       />
 
       {!data ? (
@@ -53,6 +51,7 @@ export default function DashboardPage() {
               todayXp={data.todayXp}
               goal={dailyXpGoal}
               dueCount={data.dueCount}
+              newWords={data.newWords}
               totalWords={data.totalWords}
             />
           </div>
@@ -66,6 +65,12 @@ export default function DashboardPage() {
               todayXp: data.todayXp,
               dailyXpGoal,
             })}
+            context={{
+              dueCount: data.dueCount,
+              newWords: data.newWords,
+              todayXp: data.todayXp,
+              dailyXpGoal,
+            }}
           />
           <WeeklyActivity week={data.week} goal={dailyXpGoal} />
           <RecentActivity events={data.recent} />

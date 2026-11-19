@@ -1,5 +1,6 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useId, useRef, type ReactNode } from 'react'
 import { X } from 'lucide-react'
+import { useT } from '@/i18n'
 import { Button } from './Button'
 import styles from './Dialog.module.scss'
 
@@ -27,6 +28,8 @@ export function Dialog({
   size = 'md',
 }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
+  const titleId = useId()
+  const t = useT()
 
   useEffect(() => {
     const dialog = ref.current
@@ -44,12 +47,12 @@ export function Dialog({
         // Click on the backdrop (the dialog element itself, outside the panel) closes it.
         if (e.target === e.currentTarget) onClose()
       }}
-      aria-labelledby="dialog-title"
+      aria-labelledby={titleId}
     >
       <div className={styles.panel}>
         <header className={styles.header}>
           <div>
-            <h2 id="dialog-title" className={styles.title}>
+            <h2 id={titleId} className={styles.title}>
               {title}
             </h2>
             {description && <p className={styles.description}>{description}</p>}
@@ -58,7 +61,7 @@ export function Dialog({
             variant="ghost"
             size="sm"
             iconOnly
-            aria-label="Close"
+            aria-label={t.common.close}
             icon={<X />}
             onClick={onClose}
           />
@@ -84,11 +87,12 @@ export function ConfirmDialog({
   open,
   title,
   description,
-  confirmLabel = 'Confirm',
+  confirmLabel,
   danger,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const t = useT()
   return (
     <Dialog
       open={open}
@@ -99,10 +103,10 @@ export function ConfirmDialog({
       footer={
         <>
           <Button variant="ghost" onClick={onCancel}>
-            Cancel
+            {t.common.cancel}
           </Button>
           <Button variant={danger ? 'danger' : 'primary'} onClick={onConfirm}>
-            {confirmLabel}
+            {confirmLabel ?? t.common.confirm}
           </Button>
         </>
       }

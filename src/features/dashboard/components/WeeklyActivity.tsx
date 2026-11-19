@@ -1,5 +1,6 @@
 import { ChartNoAxesColumn } from 'lucide-react'
 import { Card, CardHeader } from '@/components/ui'
+import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
 import { toDayKey, weekdayShort } from '@/lib/date'
 import type { DayActivity } from '../useDashboardData'
@@ -10,6 +11,7 @@ import styles from '../Dashboard.module.scss'
  * for 7 bars plain elements are simpler, lighter and fully accessible.
  */
 export function WeeklyActivity({ week, goal }: { week: DayActivity[]; goal: number }) {
+  const { locale, dashboard } = useT()
   const max = Math.max(goal, ...week.map((d) => d.xp))
   const total = week.reduce((s, d) => s + d.xp, 0)
   const activeDays = week.filter((d) => d.xp > 0).length
@@ -19,10 +21,10 @@ export function WeeklyActivity({ week, goal }: { week: DayActivity[]; goal: numb
     <Card>
       <CardHeader
         icon={<ChartNoAxesColumn />}
-        title="This week"
-        description={`${total} XP · ${activeDays}/7 active days`}
+        title={dashboard.week.title}
+        description={dashboard.week.summary(total, activeDays)}
       />
-      <ol className={styles.bars} aria-label="XP per day, last 7 days">
+      <ol className={styles.bars} aria-label={dashboard.week.chartLabel}>
         {week.map((d) => (
           <li key={d.day} className={styles.barCol}>
             <div className={styles.barTrack}>
@@ -37,7 +39,7 @@ export function WeeklyActivity({ week, goal }: { week: DayActivity[]; goal: numb
               />
             </div>
             <span className={cx(styles.barLabel, d.day === today && styles.barToday)}>
-              {weekdayShort(d.day)}
+              {weekdayShort(d.day, locale)}
               <span className="visually-hidden">: {d.xp} XP</span>
             </span>
           </li>

@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router'
 import { Badge } from '@/components/ui'
+import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
 import { NAV_GROUPS } from '../navigation'
 import { Logo } from './Logo'
@@ -12,18 +13,19 @@ interface SidebarNavProps {
 }
 
 export function SidebarNav({ dueCount, onNavigate }: SidebarNavProps) {
+  const t = useT()
   return (
     <div className={styles.sidebar}>
       <div className={styles.brand}>
         <Logo />
       </div>
-      <nav className={styles.nav} aria-label="Main">
+      <nav className={styles.nav} aria-label={t.common.mainNav}>
         {NAV_GROUPS.map((group) => (
-          <div key={group.label} className={styles.group}>
-            <p className={styles.groupLabel}>{group.label}</p>
+          <div key={group.id} className={styles.group}>
+            <p className={styles.groupLabel}>{t.nav.groups[group.id]}</p>
             <ul>
-              {group.items.map(({ path, label, icon: Icon }) => (
-                <li key={path}>
+              {group.items.map(({ id, path, icon: Icon }) => (
+                <li key={id}>
                   <NavLink
                     to={path}
                     end={path === '/'}
@@ -31,8 +33,8 @@ export function SidebarNav({ dueCount, onNavigate }: SidebarNavProps) {
                     className={({ isActive }) => cx(styles.link, isActive && styles.active)}
                   >
                     <Icon className={styles.icon} aria-hidden />
-                    <span className={styles.label}>{label}</span>
-                    {path === '/review' && dueCount > 0 && (
+                    <span className={styles.label}>{t.nav.items[id].label}</span>
+                    {id === 'review' && dueCount > 0 && (
                       <Badge tone="accent" className={styles.count}>
                         {dueCount}
                       </Badge>

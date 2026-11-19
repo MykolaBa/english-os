@@ -15,13 +15,16 @@ import {
   Settings,
   type LucideIcon,
 } from 'lucide-react'
+import type { Dictionary } from '@/i18n'
+
+export type NavItemId = keyof Dictionary['nav']['items']
+export type NavGroupId = keyof Dictionary['nav']['groups']
 
 export interface NavItem {
+  /** Key into `t.nav.items` — label and summary come from the i18n dictionary. */
+  id: NavItemId
   path: string
-  label: string
   icon: LucideIcon
-  /** One-line purpose, used on placeholder pages and tooltips. */
-  summary: string
   /** Roadmap phase in which the module gets implemented (see docs/ROADMAP.md). */
   phase: number
   /** Shown in the mobile bottom bar. Keep it to 4 items. */
@@ -29,143 +32,49 @@ export interface NavItem {
 }
 
 export interface NavGroup {
-  label: string
+  id: NavGroupId
   items: NavItem[]
 }
 
 /** Single source of truth for sidebar, mobile nav and routes. */
 export const NAV_GROUPS: NavGroup[] = [
   {
-    label: 'Overview',
+    id: 'overview',
     items: [
-      {
-        path: '/',
-        label: 'Dashboard',
-        icon: LayoutDashboard,
-        summary: 'Your daily learning overview.',
-        phase: 1,
-        mobilePrimary: true,
-      },
-      {
-        path: '/planner',
-        label: 'Study Planner',
-        icon: CalendarCheck,
-        summary: 'Plan daily tasks and weekly goals.',
-        phase: 9,
-      },
-      {
-        path: '/statistics',
-        label: 'Statistics',
-        icon: ChartNoAxesColumn,
-        summary: 'Progress, retention and activity over time.',
-        phase: 6,
-      },
+      { id: 'dashboard', path: '/', icon: LayoutDashboard, phase: 1, mobilePrimary: true },
+      { id: 'planner', path: '/planner', icon: CalendarCheck, phase: 9 },
+      { id: 'statistics', path: '/statistics', icon: ChartNoAxesColumn, phase: 6 },
     ],
   },
   {
-    label: 'Learn',
+    id: 'learn',
     items: [
-      {
-        path: '/vocabulary',
-        label: 'Vocabulary',
-        icon: BookOpen,
-        summary: 'Your personal dictionary and collections.',
-        phase: 2,
-        mobilePrimary: true,
-      },
-      {
-        path: '/review',
-        label: 'Review',
-        icon: Repeat,
-        summary: 'Spaced-repetition flashcards for due words.',
-        phase: 3,
-        mobilePrimary: true,
-      },
-      {
-        path: '/grammar',
-        label: 'Grammar',
-        icon: BrainCircuit,
-        summary: 'Structured lessons from A2 to B2 with exercises.',
-        phase: 5,
-        mobilePrimary: true,
-      },
-      {
-        path: '/quizzes',
-        label: 'Quizzes',
-        icon: CircleHelp,
-        summary: 'Mixed vocabulary and grammar quizzes.',
-        phase: 6,
-      },
+      { id: 'vocabulary', path: '/vocabulary', icon: BookOpen, phase: 2, mobilePrimary: true },
+      { id: 'review', path: '/review', icon: Repeat, phase: 3, mobilePrimary: true },
+      { id: 'grammar', path: '/grammar', icon: BrainCircuit, phase: 5, mobilePrimary: true },
+      { id: 'quizzes', path: '/quizzes', icon: CircleHelp, phase: 6 },
     ],
   },
   {
-    label: 'Skills',
+    id: 'skills',
     items: [
-      {
-        path: '/reading',
-        label: 'Reading',
-        icon: BookOpenText,
-        summary: 'Graded texts — tap a word to save it.',
-        phase: 7,
-      },
-      {
-        path: '/listening',
-        label: 'Listening',
-        icon: Headphones,
-        summary: 'Audio with transcripts and questions.',
-        phase: 8,
-      },
-      {
-        path: '/speaking',
-        label: 'Speaking',
-        icon: Mic,
-        summary: 'Prompts, scenarios and self-recording.',
-        phase: 8,
-      },
-      {
-        path: '/writing',
-        label: 'Writing',
-        icon: PenLine,
-        summary: 'Journal, emails and essays with drafts.',
-        phase: 8,
-      },
+      { id: 'reading', path: '/reading', icon: BookOpenText, phase: 7 },
+      { id: 'listening', path: '/listening', icon: Headphones, phase: 8 },
+      { id: 'speaking', path: '/speaking', icon: Mic, phase: 8 },
+      { id: 'writing', path: '/writing', icon: PenLine, phase: 8 },
     ],
   },
   {
-    label: 'Career',
-    items: [
-      {
-        path: '/it-english',
-        label: 'IT English',
-        icon: Code,
-        summary: 'Tech vocabulary, questions and interview prep.',
-        phase: 7,
-      },
-    ],
+    id: 'career',
+    items: [{ id: 'itEnglish', path: '/it-english', icon: Code, phase: 7 }],
   },
   {
-    label: 'Personal',
+    id: 'personal',
     items: [
-      {
-        path: '/library',
-        label: 'Library',
-        icon: Library,
-        summary: 'Your notes, links and learning materials.',
-        phase: 9,
-      },
-      {
-        path: '/settings',
-        label: 'Settings',
-        icon: Settings,
-        summary: 'Preferences, goals and data backup.',
-        phase: 1,
-      },
+      { id: 'library', path: '/library', icon: Library, phase: 9 },
+      { id: 'settings', path: '/settings', icon: Settings, phase: 1 },
     ],
   },
 ]
 
 export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((g) => g.items)
-
-export function findNavItem(path: string): NavItem | undefined {
-  return NAV_ITEMS.find((item) => item.path === path)
-}

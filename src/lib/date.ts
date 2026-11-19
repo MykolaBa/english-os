@@ -41,18 +41,33 @@ export function lastDays(count: number, end: Date = new Date()): DayKey[] {
   return Array.from({ length: count }, (_, i) => toDayKey(addDays(end, i - count + 1)))
 }
 
-export function weekdayShort(key: DayKey): string {
-  return fromDayKey(key).toLocaleDateString('en-US', { weekday: 'short' })
+export function weekdayShort(key: DayKey, locale = 'en-US'): string {
+  return fromDayKey(key).toLocaleDateString(locale, { weekday: 'short' })
 }
 
-export function formatRelative(timestamp: number, now: number = Date.now()): string {
-  const diffSec = Math.round((now - timestamp) / 1000)
-  if (diffSec < 60) return 'just now'
+/** "5 min ago" / "5 хв тому" — localized by the browser's Intl API. */
+export function formatRelative(
+  timestamp: number,
+  locale = 'en-US',
+  justNow = 'just now',
+  now: number = Date.now(),
+): string {
+  const diffSec = Math.round((timestamp - now) / 1000)
+  if (Math.abs(diffSec) < 60) return justNow
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto', style: 'short' })
   const diffMin = Math.round(diffSec / 60)
-  if (diffMin < 60) return `${diffMin}m ago`
+  if (Math.abs(diffMin) < 60) return rtf.format(diffMin, 'minute')
   const diffH = Math.round(diffMin / 60)
-  if (diffH < 24) return `${diffH}h ago`
+  if (Math.abs(diffH) < 24) return rtf.format(diffH, 'hour')
   const diffD = Math.round(diffH / 24)
-  if (diffD < 7) return `${diffD}d ago`
-  return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  if (Math.abs(diffD) < 7) return rtf.format(diffD, 'day')
+  return new Date(timestamp).toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+}
+
+export function formatDate(timestamp: number, locale = 'en-US'): string {
+  return new Date(timestamp).toLocaleDateString(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
 }

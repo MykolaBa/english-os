@@ -17,6 +17,7 @@ export interface DayActivity {
 
 export interface DashboardData {
   totalWords: number
+  newWords: number
   masteredWords: number
   dueCount: number
   todayXp: number
@@ -27,18 +28,31 @@ export interface DashboardData {
   recent: ActivityEvent[]
 }
 
+/**
+ * Words already in the review cycle whose time has come. Brand-new words are not "due" —
+ * they're introduced gradually by the review session (phase 3).
+ */
+function countDue(now = Date.now()): Promise<number> {
+  return db.words
+    .where('srs.dueAt')
+    .belowOrEqual(now)
+    .filter((w) => w.srs.status !== 'new')
+    .count()
+}
+
 async function loadDashboard(): Promise<DashboardData> {
-  const now = Date.now()
   const weekStart = startOfDay(addDays(new Date(), -6)).getTime()
 
-  const [totalWords, masteredWords, dueCount, weekEvents, activeDays, recent] = await Promise.all([
-    db.words.count(),
-    db.words.where('srs.status').equals('mastered').count(),
-    db.words.where('srs.dueAt').belowOrEqual(now).count(),
-    getActivitySince(weekStart),
-    getActiveDays(),
-    getRecentActivity(6),
-  ])
+  const [totalWords, newWords, masteredWords, dueCount, weekEvents, activeDays, recent] =
+    await Promise.all([
+      db.words.count(),
+      db.words.where('srs.status').equals('new').count(),
+      db.words.where('srs.status').equals('mastered').count(),
+      countDue(),
+      getActivitySince(weekStart),
+      getActiveDays(),
+      getRecentActivity(6),
+    ])
 
   const xpByDay = new Map<DayKey, number>()
   for (const e of weekEvents) xpByDay.set(e.day, (xpByDay.get(e.day) ?? 0) + e.xp)
@@ -46,6 +60,7 @@ async function loadDashboard(): Promise<DashboardData> {
 
   return {
     totalWords,
+    newWords,
     masteredWords,
     dueCount,
     todayXp: sumXp(weekEvents.filter((e) => e.day === today)),
@@ -63,5 +78,5 @@ export function useDashboardData(): DashboardData | undefined {
 }
 
 export function useDueCount(): number {
-  return useLiveQuery(() => db.words.where('srs.dueAt').belowOrEqual(Date.now()).count(), []) ?? 0
+  return useLiveQuery(() => countDue(), []) ?? 0
 }

@@ -1,7 +1,9 @@
-export function greetingFor(date: Date = new Date()): string {
+export type GreetingKey = 'night' | 'morning' | 'afternoon' | 'evening'
+
+export function greetingFor(date: Date = new Date()): GreetingKey {
   const h = date.getHours()
-  if (h < 5) return 'Good night'
-  if (h < 12) return 'Good morning'
-  if (h < 18) return 'Good afternoon'
-  return 'Good evening'
+  if (h < 5) return 'night'
+  if (h < 12) return 'morning'
+  if (h < 18) return 'afternoon'
+  return 'evening'
 }

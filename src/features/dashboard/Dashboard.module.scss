@@ -459,3 +459,11 @@
     border-color: var(--border-strong);
   }
 }
+
+// Weekday names are lowercase in Ukrainian ("четвер, 19 листопада").
+.date {
+  display: inline-block;
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}

@@ -1,6 +1,7 @@
 import { Mountain } from 'lucide-react'
 import { Link } from 'react-router'
 import { Card, CardHeader } from '@/components/ui'
+import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
 import type { CefrLevel } from '@/lib/db/types'
 import styles from '../Dashboard.module.scss'
@@ -8,6 +9,8 @@ import styles from '../Dashboard.module.scss'
 const JOURNEY: CefrLevel[] = ['A1', 'A2', 'B1', 'B2', 'C1']
 
 export function LevelJourney({ current, target }: { current: CefrLevel; target: CefrLevel }) {
+  const { dashboard, common } = useT()
+  const t = dashboard.journey
   const currentIdx = JOURNEY.indexOf(current)
   const targetIdx = JOURNEY.indexOf(target)
 
@@ -15,11 +18,11 @@ export function LevelJourney({ current, target }: { current: CefrLevel; target: 
     <Card>
       <CardHeader
         icon={<Mountain />}
-        title="Level journey"
+        title={t.title}
         description={`${current} → ${target}`}
         action={
           <Link to="/settings" className={styles.subtleLink}>
-            Edit
+            {common.edit}
           </Link>
         }
       />
@@ -37,7 +40,7 @@ export function LevelJourney({ current, target }: { current: CefrLevel; target: 
           >
             <span className={styles.journeyDot}>{level}</span>
             <span className={styles.journeyCaption}>
-              {i === currentIdx ? 'You' : i === targetIdx ? 'Goal' : ''}
+              {i === currentIdx ? t.you : i === targetIdx ? t.goal : ''}
             </span>
           </li>
         ))}

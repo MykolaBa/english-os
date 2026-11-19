@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router'
 import { X } from 'lucide-react'
 import { Button, ErrorBoundary, PageLoader } from '@/components/ui'
 import { useDueCount } from '@/features/dashboard/useDashboardData'
+import { useT } from '@/i18n'
 import { BottomNav } from './BottomNav'
 import { Logo } from './Logo'
 import { SidebarNav } from './SidebarNav'
@@ -12,6 +13,7 @@ export function AppLayout() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { pathname } = useLocation()
   const dueCount = useDueCount()
+  const t = useT()
 
   // New page → start at the top (the drawer closes itself via onNavigate).
   useEffect(() => {
@@ -28,7 +30,7 @@ export function AppLayout() {
   return (
     <div className={styles.shell}>
       <a href="#main" className={styles.skipLink}>
-        Skip to content
+        {t.common.skipToContent}
       </a>
 
       <aside className={styles.sidebar}>
@@ -42,13 +44,13 @@ export function AppLayout() {
       {menuOpen && (
         <div className={styles.drawerRoot}>
           <div className={styles.backdrop} onClick={() => setMenuOpen(false)} aria-hidden />
-          <aside className={styles.drawer} aria-label="Menu">
+          <aside className={styles.drawer} aria-label={t.common.menu}>
             <Button
               className={styles.drawerClose}
               variant="ghost"
               size="sm"
               iconOnly
-              aria-label="Close menu"
+              aria-label={t.common.closeMenu}
               icon={<X />}
               onClick={() => setMenuOpen(false)}
             />
