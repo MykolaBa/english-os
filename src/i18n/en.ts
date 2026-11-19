@@ -293,7 +293,8 @@ export const en = {
       notScheduled: 'Not started yet',
       dueNow: 'Due now',
       reviews: 'Reviews',
-      accuracy: 'Accuracy',
+      correctAnswers: 'Correct answers',
+      correctOf: (correct: number, total: number) => `${correct} of ${total}`,
       added: 'Added',
       starter: 'Starter word',
       deleteTitle: (term: string) => `Delete “${term}”?`,
@@ -324,9 +325,18 @@ export const en = {
       addWords: 'Add words',
       mode: 'Mode',
       modes: {
-        flashcards: 'English → Ukrainian',
-        reverse: 'Ukrainian → English',
-        typing: 'Type the word',
+        flashcards: {
+          title: 'Flashcards: English to Ukrainian',
+          hint: 'You see the English word and recall what it means.',
+        },
+        reverse: {
+          title: 'Flashcards: Ukrainian to English',
+          hint: 'You see the translation and recall the English word.',
+        },
+        typing: {
+          title: 'Type the word',
+          hint: 'You see the translation and type the English word. New words are shown as a card first.',
+        },
       },
       collection: 'Words from',
       allWords: 'All collections',
@@ -336,7 +346,8 @@ export const en = {
         newToday: 'New today',
         newLeft: (left: number, limit: number) => `${left} of ${limit} left`,
         reviewed: 'Reviewed today',
-        accuracy: (pct: number | null) => (pct === null ? 'No answers yet' : `${pct}% correct`),
+        correct: (correct: number, total: number) =>
+          total === 0 ? 'No answers yet' : `${correct} of ${total} correct`,
       },
       forecastTitle: 'Coming up',
       forecastDescription: 'Words due over the next 7 days',

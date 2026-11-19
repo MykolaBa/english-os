@@ -76,6 +76,9 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 ## Conventions
 - Components ≤ ~150 lines; split widgets into `components/`. Named exports except lazy pages.
 - Dialogs: mark the first field with `data-autofocus` (not `autoFocus`).
+- Never use a native `<select>` (its open list is drawn by the OS): use `Select` /
+  `SelectField` from the UI kit (`variant="pill"` for toolbar filters). For a few options that
+  need explaining, prefer a radio list with a one-line hint per option (see `ModePicker`).
 - Empty, loading and error states for every data view. Confirm destructive actions
   (`ConfirmDialog`), report results with `toast`.
 - Ukrainian translations must be accurate; prefer fewer, high-quality content items.

@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react'
-import { CalendarClock, Play, Plus, Sparkles } from 'lucide-react'
-import { Button, ButtonLink, Card, CardHeader, EmptyState, Segmented } from '@/components/ui'
+import { CalendarClock, Layers, Play, Plus, Sparkles } from 'lucide-react'
+import { Button, ButtonLink, Card, CardHeader, EmptyState, SelectField } from '@/components/ui'
 import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
 import { formatDue, weekdayShort } from '@/lib/date'
 import type { Word } from '@/lib/db/types'
 import { useSettings, type ReviewMode } from '@/stores/settingsStore'
+import { CollectionIcon } from '@/features/vocabulary/components/CollectionIcon'
 import { useCollections } from '@/features/vocabulary/hooks'
+import { ModePicker } from './ModePicker'
 import type { ReviewData } from '../hooks'
 import { buildQueue, estimateMinutes, forecast, isDue } from '../queue'
 import { countIntroduced } from '../reviewRepo'
@@ -41,7 +43,6 @@ export function ReviewOverview({ data, onStart }: ReviewOverviewProps) {
   const overdue = data.words.filter((w) => isDue(w, now) && w.srs.dueAt < now - 86_400_000).length
   const answeredToday = data.todayLogs.length
   const correctToday = data.todayLogs.filter((l) => l.rating !== 'again').length
-  const accuracy = answeredToday ? Math.round((correctToday / answeredToday) * 100) : null
   const days = forecast(data.words, now)
   const maxDay = Math.max(1, ...days.map((d) => d.count))
   const nextDue = data.words
@@ -88,30 +89,20 @@ export function ReviewOverview({ data, onStart }: ReviewOverviewProps) {
         )}
 
         <div className={styles.startOptions}>
-          <Segmented<ReviewMode>
-            label={o.mode}
-            value={mode}
-            onChange={(reviewMode) => update({ reviewMode })}
+          <ModePicker value={mode} onChange={(reviewMode) => update({ reviewMode })} />
+          <SelectField<string>
+            label={o.collection}
+            value={collectionId ?? ''}
+            onChange={(id) => setCollectionId(id || null)}
             options={[
-              { value: 'flashcards', label: o.modes.flashcards },
-              { value: 'reverse', label: o.modes.reverse },
-              { value: 'typing', label: o.modes.typing },
+              { value: '', label: o.allWords, icon: <Layers /> },
+              ...(collections ?? []).map((c) => ({
+                value: c.id,
+                label: c.name,
+                icon: <CollectionIcon name={c.icon} />,
+              })),
             ]}
           />
-          <label className={styles.collectionPick}>
-            <span>{o.collection}</span>
-            <select
-              value={collectionId ?? ''}
-              onChange={(e) => setCollectionId(e.target.value || null)}
-            >
-              <option value="">{o.allWords}</option>
-              {collections?.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </label>
         </div>
 
         <div className={styles.startActions}>
@@ -157,7 +148,7 @@ export function ReviewOverview({ data, onStart }: ReviewOverviewProps) {
           <dt>{o.stats.reviewed}</dt>
           <dd>
             {answeredToday}
-            <small>{o.stats.accuracy(accuracy)}</small>
+            <small>{o.stats.correct(correctToday, answeredToday)}</small>
           </dd>
         </div>
       </dl>

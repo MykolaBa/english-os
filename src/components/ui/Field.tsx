@@ -3,10 +3,10 @@ import {
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
-  type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react'
 import { cx } from '@/lib/cx'
+import { Select, type SelectOption } from './Select'
 import styles from './Field.module.scss'
 
 interface FieldShellProps {
@@ -20,7 +20,7 @@ interface FieldShellProps {
 function FieldShell({ label, hint, error, id, children }: FieldShellProps) {
   return (
     <div className={styles.field}>
-      <label htmlFor={id} className={styles.label}>
+      <label htmlFor={id} id={`${id}-label`} className={styles.label}>
         {label}
       </label>
       {children}
@@ -61,24 +61,22 @@ export function TextField({ label, hint, error, className, id, ...rest }: TextFi
   )
 }
 
-interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface SelectFieldProps<T extends string> {
   label: string
   hint?: ReactNode
-  options: ReadonlyArray<{ value: string; label: string }>
+  value: T
+  options: ReadonlyArray<SelectOption<T>>
+  onChange: (value: T) => void
+  id?: string
 }
 
-export function SelectField({ label, hint, options, className, id, ...rest }: SelectFieldProps) {
+/** Labelled `Select` with the same layout as the other form fields. */
+export function SelectField<T extends string>({ label, hint, id, ...rest }: SelectFieldProps<T>) {
   const autoId = useId()
   const fieldId = id ?? autoId
   return (
     <FieldShell label={label} hint={hint} id={fieldId}>
-      <select id={fieldId} className={cx(styles.control, styles.select, className)} {...rest}>
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+      <Select id={fieldId} labelId={`${fieldId}-label`} {...rest} />
     </FieldShell>
   )
 }

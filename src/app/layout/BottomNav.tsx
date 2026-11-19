@@ -16,7 +16,7 @@ interface BottomNavProps {
 export function BottomNav({ dueCount, onOpenMenu }: BottomNavProps) {
   const t = useT()
   return (
-    <nav className={styles.bar} aria-label={t.common.quickNav}>
+    <nav className={styles.bar} aria-label={t.common.quickNav} data-bottom-nav>
       {PRIMARY.map(({ id, path, icon: Icon }) => (
         <NavLink
           key={id}

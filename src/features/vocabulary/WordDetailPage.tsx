@@ -21,7 +21,6 @@ import { CollectionIcon } from './components/CollectionIcon'
 import { StatusBadge } from './components/StatusBadge'
 import { WordFormDialog } from './components/WordFormDialog'
 import { useCollections, useWord } from './hooks'
-import { accuracy } from './model'
 import { deleteWord, toggleFavorite } from './wordsRepo'
 import styles from './Vocabulary.module.scss'
 
@@ -87,7 +86,6 @@ export default function WordDetailPage() {
   }
 
   const wordCollections = (collections ?? []).filter((c) => word.collectionIds.includes(c.id))
-  const acc = accuracy(word.srs)
   const started = word.srs.status !== 'new'
 
   return (
@@ -215,8 +213,15 @@ export default function WordDetailPage() {
                 <dd>{word.srs.reps}</dd>
               </div>
               <div>
-                <dt>{d.accuracy}</dt>
-                <dd>{acc === null ? '—' : `${Math.round(acc * 100)}%`}</dd>
+                <dt>{d.correctAnswers}</dt>
+                <dd>
+                  {word.srs.correctCount + word.srs.incorrectCount === 0
+                    ? '—'
+                    : d.correctOf(
+                        word.srs.correctCount,
+                        word.srs.correctCount + word.srs.incorrectCount,
+                      )}
+                </dd>
               </div>
               <div>
                 <dt>{d.added}</dt>

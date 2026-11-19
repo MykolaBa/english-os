@@ -1,37 +1,20 @@
 import { Search, Star, X } from 'lucide-react'
-import type { ReactNode } from 'react'
-import { Button, Chip } from '@/components/ui'
+import { Button, Chip, Select } from '@/components/ui'
 import { useT } from '@/i18n'
-import { CEFR_LEVELS } from '@/lib/db/types'
-import { parseOneOf } from '@/lib/guards'
-import { hasActiveFilters, WORD_SORTS, WORD_STATUSES, type WordFilters } from '../filters'
+import { CEFR_LEVELS, type CefrLevel, type WordStatus } from '@/lib/db/types'
+import {
+  hasActiveFilters,
+  WORD_SORTS,
+  WORD_STATUSES,
+  type WordFilters,
+  type WordSort,
+} from '../filters'
 import styles from '../Vocabulary.module.scss'
 
 interface ToolbarProps {
   filters: WordFilters
   onChange: (patch: Partial<WordFilters>) => void
   onClear: () => void
-}
-
-function CompactSelect({
-  label,
-  value,
-  onChange,
-  children,
-}: {
-  label: string
-  value: string
-  onChange: (value: string) => void
-  children: ReactNode
-}) {
-  return (
-    <label className={styles.compactSelect}>
-      <span className="visually-hidden">{label}</span>
-      <select value={value} onChange={(e) => onChange(e.target.value)}>
-        {children}
-      </select>
-    </label>
-  )
 }
 
 export function VocabularyToolbar({ filters, onChange, onClear }: ToolbarProps) {
@@ -51,41 +34,33 @@ export function VocabularyToolbar({ filters, onChange, onClear }: ToolbarProps) 
         />
       </label>
       <div className={styles.filterRow}>
-        <CompactSelect
-          label={v.filters.status}
+        <Select<WordStatus | ''>
+          variant="pill"
+          aria-label={v.filters.status}
           value={filters.status ?? ''}
-          onChange={(value) => onChange({ status: parseOneOf(WORD_STATUSES, value) })}
-        >
-          <option value="">{v.filters.anyStatus}</option>
-          {WORD_STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {t.status[s]}
-            </option>
-          ))}
-        </CompactSelect>
-        <CompactSelect
-          label={v.filters.level}
+          onChange={(status) => onChange({ status: status || null })}
+          options={[
+            { value: '', label: v.filters.anyStatus },
+            ...WORD_STATUSES.map((s) => ({ value: s, label: t.status[s] })),
+          ]}
+        />
+        <Select<CefrLevel | ''>
+          variant="pill"
+          aria-label={v.filters.level}
           value={filters.level ?? ''}
-          onChange={(value) => onChange({ level: parseOneOf(CEFR_LEVELS, value) })}
-        >
-          <option value="">{v.filters.anyLevel}</option>
-          {CEFR_LEVELS.map((l) => (
-            <option key={l} value={l}>
-              {l}
-            </option>
-          ))}
-        </CompactSelect>
-        <CompactSelect
-          label={v.filters.sort}
+          onChange={(level) => onChange({ level: level || null })}
+          options={[
+            { value: '', label: v.filters.anyLevel },
+            ...CEFR_LEVELS.map((l) => ({ value: l, label: l })),
+          ]}
+        />
+        <Select<WordSort>
+          variant="pill"
+          aria-label={v.filters.sort}
           value={filters.sort}
-          onChange={(value) => onChange({ sort: parseOneOf(WORD_SORTS, value) ?? 'newest' })}
-        >
-          {WORD_SORTS.map((s) => (
-            <option key={s} value={s}>
-              {v.sort[s]}
-            </option>
-          ))}
-        </CompactSelect>
+          onChange={(sort) => onChange({ sort })}
+          options={WORD_SORTS.map((s) => ({ value: s, label: v.sort[s] }))}
+        />
         <Chip
           selected={filters.favoritesOnly}
           icon={<Star />}

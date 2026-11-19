@@ -1,0 +1,148 @@
+@use '@/styles/mixins' as *;
+
+.root {
+  position: relative;
+  min-width: 0;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+  color: var(--text);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+}
+
+.value {
+  flex: 1;
+  min-width: 0;
+  @include truncate;
+}
+
+.chevron {
+  color: var(--text-subtle);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+// Full-width form control (matches TextField).
+.field .trigger {
+  height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  font-size: var(--text-sm);
+
+  &:hover {
+    border-color: var(--text-subtle);
+  }
+}
+
+// Compact toolbar filter (matches Chip).
+.pill {
+  flex-shrink: 0;
+
+  .trigger {
+    height: 32px;
+    padding: 0 var(--space-2) 0 var(--space-3);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+  }
+
+  .value {
+    overflow: visible;
+  }
+}
+
+// ---------- The open list ----------
+.list {
+  position: fixed;
+  z-index: 90;
+  max-width: min(320px, calc(100vw - 16px));
+  margin: 0;
+  padding: var(--space-1);
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+  animation: list-in var(--duration-fast) var(--ease-out);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 38px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  &[aria-selected='true'] {
+    color: var(--text);
+    font-weight: 500;
+  }
+}
+
+.active {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.optionLabel {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.check {
+  color: var(--accent);
+}
+
+@keyframes list-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}

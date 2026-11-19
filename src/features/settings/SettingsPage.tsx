@@ -15,7 +15,6 @@ import {
 import { useT } from '@/i18n'
 import { CEFR_LEVELS, type ReviewRating } from '@/lib/db/types'
 import type { SrsConfig } from '@/lib/srs/scheduler'
-import { parseOneOf } from '@/lib/guards'
 import {
   formatBytes,
   getStorageInfo,
@@ -124,9 +123,9 @@ export default function SettingsPage() {
                 label={s.currentLevel}
                 options={LEVEL_OPTIONS}
                 value={settings.currentLevel}
-                onChange={(e) =>
+                onChange={(v) =>
                   settings.update({
-                    currentLevel: parseOneOf(CEFR_LEVELS, e.target.value) ?? settings.currentLevel,
+                    currentLevel: v,
                   })
                 }
               />
@@ -134,9 +133,9 @@ export default function SettingsPage() {
                 label={s.targetLevel}
                 options={LEVEL_OPTIONS}
                 value={settings.targetLevel}
-                onChange={(e) =>
+                onChange={(v) =>
                   settings.update({
-                    targetLevel: parseOneOf(CEFR_LEVELS, e.target.value) ?? settings.targetLevel,
+                    targetLevel: v,
                   })
                 }
               />
@@ -151,7 +150,7 @@ export default function SettingsPage() {
             hint={s.goalHint}
             options={GOALS.map((xp) => ({ value: String(xp), label: s.goalOption(xp) }))}
             value={String(settings.dailyXpGoal)}
-            onChange={(e) => settings.update({ dailyXpGoal: Number(e.target.value) })}
+            onChange={(v) => settings.update({ dailyXpGoal: Number(v) })}
           />
         </Card>
 
@@ -163,7 +162,7 @@ export default function SettingsPage() {
               hint={s.newPerDayHint}
               options={NEW_PER_DAY.map((n) => ({ value: String(n), label: String(n) }))}
               value={String(settings.newWordsPerDay)}
-              onChange={(e) => settings.update({ newWordsPerDay: Number(e.target.value) })}
+              onChange={(v) => settings.update({ newWordsPerDay: Number(v) })}
             />
             <fieldset className={styles.fieldset}>
               <legend>{s.intervals}</legend>
@@ -177,8 +176,8 @@ export default function SettingsPage() {
                       label: unit === 'min' ? s.minutesOption(n) : s.daysOption(n),
                     }))}
                     value={String(settings.srs[key])}
-                    onChange={(e) =>
-                      settings.update({ srs: { ...settings.srs, [key]: Number(e.target.value) } })
+                    onChange={(v) =>
+                      settings.update({ srs: { ...settings.srs, [key]: Number(v) } })
                     }
                   />
                 ))}

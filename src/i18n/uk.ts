@@ -301,7 +301,8 @@ export const uk: Dictionary = {
       notScheduled: 'Ще не почато',
       dueNow: 'Зараз',
       reviews: 'Повторень',
-      accuracy: 'Точність',
+      correctAnswers: 'Правильних відповідей',
+      correctOf: (correct: number, total: number) => `${correct} з ${total}`,
       added: 'Додано',
       starter: 'Стартове слово',
       deleteTitle: (term: string) => `Видалити «${term}»?`,
@@ -332,9 +333,18 @@ export const uk: Dictionary = {
       addWords: 'Додати слова',
       mode: 'Режим',
       modes: {
-        flashcards: 'Англійська → українська',
-        reverse: 'Українська → англійська',
-        typing: 'Введи слово',
+        flashcards: {
+          title: 'Картки: з англійської на українську',
+          hint: 'Бачиш англійське слово і згадуєш, що воно означає.',
+        },
+        reverse: {
+          title: 'Картки: з української на англійську',
+          hint: 'Бачиш переклад і згадуєш англійське слово.',
+        },
+        typing: {
+          title: 'Введи слово',
+          hint: 'Бачиш переклад і пишеш англійське слово. Нові слова спершу показуємо карткою.',
+        },
       },
       collection: 'Слова з',
       allWords: 'Усіх колекцій',
@@ -344,8 +354,8 @@ export const uk: Dictionary = {
         newToday: 'Нові сьогодні',
         newLeft: (left: number, limit: number) => `Лишилось ${left} з ${limit}`,
         reviewed: 'Повторено сьогодні',
-        accuracy: (pct: number | null) =>
-          pct === null ? 'Ще немає відповідей' : `${pct}% правильно`,
+        correct: (correct: number, total: number) =>
+          total === 0 ? 'Ще немає відповідей' : `${correct} з ${total} правильно`,
       },
       forecastTitle: 'Найближчим часом',
       forecastDescription: 'Слова до повторення на 7 днів уперед',
