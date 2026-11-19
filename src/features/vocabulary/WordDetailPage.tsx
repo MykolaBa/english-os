@@ -14,7 +14,7 @@ import {
 } from '@/components/ui'
 import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
-import { formatDate, formatRelative } from '@/lib/date'
+import { formatDate, formatDue } from '@/lib/date'
 import { useSettings } from '@/stores/settingsStore'
 import { toast } from '@/stores/toastStore'
 import { CollectionIcon } from './components/CollectionIcon'
@@ -207,7 +207,7 @@ export default function WordDetailPage() {
                     ? d.notScheduled
                     : word.srs.dueAt <= now
                       ? d.dueNow
-                      : formatRelative(word.srs.dueAt, t.locale, t.common.justNow, now)}
+                      : formatDue(word.srs.dueAt, t.locale, t.common.justNow, now)}
                 </dd>
               </div>
               <div>

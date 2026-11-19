@@ -178,6 +178,11 @@ export const uk: Dictionary = {
     it_english: (s: string) => `IT English: ${s}`,
   },
 
+  activityMany: {
+    review: (n: number) => `Повторено ${n} ${words(n)}`,
+    word_added: (n: number) => `Додано ${n} ${words(n)}`,
+  },
+
   status: {
     new: 'Нове',
     learning: 'Вивчаю',
@@ -307,6 +312,80 @@ export const uk: Dictionary = {
     },
   },
 
+  review: {
+    title: 'Повторення',
+    overview: {
+      headline: (due: number, fresh: number) =>
+        due > 0 && fresh > 0
+          ? `${due} ${words(due)} до повторення і ${fresh} ${plural(fresh, 'нове', 'нові', 'нових')}`
+          : due > 0
+            ? `${due} ${words(due)} до повторення`
+            : `${fresh} ${plural(fresh, 'нове слово', 'нові слова', 'нових слів')} до вивчення`,
+      estimate: (min: number) => `Близько ${min} хв.`,
+      start: 'Почати повторення',
+      doneTitle: 'Усе повторено',
+      doneText: (when: string | null) =>
+        when ? `Наступні слова чекатимуть ${when}.` : 'Додай нові слова, щоб вчитися далі.',
+      learnMore: 'Вивчити ще 5 нових слів',
+      noWordsTitle: 'Поки нічого повторювати',
+      noWordsText: 'Додай слова у словник, і вони з’являться тут.',
+      addWords: 'Додати слова',
+      mode: 'Режим',
+      modes: {
+        flashcards: 'Англійська → українська',
+        reverse: 'Українська → англійська',
+        typing: 'Введи слово',
+      },
+      collection: 'Слова з',
+      allWords: 'Усіх колекцій',
+      stats: {
+        due: 'До повторення',
+        overdue: 'Прострочені',
+        newToday: 'Нові сьогодні',
+        newLeft: (left: number, limit: number) => `Лишилось ${left} з ${limit}`,
+        reviewed: 'Повторено сьогодні',
+        accuracy: (pct: number | null) =>
+          pct === null ? 'Ще немає відповідей' : `${pct}% правильно`,
+      },
+      forecastTitle: 'Найближчим часом',
+      forecastDescription: 'Слова до повторення на 7 днів уперед',
+      today: 'Сьогодні',
+    },
+    session: {
+      label: 'Сесія повторення',
+      progress: (done: number, total: number) => `${done} з ${total}`,
+      end: 'Завершити',
+      newWord: 'Нове слово',
+      show: 'Показати відповідь',
+      rate: 'Наскільки добре ти знав?',
+      ratings: { again: 'Знову', hard: 'Важко', good: 'Добре', easy: 'Легко' },
+      minutes: (n: number) => `${n} хв`,
+      days: (n: number) => `${n} ${days(n)}`,
+      typePrompt: 'Введи англійське слово',
+      typeLabel: 'Твоя відповідь',
+      check: 'Перевірити',
+      reveal: 'Не знаю',
+      correct: 'Правильно',
+      typo: 'Майже — перевір написання',
+      wrong: 'Цього разу ні',
+      answerWas: 'Відповідь',
+      continue: 'Далі',
+      shortcuts: 'Клавіші: пробіл показує відповідь, 1–4 — оцінка.',
+    },
+    summary: {
+      title: 'Сесію завершено',
+      text: (n: number, pct: number) =>
+        `Ти відповів на ${n} ${plural(n, 'картку', 'картки', 'карток')}, ${pct}% правильно.`,
+      xp: (xp: number) => `+${xp} XP`,
+      time: (min: number) => (min < 1 ? 'Менше хвилини' : `${min} хв`),
+      struggled: 'Варто глянути ще раз',
+      struggledHint: 'Ці слова потрапили в «My Mistakes» і скоро повернуться.',
+      noMistakes: 'Цього разу без помилок.',
+      again: 'До повторення',
+      dashboard: 'На головну',
+    },
+  },
+
   settings: {
     title: 'Налаштування',
     subtitle: 'Налаштування зберігаються на цьому пристрої.',
@@ -347,6 +426,14 @@ export const uk: Dictionary = {
     version: 'Версія',
     mode: 'Режим',
     modeValue: 'Дані на цьому пристрої. Без акаунта й трекінгу',
+    reviewTitle: 'Повторення',
+    reviewDescription: 'Скільки нових слів на день і як скоро слова повертаються.',
+    newPerDay: 'Нових слів на день',
+    newPerDayHint: 'Менше нових слів — менше повторень потім. 10 — рівний темп.',
+    intervals: 'Перші інтервали',
+    intervalsHint: 'Діють для першої відповіді на слово. Далі інтервали ростуть від них.',
+    minutesOption: (n: number) => `${n} хв`,
+    daysOption: (n: number) => `${n} ${days(n)}`,
     reset: 'Скинути налаштування',
     resetTitle: 'Скинути налаштування?',
     resetText:

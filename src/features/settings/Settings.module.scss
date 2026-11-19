@@ -63,3 +63,30 @@
   font-size: var(--text-xs);
   color: var(--text-subtle);
 }
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+
+  legend {
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .hint {
+    margin-top: var(--space-3);
+  }
+}
+
+.row4 {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @include up(sm) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/lib/db/db'
-import type { ActivityEvent, Word } from '@/lib/db/types'
+import { groupFeed, type FeedItem } from '@/lib/activity/feed'
+import type { Word } from '@/lib/db/types'
 import {
   getActiveDays,
   getActivitySince,
@@ -27,7 +28,7 @@ export interface DashboardData {
   longestStreak: number
   totalStudyDays: number
   week: DayActivity[]
-  recent: ActivityEvent[]
+  recent: FeedItem[]
 }
 
 /**
@@ -68,7 +69,7 @@ async function loadDashboard(): Promise<DashboardData> {
       countDue(),
       getActivitySince(weekStart),
       getActiveDays(),
-      getRecentActivity(6),
+      getRecentActivity(80),
       findSpotlight(),
     ])
 
@@ -87,7 +88,7 @@ async function loadDashboard(): Promise<DashboardData> {
     longestStreak: computeLongestStreak(activeDays),
     totalStudyDays: activeDays.length,
     week: lastDays(7).map((day) => ({ day, xp: xpByDay.get(day) ?? 0 })),
-    recent,
+    recent: groupFeed(recent, 6),
   }
 }
 

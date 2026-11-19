@@ -93,6 +93,8 @@ export interface ReviewLog {
   rating: ReviewRating
   mode: string
   durationMs?: number
+  /** True when this was the word's very first review (counts toward the daily new-word limit). */
+  wasNew?: boolean
 }
 
 export type ActivityType =

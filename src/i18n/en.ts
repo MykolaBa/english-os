@@ -169,6 +169,12 @@ export const en = {
     it_english: (s: string) => `IT English: ${s}`,
   },
 
+  /** Feed lines for several merged events of the same type. */
+  activityMany: {
+    review: (n: number) => `Reviewed ${n} ${plural(n, 'word', 'words')}`,
+    word_added: (n: number) => `Added ${n} ${plural(n, 'word', 'words')}`,
+  },
+
   status: {
     new: 'New',
     learning: 'Learning',
@@ -298,6 +304,79 @@ export const en = {
     },
   },
 
+  review: {
+    title: 'Review',
+    overview: {
+      headline: (due: number, fresh: number) =>
+        due > 0 && fresh > 0
+          ? `${due} ${plural(due, 'word', 'words')} to review and ${fresh} new`
+          : due > 0
+            ? `${due} ${plural(due, 'word', 'words')} to review`
+            : `${fresh} new ${plural(fresh, 'word', 'words')} to learn`,
+      estimate: (min: number) => `About ${min} min.`,
+      start: 'Start review',
+      doneTitle: 'You’re all caught up',
+      doneText: (when: string | null) =>
+        when ? `The next words are due ${when}.` : 'Add new words to keep learning.',
+      learnMore: 'Learn 5 more new words',
+      noWordsTitle: 'Nothing to review yet',
+      noWordsText: 'Add words to your vocabulary and they will show up here.',
+      addWords: 'Add words',
+      mode: 'Mode',
+      modes: {
+        flashcards: 'English → Ukrainian',
+        reverse: 'Ukrainian → English',
+        typing: 'Type the word',
+      },
+      collection: 'Words from',
+      allWords: 'All collections',
+      stats: {
+        due: 'Due now',
+        overdue: 'Overdue',
+        newToday: 'New today',
+        newLeft: (left: number, limit: number) => `${left} of ${limit} left`,
+        reviewed: 'Reviewed today',
+        accuracy: (pct: number | null) => (pct === null ? 'No answers yet' : `${pct}% correct`),
+      },
+      forecastTitle: 'Coming up',
+      forecastDescription: 'Words due over the next 7 days',
+      today: 'Today',
+    },
+    session: {
+      label: 'Review session',
+      progress: (done: number, total: number) => `${done} of ${total}`,
+      end: 'End session',
+      newWord: 'New word',
+      show: 'Show answer',
+      rate: 'How well did you know it?',
+      ratings: { again: 'Again', hard: 'Hard', good: 'Good', easy: 'Easy' },
+      minutes: (n: number) => `${n} min`,
+      days: (n: number) => `${n} ${plural(n, 'day', 'days')}`,
+      typePrompt: 'Type the English word',
+      typeLabel: 'Your answer',
+      check: 'Check',
+      reveal: 'I don’t know',
+      correct: 'Correct',
+      typo: 'Almost — mind the spelling',
+      wrong: 'Not this time',
+      answerWas: 'Answer',
+      continue: 'Continue',
+      shortcuts: 'Keyboard: Space shows the answer, 1–4 rates it.',
+    },
+    summary: {
+      title: 'Session complete',
+      text: (n: number, pct: number) =>
+        `You answered ${n} ${plural(n, 'card', 'cards')}, ${pct}% of them correctly.`,
+      xp: (xp: number) => `+${xp} XP`,
+      time: (min: number) => (min < 1 ? 'Under a minute' : `${min} min`),
+      struggled: 'Worth another look',
+      struggledHint: 'These went to “My Mistakes” and will come back soon.',
+      noMistakes: 'No mistakes this time.',
+      again: 'Back to review',
+      dashboard: 'Go to dashboard',
+    },
+  },
+
   settings: {
     title: 'Settings',
     subtitle: 'Preferences are stored on this device.',
@@ -337,6 +416,14 @@ export const en = {
     version: 'Version',
     mode: 'Mode',
     modeValue: 'Stored on this device. No account, no tracking',
+    reviewTitle: 'Review',
+    reviewDescription: 'How many new words a day, and how soon words come back.',
+    newPerDay: 'New words per day',
+    newPerDayHint: 'Fewer new words means fewer reviews later. 10 is a steady pace.',
+    intervals: 'First intervals',
+    intervalsHint: 'Used for a word’s first answer. Later intervals grow from these.',
+    minutesOption: (n: number) => `${n} min`,
+    daysOption: (n: number) => `${n} ${plural(n, 'day', 'days')}`,
     reset: 'Reset preferences',
     resetTitle: 'Reset preferences?',
     resetText:

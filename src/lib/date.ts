@@ -71,3 +71,23 @@ export function formatDate(timestamp: number, locale = 'en-US'): string {
     year: 'numeric',
   })
 }
+
+const DAY_MS = 86_400_000
+
+/**
+ * When something is due, in words: "in 10 min" later today, otherwise calendar days —
+ * "tomorrow", "in 3 days" — so a word due on Sunday never reads as "in 2 days" on
+ * Thursday evening.
+ */
+export function formatDue(
+  timestamp: number,
+  locale = 'en-US',
+  justNow = 'just now',
+  now: number = Date.now(),
+): string {
+  const days = Math.round(
+    (startOfDay(new Date(timestamp)).getTime() - startOfDay(new Date(now)).getTime()) / DAY_MS,
+  )
+  if (days === 0) return formatRelative(timestamp, locale, justNow, now)
+  return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(days, 'day')
+}

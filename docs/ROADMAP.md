@@ -7,14 +7,26 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 0 | Project setup: Vite, strict TS, lint, Prettier, Vitest, PWA, git, CLAUDE.md | ✅ Done |
 | 1 | Foundation: design tokens, themes, layout (sidebar / bottom nav / drawer), UI kit, DB schema, activity log, dashboard on live data, settings | ✅ Done |
 | 2 | Vocabulary: CRUD, search/filter/sort, collections, favorites, word detail page, ~100 seeded words, pronunciation (speechSynthesis) + Ukrainian interface | ✅ Done |
-| 3 | Review: SRS algorithm (SM-2-lite, tested), flashcard session (Again/Hard/Good/Easy), typing mode, review logs, XP | ⏳ Next |
-| 4 | Dashboard polish, JSON backup/restore, CSV/JSON vocabulary import/export (zod-validated), deploy as PWA | |
+| 3 | Review: SRS algorithm (SM-2-lite, tested), flashcard session (Again/Hard/Good/Easy), typing mode, review logs, XP | ✅ Done |
+| 4 | Dashboard polish, JSON backup/restore, CSV/JSON vocabulary import/export (zod-validated), deploy as PWA | ⏳ Next |
 | 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | |
 | 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | |
 | 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | |
 | 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | |
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
+
+## Done in phase 3
+- `lib/srs/scheduler.ts`: simplified SM-2 — configurable first intervals (10 min / 1 / 3 / 7 d),
+  then growth by per-word ease; lapses, mastered at 21+ days; due at the start of the day
+- Review overview: today's queue in one sentence with time estimate, mode (EN→UA, UA→EN,
+  typing), collection filter, stats strip, 7-day forecast, "learn 5 more" when done
+- Queue: often-forgotten due words first, then new words within the daily limit
+- Session (pure reducer): flashcards with a turn animation, typing mode with typo tolerance
+  and a masked example as hint, "again" cards return in the same session, keys Space / 1–4
+- Each answer is one transaction: SRS state, review log, XP; forgotten words join "My Mistakes"
+- Summary: cards, accuracy, XP, time and words worth another look
+- Settings: new words per day and the four first intervals; dashboard feed groups reviews
 
 ## Done in phase 2
 - Interface language switch (English / Українська) with typed dictionaries, Ukrainian
