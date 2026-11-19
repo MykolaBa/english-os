@@ -1,0 +1,75 @@
+@use '@/styles/mixins' as *;
+
+.card {
+  @include card-surface;
+  position: relative;
+  min-width: 0;
+}
+
+.pad-none {
+  padding: 0;
+}
+.pad-sm {
+  padding: var(--space-4);
+}
+.pad-md {
+  padding: var(--space-5);
+}
+.pad-lg {
+  padding: var(--space-6);
+  @include up(md) {
+    padding: var(--space-8);
+  }
+}
+
+.interactive {
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    background var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+  &:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.headerIcon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  color: var(--accent);
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.headerText {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.description {
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.action {
+  flex-shrink: 0;
+}

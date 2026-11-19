@@ -1,0 +1,84 @@
+@use '@/styles/mixins' as *;
+
+.region {
+  position: fixed;
+  z-index: 100;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: calc(var(--bottom-nav-height) + var(--space-4) + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: none;
+
+  @include up(md) {
+    left: auto;
+    right: var(--space-6);
+    bottom: var(--space-6);
+    width: 360px;
+  }
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
+  pointer-events: auto;
+  animation: toast-in var(--duration-slow) var(--ease-out);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+}
+
+.success .icon {
+  color: var(--success);
+}
+.error .icon {
+  color: var(--danger);
+}
+.info .icon {
+  color: var(--info);
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.description {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.close {
+  color: var(--text-subtle);
+  border-radius: var(--radius-sm);
+  @include focus-ring;
+  &:hover {
+    color: var(--text);
+  }
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

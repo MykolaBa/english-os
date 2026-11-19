@@ -1,0 +1,7 @@
+export function greetingFor(date: Date = new Date()): string {
+  const h = date.getHours()
+  if (h < 5) return 'Good night'
+  if (h < 12) return 'Good morning'
+  if (h < 18) return 'Good afternoon'
+  return 'Good evening'
+}

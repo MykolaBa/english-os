@@ -1,0 +1,21 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mark {
+  width: 28px;
+  height: 28px;
+}
+
+.word {
+  font-weight: 600;
+  font-size: var(--text-md);
+  letter-spacing: -0.02em;
+
+  span {
+    color: var(--text-subtle);
+    font-weight: 500;
+  }
+}

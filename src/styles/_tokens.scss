@@ -1,0 +1,145 @@
+// Design tokens. All colors / radii / spacing live here as CSS custom properties,
+// so components never hardcode values and themes only swap variables.
+
+:root {
+  // Typography
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.375rem;
+
+  // Spacing (4px grid)
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  // Radii
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  // Motion
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+
+  // Layout
+  --sidebar-width: 248px;
+  --content-max: 1180px;
+  --topbar-height: 56px;
+  --bottom-nav-height: 64px;
+
+  // Accents (shared by both themes)
+  --violet: #8b7cf8;
+  --blue: #5b8def;
+  --teal: #2dd4bf;
+  --gradient-brand: linear-gradient(135deg, #8b7cf8 0%, #5b8def 55%, #2dd4bf 100%);
+
+  // Learning statuses
+  --status-new: #5b8def;
+  --status-learning: #f5b84b;
+  --status-reviewing: #8b7cf8;
+  --status-mastered: #34d399;
+}
+
+@mixin dark-theme {
+  color-scheme: dark;
+  --bg: #0b0d12;
+  --bg-elevated: #0f1218;
+  --surface: #13161d;
+  --surface-2: #191d26;
+  --surface-3: #222734;
+  --surface-hover: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.13);
+
+  --text: #e9ebf1;
+  --text-muted: #a0a6b6;
+  --text-subtle: #6c7387;
+
+  --accent: #8b7cf8;
+  --accent-hover: #9d90fa;
+  --accent-soft: rgba(139, 124, 248, 0.14);
+  --accent-contrast: #0b0d12;
+
+  --success: #34d399;
+  --success-soft: rgba(52, 211, 153, 0.13);
+  --warning: #f5b84b;
+  --warning-soft: rgba(245, 184, 75, 0.13);
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.13);
+  --info: #5b8def;
+  --info-soft: rgba(91, 141, 239, 0.14);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px rgba(139, 124, 248, 0.6);
+}
+
+@mixin light-theme {
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f3f4f8;
+  --surface-3: #e9ebf2;
+  --surface-hover: rgba(15, 20, 40, 0.04);
+  --border: rgba(15, 20, 40, 0.08);
+  --border-strong: rgba(15, 20, 40, 0.15);
+
+  --text: #151824;
+  --text-muted: #555c70;
+  --text-subtle: #8a90a2;
+
+  --accent: #6d5ce8;
+  --accent-hover: #5d4bdc;
+  --accent-soft: rgba(109, 92, 232, 0.1);
+  --accent-contrast: #ffffff;
+
+  --success: #0f9f6e;
+  --success-soft: rgba(15, 159, 110, 0.1);
+  --warning: #c27c0e;
+  --warning-soft: rgba(194, 124, 14, 0.1);
+  --danger: #dc3c3c;
+  --danger-soft: rgba(220, 60, 60, 0.1);
+  --info: #3569d4;
+  --info-soft: rgba(53, 105, 212, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(15, 20, 40, 0.06);
+  --shadow-md: 0 8px 24px -10px rgba(15, 20, 40, 0.18);
+  --shadow-lg: 0 24px 60px -16px rgba(15, 20, 40, 0.25);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px rgba(109, 92, 232, 0.5);
+}
+
+// Dark is the default. `data-theme` is set on <html> by the settings store.
+:root,
+:root[data-theme='dark'] {
+  @include dark-theme;
+}
+
+:root[data-theme='light'] {
+  @include light-theme;
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme='system'] {
+    @include light-theme;
+  }
+}
