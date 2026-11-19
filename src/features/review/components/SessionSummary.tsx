@@ -3,16 +3,17 @@ import { Link } from 'react-router'
 import { Button, ButtonLink } from '@/components/ui'
 import { useT } from '@/i18n'
 import { XP_PER_REVIEW } from '../reviewRepo'
-import { summarize, type SessionState } from '../session'
+import { summarize, type SessionKind, type SessionState } from '../session'
 import styles from '../Review.module.scss'
 
 interface SessionSummaryProps {
   state: SessionState
   finishedAt: number
+  kind: SessionKind
   onBack: () => void
 }
 
-export function SessionSummary({ state, finishedAt, onBack }: SessionSummaryProps) {
+export function SessionSummary({ state, finishedAt, kind, onBack }: SessionSummaryProps) {
   const t = useT().review.summary
   const summary = summarize(state)
   const pct = Math.round(summary.accuracy * 100)
@@ -22,7 +23,9 @@ export function SessionSummary({ state, finishedAt, onBack }: SessionSummaryProp
     <section className={styles.summary}>
       <CircleCheck className={styles.summaryIcon} aria-hidden />
       <h2 className={styles.summaryTitle}>{t.title}</h2>
-      <p className={styles.summaryText}>{t.text(summary.reviewed, pct)}</p>
+      <p className={styles.summaryText}>
+        {t.text(summary.reviewed, pct)} {kind === 'practice' && t.practiceNote}
+      </p>
       <p className={styles.summaryMeta}>
         <span>{t.xp(summary.reviewed * XP_PER_REVIEW)}</span>
         <span>{t.time(minutes)}</span>

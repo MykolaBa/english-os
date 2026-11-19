@@ -27,6 +27,9 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 - Each answer is one transaction: SRS state, review log, XP; forgotten words join "My Mistakes"
 - Summary: cards, accuracy, XP, time and words worth another look
 - Settings: new words per day and the four first intervals; dashboard feed groups reviews
+- Practice: repeat learned words any time (weakest first, recently reviewed or random; 10 / 20 /
+  50 / all) — earns XP and tracks mistakes, never changes review dates; primary action when
+  caught up
 
 ## Done in phase 2
 - Interface language switch (English / Українська) with typed dictionaries, Ukrainian

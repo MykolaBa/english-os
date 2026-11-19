@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Word } from '@/lib/db/types'
 import { createInitialSrs } from '@/features/vocabulary/model'
-import { buildQueue, estimateMinutes, forecast } from './queue'
+import { buildPracticeQueue, buildQueue, estimateMinutes, forecast } from './queue'
 
 const NOW = new Date(2026, 10, 19, 12).getTime()
 const DAY = 86_400_000
@@ -60,5 +60,42 @@ describe('estimateMinutes', () => {
   it('rounds and never returns zero', () => {
     expect(estimateMinutes(0, 0)).toBe(1)
     expect(estimateMinutes(15, 4)).toBe(3)
+  })
+})
+
+describe('buildPracticeQueue', () => {
+  const learned = [
+    word('solid', { status: 'reviewing', correctCount: 5, incorrectCount: 0, lastReviewedAt: 30 }),
+    word('shaky', { status: 'learning', correctCount: 1, incorrectCount: 3, lastReviewedAt: 10 }),
+    word('lapsed', {
+      status: 'reviewing',
+      correctCount: 3,
+      incorrectCount: 1,
+      lapses: 1,
+      lastReviewedAt: 20,
+    }),
+    word('fresh'), // never reviewed — not part of practice
+  ]
+
+  it('uses only learned words, weakest first', () => {
+    // shaky is 75% wrong, lapsed 25% wrong plus one lapse, solid never wrong
+    expect(buildPracticeQueue(learned, { order: 'weakest', limit: null }).map((w) => w.id)).toEqual(
+      ['shaky', 'lapsed', 'solid'],
+    )
+  })
+
+  it('orders by last review and respects the limit', () => {
+    expect(buildPracticeQueue(learned, { order: 'recent', limit: 2 }).map((w) => w.id)).toEqual([
+      'solid',
+      'lapsed',
+    ])
+  })
+
+  it('shuffles with the given random source', () => {
+    const ids = buildPracticeQueue(learned, { order: 'random', limit: null, random: () => 0 }).map(
+      (w) => w.id,
+    )
+    expect(ids.toSorted()).toEqual(['lapsed', 'shaky', 'solid'])
+    expect(ids).not.toContain('fresh')
   })
 })

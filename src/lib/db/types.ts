@@ -95,6 +95,8 @@ export interface ReviewLog {
   durationMs?: number
   /** True when this was the word's very first review (counts toward the daily new-word limit). */
   wasNew?: boolean
+  /** Extra practice: counted for XP and history, but the schedule was left unchanged. */
+  practice?: boolean
 }
 
 export type ActivityType =

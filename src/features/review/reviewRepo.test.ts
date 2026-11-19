@@ -37,3 +37,28 @@ describe('recordAnswer', () => {
     expect(countIntroduced(await getTodayLogs())).toBe(1) // only the first answer was "new"
   })
 })
+
+describe('practice answers', () => {
+  it('earn XP and track mistakes but leave the schedule untouched', async () => {
+    await seedStarterVocabulary()
+    const wordId = 'seed:word:merge'
+    const learned = await recordAnswer({
+      wordId,
+      rating: 'good',
+      mode: 'flashcards',
+      config: DEFAULT_SRS_CONFIG,
+    })
+    const after = await recordAnswer({
+      wordId,
+      rating: 'again',
+      mode: 'flashcards',
+      config: DEFAULT_SRS_CONFIG,
+      practice: true,
+    })
+    expect(after.srs).toEqual(learned.srs)
+    expect(after.collectionIds).toContain(MISTAKES_COLLECTION_ID)
+    const logs = await getTodayLogs()
+    expect(logs.filter((l) => l.practice)).toHaveLength(1)
+    expect(await db.activity.where('type').equals('review').count()).toBe(2)
+  })
+})

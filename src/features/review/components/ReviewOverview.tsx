@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { CalendarClock, Layers, Play, Plus, Sparkles } from 'lucide-react'
+import { CalendarClock, Dumbbell, Layers, Play, Plus, Sparkles } from 'lucide-react'
 import { Button, ButtonLink, Card, CardHeader, EmptyState, SelectField } from '@/components/ui'
 import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
@@ -8,15 +8,17 @@ import type { Word } from '@/lib/db/types'
 import { useSettings, type ReviewMode } from '@/stores/settingsStore'
 import { CollectionIcon } from '@/features/vocabulary/components/CollectionIcon'
 import { useCollections } from '@/features/vocabulary/hooks'
+import type { SessionKind } from '../session'
 import { ModePicker } from './ModePicker'
+import { PracticeCard } from './PracticeCard'
 import type { ReviewData } from '../hooks'
-import { buildQueue, estimateMinutes, forecast, isDue } from '../queue'
+import { buildPracticeQueue, buildQueue, estimateMinutes, forecast, isDue } from '../queue'
 import { countIntroduced } from '../reviewRepo'
 import styles from '../Review.module.scss'
 
 interface ReviewOverviewProps {
   data: ReviewData
-  onStart: (queue: Word[], mode: ReviewMode) => void
+  onStart: (queue: Word[], mode: ReviewMode, kind: SessionKind) => void
 }
 
 export function ReviewOverview({ data, onStart }: ReviewOverviewProps) {
@@ -36,6 +38,12 @@ export function ReviewOverview({ data, onStart }: ReviewOverviewProps) {
   const queue = useMemo(
     () => buildQueue(data.words, { now, newLimit: newLeft + extraNew, collectionId }),
     [data.words, now, newLeft, extraNew, collectionId],
+  )
+
+  // Default practice round for the caught-up state: the 20 weakest learned words.
+  const practiceQueue = useMemo(
+    () => buildPracticeQueue(data.words, { order: 'weakest', limit: 20, collectionId }),
+    [data.words, collectionId],
   )
 
   const due = queue.filter((w) => w.srs.status !== 'new').length
@@ -111,22 +119,41 @@ export function ReviewOverview({ data, onStart }: ReviewOverviewProps) {
               variant="primary"
               size="lg"
               icon={<Play />}
-              onClick={() => onStart(queue, mode)}
+              onClick={() => onStart(queue, mode, 'scheduled')}
             >
               {o.start}
             </Button>
           ) : (
-            <Button
-              variant="primary"
-              size="lg"
-              icon={<Plus />}
-              onClick={() => setExtraNew((n) => n + 5)}
-            >
-              {o.learnMore}
-            </Button>
+            <>
+              {/* Caught up: practising what you know comes first; new words are optional. */}
+              {practiceQueue.length > 0 && (
+                <Button
+                  variant="primary"
+                  size="lg"
+                  icon={<Dumbbell />}
+                  onClick={() => onStart(practiceQueue, mode, 'practice')}
+                >
+                  {t.review.practice.title}
+                </Button>
+              )}
+              <Button
+                variant={practiceQueue.length > 0 ? 'ghost' : 'primary'}
+                size="lg"
+                icon={<Plus />}
+                onClick={() => setExtraNew((n) => n + 5)}
+              >
+                {o.learnMore}
+              </Button>
+            </>
           )}
         </div>
       </section>
+
+      <PracticeCard
+        words={data.words}
+        collectionId={collectionId}
+        onStart={(practiceQueue) => onStart(practiceQueue, mode, 'practice')}
+      />
 
       <dl className={styles.stats}>
         <div>

@@ -16,6 +16,8 @@ interface AnswerInput {
   config: SrsConfig
   durationMs?: number
   now?: number
+  /** Practice answers earn XP and track mistakes but never move the word's schedule. */
+  practice?: boolean
 }
 
 /**
@@ -29,6 +31,7 @@ export async function recordAnswer({
   config,
   durationMs,
   now = Date.now(),
+  practice = false,
 }: AnswerInput): Promise<Word> {
   return db.transaction('rw', [db.words, db.reviewLogs, db.activity, db.collections], async () => {
     const word = await db.words.get(wordId)
@@ -46,7 +49,7 @@ export async function recordAnswer({
     const updated: Word = {
       ...word,
       collectionIds,
-      srs: schedule(word.srs, rating, now, config),
+      srs: practice ? word.srs : schedule(word.srs, rating, now, config),
       updatedAt: now,
     }
     await db.words.put(updated)
@@ -57,6 +60,7 @@ export async function recordAnswer({
       mode,
       durationMs,
       wasNew: word.srs.status === 'new',
+      practice,
     })
     await logActivity({
       type: 'review',

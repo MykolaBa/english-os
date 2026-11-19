@@ -6,12 +6,14 @@ import type { ReviewRating, Word } from '@/lib/db/types'
 import { speak } from '@/lib/speech'
 import { useSettings, type ReviewMode } from '@/stores/settingsStore'
 import { toast } from '@/stores/toastStore'
+import { previewIntervals } from '@/lib/srs/scheduler'
 import { recordAnswer } from '../reviewRepo'
 import {
   completedCount,
   currentWord,
   sessionReducer,
   startSession,
+  type SessionKind,
   type SessionState,
 } from '../session'
 import { Flashcard } from './Flashcard'
@@ -29,10 +31,11 @@ const RATING_KEYS: Record<string, ReviewRating> = {
 interface ReviewSessionProps {
   words: Word[]
   mode: ReviewMode
+  kind: SessionKind
   onFinish: (state: SessionState) => void
 }
 
-export function ReviewSession({ words, mode, onFinish }: ReviewSessionProps) {
+export function ReviewSession({ words, mode, kind, onFinish }: ReviewSessionProps) {
   const t = useT()
   const s = t.review.session
   const srsConfig = useSettings((st) => st.srs)
@@ -78,6 +81,7 @@ export function ReviewSession({ words, mode, onFinish }: ReviewSessionProps) {
         mode,
         config: srsConfig,
         durationMs: Date.now() - shownAt.current,
+        practice: kind === 'practice',
       })
       dispatch({ type: 'answered', rating, word: updated })
     } catch (err) {
@@ -118,6 +122,7 @@ export function ReviewSession({ words, mode, onFinish }: ReviewSessionProps) {
           {s.end}
         </Button>
       </header>
+      {kind === 'practice' && <p className={styles.practiceBanner}>{s.practiceLabel}</p>}
 
       {typing ? (
         <TypingCard
@@ -139,8 +144,7 @@ export function ReviewSession({ words, mode, onFinish }: ReviewSessionProps) {
           />
           {state.revealed && (
             <RatingBar
-              srs={word.srs}
-              config={srsConfig}
+              preview={kind === 'practice' ? null : previewIntervals(word.srs, srsConfig)}
               disabled={busy}
               onRate={(r) => void answer(r)}
             />

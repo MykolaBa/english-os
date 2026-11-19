@@ -53,3 +53,54 @@ export function forecast(words: Word[], now: number, days = 7): ForecastDay[] {
 export function estimateMinutes(due: number, fresh: number): number {
   return Math.max(1, Math.round((due * 8 + fresh * 15) / 60))
 }
+
+export const PRACTICE_ORDERS = ['weakest', 'recent', 'random'] as const
+export type PracticeOrder = (typeof PRACTICE_ORDERS)[number]
+
+export interface PracticeOptions {
+  order: PracticeOrder
+  /** Max words in the session; `null` = all of them. */
+  limit: number | null
+  collectionId?: string | null
+  /** Injectable for tests. */
+  random?: () => number
+}
+
+/** Words you have already met at least once — the only ones worth practising. */
+export const isLearned = (w: Word) => w.srs.status !== 'new'
+
+/** Share of wrong answers, with forgotten-after-learning words weighing extra. */
+function weakness(w: Word): number {
+  const answers = w.srs.correctCount + w.srs.incorrectCount
+  const errorRate = answers === 0 ? 0 : w.srs.incorrectCount / answers
+  return errorRate + w.srs.lapses * 0.25
+}
+
+function shuffle<T>(items: T[], random: () => number): T[] {
+  const list = [...items]
+  for (let i = list.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1))
+    ;[list[i], list[j]] = [list[j]!, list[i]!]
+  }
+  return list
+}
+
+/**
+ * Extra practice on learned words, independent of the schedule:
+ * weakest = most mistakes first (ties: lowest ease), recent = last reviewed first, or random.
+ */
+export function buildPracticeQueue(
+  words: Word[],
+  { order, limit, collectionId, random = Math.random }: PracticeOptions,
+): Word[] {
+  const pool = words.filter(
+    (w) => isLearned(w) && (!collectionId || w.collectionIds.includes(collectionId)),
+  )
+  const ordered =
+    order === 'random'
+      ? shuffle(pool, random)
+      : order === 'recent'
+        ? pool.toSorted((a, b) => (b.srs.lastReviewedAt ?? 0) - (a.srs.lastReviewedAt ?? 0))
+        : pool.toSorted((a, b) => weakness(b) - weakness(a) || a.srs.ease - b.srs.ease)
+  return limit === null ? ordered : ordered.slice(0, limit)
+}

@@ -1,5 +1,8 @@
 import type { ReviewRating, Word } from '@/lib/db/types'
 
+/** `scheduled` follows the SRS plan; `practice` repeats learned words without rescheduling. */
+export type SessionKind = 'scheduled' | 'practice'
+
 /**
  * Review session state as a reducer — pure, so the whole flow is testable without UI.
  * Words answered "again" go to the back of the queue and come back in the same session.
