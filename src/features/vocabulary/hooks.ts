@@ -1,9 +1,9 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { STARTER_COLLECTIONS } from '@/content/vocabulary/starterWords'
+import { STARTER_COLLECTIONS } from '@/content/vocabulary/starterCollections'
 import { db } from '@/lib/db/db'
 import type { Collection, Word } from '@/lib/db/types'
 import { normalizeTerm } from './model'
-import { seedCollectionId } from './seed'
+import { seedCollectionId } from './seedIds'
 
 const STARTER_ORDER = new Map(STARTER_COLLECTIONS.map((c, i) => [seedCollectionId(c.slug), i]))
 

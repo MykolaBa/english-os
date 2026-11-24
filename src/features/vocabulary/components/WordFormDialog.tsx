@@ -20,6 +20,8 @@ import { toast } from '@/stores/toastStore'
 import {
   EMPTY_DRAFT,
   PARTS_OF_SPEECH,
+  TERM_MAX,
+  TRANSLATION_MAX,
   validateDraft,
   wordToDraft,
   type WordDraft,
@@ -145,7 +147,7 @@ export function WordFormDialog({
             autoComplete="off"
             spellCheck={false}
             lang="en"
-            maxLength={120}
+            maxLength={TERM_MAX}
           />
           <TextField
             label={f.translation}
@@ -155,7 +157,7 @@ export function WordFormDialog({
             error={errors.translation && f[errors.translation]}
             autoComplete="off"
             lang="uk"
-            maxLength={300}
+            maxLength={TRANSLATION_MAX}
           />
         </div>
         <TextAreaField

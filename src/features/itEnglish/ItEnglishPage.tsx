@@ -4,7 +4,7 @@ import { ButtonLink, PageHeader, Skeleton } from '@/components/ui'
 import { INTERVIEW_QUESTIONS, PHRASE_SETS } from '@/content/it'
 import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
-import { seedCollectionId } from '@/features/vocabulary/seed'
+import { seedCollectionId } from '@/features/vocabulary/seedIds'
 import { useInterviewAnswers } from './hooks'
 import styles from './ItEnglish.module.scss'
 

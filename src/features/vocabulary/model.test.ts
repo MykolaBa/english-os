@@ -20,6 +20,10 @@ describe('vocabulary model', () => {
     expect(validateDraft({ ...EMPTY_DRAFT, term: '   ', translation: 'x' }).term).toBe(
       'termRequired',
     )
+    // Too long is its own error, not "required".
+    expect(validateDraft({ ...EMPTY_DRAFT, term: 'a'.repeat(121), translation: 'x' })).toEqual({
+      term: 'termTooLong',
+    })
   })
 
   it('turns empty optional fields into undefined', () => {

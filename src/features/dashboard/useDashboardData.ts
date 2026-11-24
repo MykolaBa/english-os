@@ -1,7 +1,8 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNow } from '@/lib/useNow'
 import { db } from '@/lib/db/db'
-import { getLastBackupAt } from '@/features/backup/backup'
+import { getLastBackupAt } from '@/features/backup/backupMeta'
+import { countDue } from '@/features/review/dueCount'
 import { groupFeed, type FeedItem } from '@/lib/activity/feed'
 import type { Word } from '@/lib/db/types'
 import {
@@ -35,18 +36,6 @@ export interface DashboardData {
   recent: FeedItem[]
   /** Non-null when a backup is overdue (progress exists, last backup missing or 14+ days old). */
   backupDue: { days: number | null } | null
-}
-
-/**
- * Words already in the review cycle whose time has come. Brand-new words are not "due" —
- * they're introduced gradually by the review session (phase 3).
- */
-function countDue(now = Date.now()): Promise<number> {
-  return db.words
-    .where('srs.dueAt')
-    .belowOrEqual(now)
-    .filter((w) => w.srs.status !== 'new')
-    .count()
 }
 
 async function findSpotlight(now = Date.now()): Promise<Word | null> {
@@ -113,9 +102,4 @@ async function loadDashboard(now: number): Promise<DashboardData> {
 export function useDashboardData(): DashboardData | undefined {
   const now = useNow()
   return useLiveQuery(() => loadDashboard(now), [now])
-}
-
-export function useDueCount(): number {
-  const now = useNow()
-  return useLiveQuery(() => countDue(now), [now]) ?? 0
 }

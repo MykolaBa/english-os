@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Star } from 'lucide-react'
 import { Link } from 'react-router'
 import { Button, SpeakButton } from '@/components/ui'
@@ -12,8 +13,11 @@ import styles from '../Vocabulary.module.scss'
  * One dictionary entry in the list. The whole row is clickable via a "stretched link"
  * (the headword's ::after covers the row), while the speak/favorite buttons sit above it —
  * valid HTML, no nested interactive elements.
+ *
+ * Memoised: typing in the search re-renders the page, but rows re-render only when the
+ * words are read again after a database change, not on every keystroke.
  */
-export function WordEntry({ word }: { word: Word }) {
+export const WordEntry = memo(function WordEntry({ word }: { word: Word }) {
   const t = useT()
   return (
     <li className={styles.entry}>
@@ -57,4 +61,4 @@ export function WordEntry({ word }: { word: Word }) {
       </div>
     </li>
   )
-}
+})

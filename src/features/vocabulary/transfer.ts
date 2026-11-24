@@ -72,7 +72,7 @@ export interface ImportRow {
   collections: string[]
 }
 
-export type RowProblem = 'missingTerm' | 'missingTranslation'
+export type RowProblem = 'missingTerm' | 'missingTranslation' | 'tooLong'
 
 export interface ParsedImport {
   rows: ImportRow[]
@@ -115,8 +115,10 @@ function validate(rows: ImportRow[]): ParsedImport {
   const invalid: ParsedImport['invalid'] = []
   for (const row of rows) {
     const errors = validateDraft(row.draft)
-    if (errors.term) invalid.push({ line: row.line, problem: 'missingTerm' })
-    else if (errors.translation) invalid.push({ line: row.line, problem: 'missingTranslation' })
+    if (errors.term === 'termRequired') invalid.push({ line: row.line, problem: 'missingTerm' })
+    else if (errors.translation === 'translationRequired')
+      invalid.push({ line: row.line, problem: 'missingTranslation' })
+    else if (errors.term || errors.translation) invalid.push({ line: row.line, problem: 'tooLong' })
     else valid.push(row)
   }
   return { rows: valid, invalid, unreadable: valid.length === 0 && invalid.length === 0 }

@@ -3,7 +3,7 @@ import { startOfDay } from '@/lib/date'
 import { db } from '@/lib/db/db'
 import type { ReviewLog, ReviewRating, Word } from '@/lib/db/types'
 import { schedule, type SrsConfig } from '@/lib/srs/scheduler'
-import { seedCollectionId } from '@/features/vocabulary/seed'
+import { seedCollectionId } from '@/features/vocabulary/seedIds'
 
 /** One XP per answered card: the daily goal measures effort, not perfection. */
 export const XP_PER_REVIEW = 1

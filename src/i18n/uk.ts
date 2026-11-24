@@ -285,6 +285,8 @@ export const uk: Dictionary = {
       more: 'Більше деталей',
       termRequired: 'Введи слово або фразу',
       translationRequired: 'Введи переклад',
+      termTooLong: 'Не довше 120 символів',
+      translationTooLong: 'Не довше 300 символів',
       duplicate: (term: string) => `«${term}» вже є у словнику`,
       added: (term: string) => `«${term}» додано`,
       saved: 'Зміни збережено',
@@ -457,6 +459,8 @@ export const uk: Dictionary = {
     problem: {
       missingTerm: (line: number) => `рядок ${line}: немає слова`,
       missingTranslation: (line: number) => `рядок ${line}: немає перекладу`,
+      tooLong: (line: number) =>
+        `рядок ${line}: задовгий запис (слово до 120 символів, переклад до 300)`,
     },
     planCollections: (names: string) => `Буде створено нові колекції: ${names}.`,
     importConfirm: (n: number) => `Імпортувати ${n} ${words(n)}`,

@@ -279,6 +279,8 @@ export const en = {
       more: 'More details',
       termRequired: 'Enter a word or phrase',
       translationRequired: 'Enter a translation',
+      termTooLong: 'Keep it under 120 characters',
+      translationTooLong: 'Keep it under 300 characters',
       duplicate: (term: string) => `“${term}” is already in your vocabulary`,
       added: (term: string) => `“${term}” added`,
       saved: 'Changes saved',
@@ -448,6 +450,8 @@ export const en = {
     problem: {
       missingTerm: (line: number) => `line ${line} has no word`,
       missingTranslation: (line: number) => `line ${line} has no translation`,
+      tooLong: (line: number) =>
+        `line ${line} is too long (word up to 120 characters, translation up to 300)`,
     },
     planCollections: (names: string) => `New collections will be created: ${names}.`,
     importConfirm: (n: number) => `Import ${n} ${plural(n, 'word', 'words')}`,

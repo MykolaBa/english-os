@@ -51,9 +51,18 @@ export default function VocabularyPage() {
 
   // Typing stays responsive: filtering re-runs with the deferred query.
   const query = useDeferredValue(filters.query)
+  const { collectionId, status, level, favoritesOnly, sort } = filters
+  // Depends on the filter values, not the `filters` object (a new one on every keystroke),
+  // so the list is recomputed only with the deferred query.
   const visible = useMemo(
-    () => (words ? sortWords(filterWords(words, { ...filters, query }), filters.sort) : []),
-    [words, filters, query],
+    () =>
+      words
+        ? sortWords(
+            filterWords(words, { query, collectionId, status, level, favoritesOnly, sort }),
+            sort,
+          )
+        : [],
+    [words, query, collectionId, status, level, favoritesOnly, sort],
   )
 
   const counts = useMemo(() => {

@@ -39,6 +39,16 @@ export function ReadingArticle({ text, vocabulary, selectedId, onSelect }: Readi
     return { rendered, selections }
   }, [text])
 
+  // Known-word lookups (several guessed base forms per word) run once per vocabulary
+  // change, not on every tap that only moves the selection.
+  const knownIds = useMemo(() => {
+    const ids = new Set<string>()
+    for (const [id, s] of paragraphs.selections) {
+      if (s.glossIndex === undefined && findKnownWord(s.text, vocabulary)) ids.add(id)
+    }
+    return ids
+  }, [paragraphs, vocabulary])
+
   const handleClick = (e: MouseEvent<HTMLElement>) => {
     const el = e.target instanceof Element ? e.target.closest('[data-token]') : null
     const id = el?.getAttribute('data-token')
@@ -70,7 +80,7 @@ export function ReadingArticle({ text, vocabulary, selectedId, onSelect }: Readi
                   </button>
                 )
               }
-              const known = findKnownWord(token.text, vocabulary) !== undefined
+              const known = knownIds.has(id)
               return (
                 <span
                   key={id}

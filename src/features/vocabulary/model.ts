@@ -1,6 +1,4 @@
-import { z } from 'zod'
 import type { CefrLevel, PartOfSpeech, SrsState, Word } from '@/lib/db/types'
-import { parseOneOf } from '@/lib/guards'
 
 export const PARTS_OF_SPEECH = [
   'noun',
@@ -77,29 +75,31 @@ export const EMPTY_DRAFT: WordDraft = {
   notes: '',
 }
 
-/**
- * Validation schema. Error messages are i18n keys, so the form can show them in the
- * current interface language.
- */
-export const wordDraftSchema = z.object({
-  term: z.string().trim().min(1, 'termRequired').max(120),
-  translation: z.string().trim().min(1, 'translationRequired').max(300),
-})
+/** Limits shared by the form (maxLength), imports and backups. */
+export const TERM_MAX = 120
+export const TRANSLATION_MAX = 300
 
-const DRAFT_ERROR_KEYS = ['termRequired', 'translationRequired'] as const
+export const DRAFT_ERROR_KEYS = [
+  'termRequired',
+  'termTooLong',
+  'translationRequired',
+  'translationTooLong',
+] as const
 export type WordDraftErrorKey = (typeof DRAFT_ERROR_KEYS)[number]
 export type WordDraftErrors = Partial<Record<'term' | 'translation', WordDraftErrorKey>>
 
+/**
+ * Required fields and length limits. Errors are i18n keys, so the form shows them in the
+ * current interface language. (Plain checks: no schema library on the add-word path.)
+ */
 export function validateDraft(draft: WordDraft): WordDraftErrors {
-  const result = wordDraftSchema.safeParse(draft)
-  if (result.success) return {}
   const errors: WordDraftErrors = {}
-  for (const issue of result.error.issues) {
-    const field = issue.path[0]
-    if (field === 'term' || field === 'translation') {
-      errors[field] ??= parseOneOf(DRAFT_ERROR_KEYS, issue.message) ?? 'termRequired'
-    }
-  }
+  const term = draft.term.trim()
+  const translation = draft.translation.trim()
+  if (!term) errors.term = 'termRequired'
+  else if (term.length > TERM_MAX) errors.term = 'termTooLong'
+  if (!translation) errors.translation = 'translationRequired'
+  else if (translation.length > TRANSLATION_MAX) errors.translation = 'translationTooLong'
   return errors
 }
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { GRAMMAR_LESSONS } from '@/content/grammar'
-import { buildStarterData, seedCollectionId } from '@/features/vocabulary/seed'
+import { seedCollectionId } from '@/features/vocabulary/seedIds'
+import { buildStarterData } from '@/features/vocabulary/starterData'
 import { checkExercise } from '@/lib/exercises/check'
 import type { Word } from '@/lib/db/types'
 import { buildQuiz, rebuildQuiz, wordIdOf, type QuizConfig } from './generate'

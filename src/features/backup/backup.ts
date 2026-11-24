@@ -15,7 +15,6 @@ import { currentSettings, sanitizeSettings, useSettings } from '@/stores/setting
 
 /** Bump when the file layout changes; older files must stay readable. */
 export const BACKUP_FORMAT = 1
-const LAST_BACKUP_KEY = 'backup.lastAt'
 
 const backupSchema = z.object({
   app: z.literal('englishos'),
@@ -83,14 +82,7 @@ export async function createBackup(now = new Date()): Promise<Backup> {
 }
 
 /** Remember when the last backup was made (for the reminder). */
-export async function markBackupMade(now = Date.now()): Promise<void> {
-  await db.meta.put({ key: LAST_BACKUP_KEY, value: now })
-}
-
-export async function getLastBackupAt(): Promise<number | null> {
-  const value = (await db.meta.get(LAST_BACKUP_KEY))?.value
-  return typeof value === 'number' ? value : null
-}
+export { getLastBackupAt, markBackupMade } from './backupMeta'
 
 export type BackupProblem = 'invalidJson' | 'notBackup' | 'newerFormat' | 'invalidData'
 

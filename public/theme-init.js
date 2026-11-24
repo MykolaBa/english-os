@@ -6,4 +6,6 @@ try {
     document.documentElement.dataset.theme = saved.theme
   if (['en', 'uk'].indexOf(saved.uiLanguage) !== -1)
     document.documentElement.lang = saved.uiLanguage
-} catch (e) {}
+} catch {
+  // Storage blocked or corrupt: the app falls back to the default theme.
+}

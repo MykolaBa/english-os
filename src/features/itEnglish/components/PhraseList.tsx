@@ -5,7 +5,7 @@ import type { Phrase } from '@/content/it'
 import { useT } from '@/i18n'
 import { useCollections, useVocabularyIndex } from '@/features/vocabulary/hooks'
 import { normalizeTerm } from '@/features/vocabulary/model'
-import { seedCollectionId } from '@/features/vocabulary/seed'
+import { seedCollectionId } from '@/features/vocabulary/seedIds'
 import { WordFormDialog } from '@/features/vocabulary/components/WordFormDialog'
 import styles from '../ItEnglish.module.scss'
 
