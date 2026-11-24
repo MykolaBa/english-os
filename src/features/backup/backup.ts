@@ -3,6 +3,7 @@ import { db } from '@/lib/db/db'
 import {
   activitySchema,
   collectionSchema,
+  lessonProgressSchema,
   metaSchema,
   reviewLogSchema,
   wordSchema,
@@ -23,6 +24,8 @@ const backupSchema = z.object({
     reviewLogs: z.array(reviewLogSchema),
     activity: z.array(activitySchema),
     meta: z.array(metaSchema),
+    /** Added with database v2; missing in older backups. */
+    lessonProgress: z.array(lessonProgressSchema).default([]),
   }),
   settings: z.unknown().optional(),
 })
@@ -30,18 +33,19 @@ const backupSchema = z.object({
 export type Backup = z.infer<typeof backupSchema>
 
 export async function createBackup(now = new Date()): Promise<Backup> {
-  const [words, collections, reviewLogs, activity, meta] = await Promise.all([
+  const [words, collections, reviewLogs, activity, meta, lessonProgress] = await Promise.all([
     db.words.toArray(),
     db.collections.toArray(),
     db.reviewLogs.toArray(),
     db.activity.toArray(),
     db.meta.toArray(),
+    db.lessonProgress.toArray(),
   ])
   return {
     app: 'englishos',
     format: BACKUP_FORMAT,
     exportedAt: now.toISOString(),
-    data: { words, collections, reviewLogs, activity, meta },
+    data: { words, collections, reviewLogs, activity, meta, lessonProgress },
     settings: currentSettings(),
   }
 }
@@ -99,24 +103,16 @@ export function parseBackup(text: string): ParsedBackup {
  * the database is left exactly as it was. Settings are applied field by field.
  */
 export async function restoreBackup(backup: Backup): Promise<void> {
-  const { words, collections, reviewLogs, activity, meta } = backup.data
-  await db.transaction(
-    'rw',
-    [db.words, db.collections, db.reviewLogs, db.activity, db.meta],
-    async () => {
-      await Promise.all([
-        db.words.clear(),
-        db.collections.clear(),
-        db.reviewLogs.clear(),
-        db.activity.clear(),
-        db.meta.clear(),
-      ])
-      await db.words.bulkAdd(words)
-      await db.collections.bulkAdd(collections)
-      await db.reviewLogs.bulkAdd(reviewLogs)
-      await db.activity.bulkAdd(activity)
-      await db.meta.bulkAdd(meta)
-    },
-  )
+  const { data } = backup
+  const tables = [db.words, db.collections, db.reviewLogs, db.activity, db.meta, db.lessonProgress]
+  await db.transaction('rw', tables, async () => {
+    await Promise.all(tables.map((table) => table.clear()))
+    await db.words.bulkAdd(data.words)
+    await db.collections.bulkAdd(data.collections)
+    await db.reviewLogs.bulkAdd(data.reviewLogs)
+    await db.activity.bulkAdd(data.activity)
+    await db.meta.bulkAdd(data.meta)
+    await db.lessonProgress.bulkAdd(data.lessonProgress)
+  })
   useSettings.getState().update(sanitizeSettings(backup.settings))
 }

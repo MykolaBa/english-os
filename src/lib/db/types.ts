@@ -132,6 +132,23 @@ export interface ActivityEvent {
   refId?: string
 }
 
+export type LessonStatus = 'in_progress' | 'completed'
+
+/** Progress in one grammar lesson (lesson content itself lives in src/content). */
+export interface LessonProgress {
+  lessonId: string
+  status: LessonStatus
+  bookmarked: boolean
+  attempts: number
+  /** Percent, 0–100; undefined until the exercises were done once. */
+  bestScore?: number
+  lastScore?: number
+  /** Exercise ids answered wrongly in the last attempt — for "review mistakes". */
+  lastMistakes: string[]
+  completedAt?: number
+  updatedAt: number
+}
+
 export interface MetaEntry {
   key: string
   value: unknown

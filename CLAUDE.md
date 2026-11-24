@@ -27,6 +27,8 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   (grammar, reading, IT questions) lives in `src/content` as typed TS modules referenced by id.
   Seeded vocabulary is imported into the DB once, with stable `seed:*` ids and `source: 'seed'`.
 - **Schema changes**: never edit a released `db.version(n)`; add `version(n + 1)` + upgrade.
+  Current: v2 (v1 + `lessonProgress`). New tables also go into the backup schema (with a
+  `.default([])` so older backups still restore).
 - **Reads in components** via `useLiveQuery` (auto-refresh). Zustand only for UI/session state
   and settings (`localStorage`, key `englishos:settings`) — never a second copy of DB data.
 - **Activity log**: every meaningful learning action calls `logActivity()` (with XP). Dashboard,
@@ -83,6 +85,11 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   (`ConfirmDialog`), report results with `toast`.
 - Ukrainian translations must be accurate; prefer fewer, high-quality content items.
 - `src/content` is excluded from Prettier: keep content compact (one entry per line).
+- Grammar lessons: one file per lesson in `src/content/grammar/lessons/`, listed in
+  `content/grammar/index.ts`. Lesson and exercise ids are stable (saved progress uses them).
+  `grammar.test.ts` must pass: every accepted answer checks as correct.
+- Exercises: use the shared engine (`lib/exercises`, `features/exercises/ExerciseRunner`) for
+  any practice or quiz — don't build a second one.
 - AI features: only when explicitly requested, behind a service interface, never with keys
   in the frontend.
 

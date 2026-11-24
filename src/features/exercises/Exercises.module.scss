@@ -1,0 +1,249 @@
+@use '@/styles/mixins' as *;
+
+.runner,
+.result {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.runnerHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+
+  > :first-child {
+    flex: 1;
+  }
+}
+
+.task {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--accent);
+}
+
+// The sentence is the English language itself — set in the serif.
+.prompt {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  line-height: 1.4;
+}
+
+.translation {
+  color: var(--text-muted);
+}
+
+.hint {
+  font-size: var(--text-sm);
+  color: var(--text-subtle);
+}
+
+// ---------- Choice ----------
+.choices {
+  display: grid;
+  gap: var(--space-2);
+
+  @include up(sm) {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+
+.choice {
+  min-height: 48px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  text-align: left;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+  @include focus-ring;
+
+  &:hover:not(:disabled) {
+    background: var(--surface-3);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.choiceSelected {
+  border-color: var(--accent);
+}
+
+.choiceRight {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+
+.choiceWrong {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+// ---------- Text answer ----------
+.answer {
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+}
+
+.answerRight {
+  border-color: var(--success);
+}
+
+.answerWrong {
+  border-color: var(--danger);
+}
+
+// ---------- Word order ----------
+.order {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+}
+
+.sentence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-strong);
+}
+
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tile {
+  min-height: 38px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  @include focus-ring;
+
+  &:hover:not(:disabled) {
+    background: var(--surface-3);
+  }
+}
+
+.tileUsed {
+  opacity: 0.3;
+}
+
+// ---------- Feedback ----------
+.feedback {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border-left: 3px solid;
+  background: var(--surface-2);
+  font-size: var(--text-sm);
+}
+
+.feedbackRight {
+  border-color: var(--success);
+}
+
+.feedbackWrong {
+  border-color: var(--danger);
+}
+
+.verdict {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: 600;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .feedbackRight & {
+    color: var(--success);
+  }
+
+  .feedbackWrong & {
+    color: var(--danger);
+  }
+}
+
+.explanation {
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+// ---------- Result ----------
+.resultIcon {
+  width: 32px;
+  height: 32px;
+  color: var(--success);
+}
+
+.resultTitle {
+  font-size: var(--text-2xl);
+}
+
+.resultText {
+  max-width: 60ch;
+  color: var(--text-muted);
+}
+
+.missed {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+
+  h4 {
+    font-size: var(--text-base);
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  li p:first-child {
+    font-family: var(--font-serif);
+  }
+
+  li .explanation {
+    font-size: var(--text-sm);
+  }
+}

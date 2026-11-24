@@ -9,12 +9,26 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 2 | Vocabulary: CRUD, search/filter/sort, collections, favorites, word detail page, ~100 seeded words, pronunciation (speechSynthesis) + Ukrainian interface | ✅ Done |
 | 3 | Review: SRS algorithm (SM-2-lite, tested), flashcard session (Again/Hard/Good/Easy), typing mode, review logs, XP | ✅ Done |
 | 4 | Dashboard polish, JSON backup/restore, CSV/JSON vocabulary import/export (zod-validated), deploy as PWA | ✅ Done — live at https://english-os-henna.vercel.app |
-| 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | ⏳ Next |
-| 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | |
+| 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | ✅ Done (6 lessons; more to add) |
+| 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | ⏳ Next |
 | 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | |
 | 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | |
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
+
+## Done in phase 5
+- Exercise engine (`lib/exercises`): choice, gap, transform and word-order exercises as a typed
+  union; strict grammar checking that forgives case, punctuation and contractions
+- Reusable `ExerciseRunner` (answer, check, explanation, result with mistakes); keyboard friendly
+- Grammar content as code (`src/content/grammar`): 6 lessons — A2: Present Simple vs
+  Continuous, Past Simple, will vs going to; B1: Present Perfect, First and Second
+  Conditional, Passive Voice — each with Ukrainian explanation, simple English, formulas,
+  examples, usage, common mistakes, comparison and 8 exercises
+- Content tests: every accepted answer must check as correct, word tiles must match the answer
+- Database v2 (first migration): `lessonProgress` — status, best/last score, mistakes,
+  bookmarks; included in backups (older backups still restore)
+- Grammar list with search, level, topic and bookmark filters; lesson page; XP per correct
+  answer plus a one-time completion bonus
 
 ## Done in phase 4
 - Backup: one JSON file with all tables and settings; every row validated by zod schemas

@@ -9,6 +9,8 @@ const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'))
 const VocabularyPage = lazy(() => import('@/features/vocabulary/VocabularyPage'))
 const WordDetailPage = lazy(() => import('@/features/vocabulary/WordDetailPage'))
 const ReviewPage = lazy(() => import('@/features/review/ReviewPage'))
+const GrammarPage = lazy(() => import('@/features/grammar/GrammarPage'))
+const LessonPage = lazy(() => import('@/features/grammar/LessonPage'))
 const ComingSoonPage = lazy(() => import('@/features/placeholder/ComingSoonPage'))
 const NotFoundPage = lazy(() => import('@/features/placeholder/NotFoundPage'))
 
@@ -17,6 +19,7 @@ const PAGES: Record<string, RouteObject['element']> = {
   '/': <DashboardPage />,
   '/vocabulary': <VocabularyPage />,
   '/review': <ReviewPage />,
+  '/grammar': <GrammarPage />,
   '/settings': <SettingsPage />,
 }
 
@@ -31,6 +34,7 @@ export const router = createBrowserRouter([
     children: [
       ...moduleRoutes,
       { path: '/vocabulary/:wordId', element: <WordDetailPage /> },
+      { path: '/grammar/:lessonId', element: <LessonPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

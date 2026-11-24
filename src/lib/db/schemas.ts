@@ -5,6 +5,7 @@ import {
   CEFR_LEVELS,
   type ActivityEvent,
   type Collection,
+  type LessonProgress,
   type MetaEntry,
   type ReviewLog,
   type Word,
@@ -106,3 +107,15 @@ export const metaSchema = z.object({
   key: z.string(),
   value: z.unknown(),
 }) satisfies z.ZodType<MetaEntry>
+
+export const lessonProgressSchema = z.object({
+  lessonId: z.string().min(1).max(200),
+  status: z.enum(['in_progress', 'completed']),
+  bookmarked: z.boolean(),
+  attempts: count,
+  bestScore: z.number().min(0).max(100).optional(),
+  lastScore: z.number().min(0).max(100).optional(),
+  lastMistakes: z.array(z.string()),
+  completedAt: timestamp.optional(),
+  updatedAt: timestamp,
+}) satisfies z.ZodType<LessonProgress>

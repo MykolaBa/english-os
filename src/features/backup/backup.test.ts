@@ -70,3 +70,13 @@ describe('backup', () => {
     expect(await getLastBackupAt()).toBe(123)
   })
 })
+
+describe('backup compatibility', () => {
+  it('accepts a backup made before lesson progress existed', async () => {
+    const old = await createBackup()
+    const { lessonProgress: _dropped, ...dataWithoutLessons } = old.data
+    const parsed = parseBackup(JSON.stringify({ ...old, data: dataWithoutLessons }))
+    expect(parsed.ok).toBe(true)
+    if (parsed.ok) expect(parsed.backup.data.lessonProgress).toEqual([])
+  })
+})
