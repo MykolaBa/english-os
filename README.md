@@ -7,7 +7,11 @@ Vocabulary with spaced repetition, grammar, quizzes, reading, listening, speakin
 IT interview preparation and learning statistics. Works offline, installs on a phone as a
 PWA, and needs no account, backend or API keys: all data stays in your browser.
 
-> Status: foundation (phases 0–1) is done. See [docs/ROADMAP.md](docs/ROADMAP.md).
+**Live:** https://english-os-henna.vercel.app (deployed by Vercel on every push to `main`).
+Install it on a phone from the browser menu ("Add to Home Screen" / "Install app").
+
+> Status: MVP done (phases 0–4: vocabulary, spaced-repetition review, practice, backup,
+> import/export). See [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Getting started
 
