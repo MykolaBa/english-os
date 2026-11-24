@@ -37,6 +37,8 @@ interface WordFormDialogProps {
   word?: Word
   /** Pre-selected collection when adding from a filtered view. */
   defaultCollectionId?: string | null
+  /** Prefilled fields when adding, e.g. a word tapped in a reading text. */
+  initial?: Partial<WordDraft>
 }
 
 /** Mount with a `key` that changes per opening, so the draft state starts fresh. */
@@ -46,6 +48,7 @@ export function WordFormDialog({
   collections,
   word,
   defaultCollectionId,
+  initial,
 }: WordFormDialogProps) {
   const t = useT()
   const f = t.vocabulary.form
@@ -53,7 +56,11 @@ export function WordFormDialog({
   const [draft, setDraft] = useState<WordDraft>(() =>
     word
       ? wordToDraft(word)
-      : { ...EMPTY_DRAFT, collectionIds: defaultCollectionId ? [defaultCollectionId] : [] },
+      : {
+          ...EMPTY_DRAFT,
+          collectionIds: defaultCollectionId ? [defaultCollectionId] : [],
+          ...initial,
+        },
   )
   const [errors, setErrors] = useState<WordDraftErrors>({})
   const [duplicate, setDuplicate] = useState<string | null>(null)

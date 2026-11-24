@@ -16,6 +16,17 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
 
+## Done in phase 7 (part 1: reading)
+- Six graded texts as code (`src/content/reading`, A2–B2: everyday, work, IT), each with a
+  glossary of key words and comprehension questions; `reading.test.ts` checks every key word
+  really appears in its text
+- Tap any word: a dictionary-style panel (sticky column on desktop, sheet on the phone) with
+  pronunciation, translation for key words, and "Add to vocabulary" prefilled with the
+  sentence as the example; words you already know are marked in the text
+- Comprehension questions on the shared `ExerciseRunner`; reading progress in database v4
+  (`readingProgress`, included in backups), XP and the activity feed
+- Listen to the whole text with the browser's speech synthesis
+
 ## Done in phase 6 (part 2: statistics)
 - Statistics page with a 7 days / 30 days / 3 months period (3 months is grouped by week);
   everything is derived from `activity`, `reviewLogs`, `quizResults` and `lessonProgress` by

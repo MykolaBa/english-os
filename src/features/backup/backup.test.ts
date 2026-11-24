@@ -79,4 +79,27 @@ describe('backup compatibility', () => {
     expect(parsed.ok).toBe(true)
     if (parsed.ok) expect(parsed.backup.data.lessonProgress).toEqual([])
   })
+
+  it('accepts a backup made before reading progress existed (v3)', async () => {
+    const old = await createBackup()
+    const { readingProgress: _dropped, ...dataV3 } = old.data
+    const parsed = parseBackup(JSON.stringify({ ...old, data: dataV3 }))
+    expect(parsed.ok).toBe(true)
+    if (parsed.ok) expect(parsed.backup.data.readingProgress).toEqual([])
+  })
+
+  it('round-trips reading progress', async () => {
+    await db.readingProgress.put({
+      textId: 'r1',
+      readAt: 5,
+      attempts: 1,
+      bestScore: 80,
+      lastScore: 80,
+      updatedAt: 5,
+    })
+    const backup = await createBackup()
+    await db.readingProgress.clear()
+    await restoreBackup(backup)
+    expect(await db.readingProgress.get('r1')).toMatchObject({ bestScore: 80 })
+  })
 })

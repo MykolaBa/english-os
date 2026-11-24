@@ -149,6 +149,18 @@ export interface LessonProgress {
   updatedAt: number
 }
 
+/** Progress in one reading text (the text itself lives in src/content/reading). */
+export interface ReadingProgress {
+  textId: string
+  /** Set once the comprehension questions were answered for the first time. */
+  readAt?: number
+  attempts: number
+  /** Percent, 0–100, of the comprehension questions. */
+  bestScore?: number
+  lastScore?: number
+  updatedAt: number
+}
+
 export const QUIZ_SOURCES = ['mixed', 'vocabulary', 'grammar', 'mistakes'] as const
 export type QuizSource = (typeof QUIZ_SOURCES)[number]
 

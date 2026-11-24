@@ -5,6 +5,7 @@ import type {
   LessonProgress,
   MetaEntry,
   QuizResult,
+  ReadingProgress,
   ReviewLog,
   Word,
 } from './types'
@@ -24,6 +25,7 @@ export class EnglishOSDatabase extends Dexie {
   meta!: EntityTable<MetaEntry, 'key'>
   lessonProgress!: EntityTable<LessonProgress, 'lessonId'>
   quizResults!: EntityTable<QuizResult, 'id'>
+  readingProgress!: EntityTable<ReadingProgress, 'textId'>
 
   constructor(name = 'englishos') {
     super(name)
@@ -42,6 +44,10 @@ export class EnglishOSDatabase extends Dexie {
     // v3 (phase 6): quiz history.
     this.version(3).stores({
       quizResults: '++id, at',
+    })
+    // v4 (phase 7): reading progress.
+    this.version(4).stores({
+      readingProgress: 'textId, readAt, updatedAt',
     })
   }
 }

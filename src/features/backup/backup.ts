@@ -5,6 +5,7 @@ import {
   collectionSchema,
   lessonProgressSchema,
   quizResultSchema,
+  readingProgressSchema,
   metaSchema,
   reviewLogSchema,
   wordSchema,
@@ -29,6 +30,8 @@ const backupSchema = z.object({
     lessonProgress: z.array(lessonProgressSchema).default([]),
     /** Added with database v3. */
     quizResults: z.array(quizResultSchema).default([]),
+    /** Added with database v4. */
+    readingProgress: z.array(readingProgressSchema).default([]),
   }),
   settings: z.unknown().optional(),
 })
@@ -36,21 +39,39 @@ const backupSchema = z.object({
 export type Backup = z.infer<typeof backupSchema>
 
 export async function createBackup(now = new Date()): Promise<Backup> {
-  const [words, collections, reviewLogs, activity, meta, lessonProgress, quizResults] =
-    await Promise.all([
-      db.words.toArray(),
-      db.collections.toArray(),
-      db.reviewLogs.toArray(),
-      db.activity.toArray(),
-      db.meta.toArray(),
-      db.lessonProgress.toArray(),
-      db.quizResults.toArray(),
-    ])
+  const [
+    words,
+    collections,
+    reviewLogs,
+    activity,
+    meta,
+    lessonProgress,
+    quizResults,
+    readingProgress,
+  ] = await Promise.all([
+    db.words.toArray(),
+    db.collections.toArray(),
+    db.reviewLogs.toArray(),
+    db.activity.toArray(),
+    db.meta.toArray(),
+    db.lessonProgress.toArray(),
+    db.quizResults.toArray(),
+    db.readingProgress.toArray(),
+  ])
   return {
     app: 'englishos',
     format: BACKUP_FORMAT,
     exportedAt: now.toISOString(),
-    data: { words, collections, reviewLogs, activity, meta, lessonProgress, quizResults },
+    data: {
+      words,
+      collections,
+      reviewLogs,
+      activity,
+      meta,
+      lessonProgress,
+      quizResults,
+      readingProgress,
+    },
     settings: currentSettings(),
   }
 }
@@ -117,6 +138,7 @@ export async function restoreBackup(backup: Backup): Promise<void> {
     db.meta,
     db.lessonProgress,
     db.quizResults,
+    db.readingProgress,
   ]
   await db.transaction('rw', tables, async () => {
     await Promise.all(tables.map((table) => table.clear()))
@@ -127,6 +149,7 @@ export async function restoreBackup(backup: Backup): Promise<void> {
     await db.meta.bulkAdd(data.meta)
     await db.lessonProgress.bulkAdd(data.lessonProgress)
     await db.quizResults.bulkAdd(data.quizResults)
+    await db.readingProgress.bulkAdd(data.readingProgress)
   })
   useSettings.getState().update(sanitizeSettings(backup.settings))
 }

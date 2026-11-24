@@ -1,0 +1,375 @@
+@use '@/styles/mixins' as *;
+
+// ---------- Text list ----------
+// One surface with dividers — a table of contents, not a grid of cards.
+.texts {
+  @include card-surface;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+
+  li + li {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.textRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-out);
+  @include focus-ring;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  @include up(md) {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-6);
+  }
+}
+
+.textMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.textMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.textTitle {
+  margin-top: var(--space-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.textSummary {
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+}
+
+.textRead,
+.textUnread {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.textRead {
+  color: var(--success);
+}
+
+.textUnread {
+  color: var(--text-subtle);
+}
+
+// ---------- Text page ----------
+.page {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: fit-content;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  @include focus-ring;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+}
+
+.hero {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-2) 0 var(--space-2);
+}
+
+.heroTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(1.875rem, 3vw + 1rem, 2.75rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.heroSummary {
+  max-width: 60ch;
+  color: var(--text-muted);
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: var(--space-5);
+  }
+}
+
+.main {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+
+  @include up(lg) {
+    gap: var(--space-5);
+  }
+}
+
+// The text itself: the English language, so it's set in the reading serif.
+.article {
+  max-width: 66ch;
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.75;
+
+  p + p {
+    margin-top: 1em;
+  }
+}
+
+.word,
+.gloss {
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+// Key words: a real button that looks like part of the sentence.
+.gloss {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline dotted var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+  @include focus-ring;
+}
+
+// Words already in the vocabulary get a quiet hint, nothing more.
+.known {
+  text-decoration: underline solid var(--border-strong);
+  text-underline-offset: 0.22em;
+}
+
+.selected,
+.selected:hover {
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+// ---------- Word panel ----------
+.panel {
+  @include card-surface;
+  padding: var(--space-5);
+
+  // Phone: a sheet above the bottom navigation, only while a word is selected.
+  @include down(lg) {
+    position: fixed;
+    z-index: 30;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--space-3));
+    box-shadow: var(--shadow-lg);
+
+    &[data-empty] {
+      display: none;
+    }
+  }
+
+  @include up(lg) {
+    position: sticky;
+    top: var(--space-6);
+  }
+}
+
+.panelHintIcon {
+  width: 22px;
+  height: 22px;
+  margin-bottom: var(--space-2);
+  color: var(--accent);
+}
+
+.panelHint {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.headword {
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.panelClose {
+  margin-left: auto;
+}
+
+.pos {
+  margin-top: 2px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.translation {
+  margin-top: var(--space-2);
+  font-size: var(--text-md);
+}
+
+.related {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+
+  a {
+    font-family: var(--font-serif);
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.panelActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.knownLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--success);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// ---------- Key words ----------
+.keyWords {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.keyWord {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+
+  & + & {
+    border-top: 1px solid var(--border);
+  }
+
+  // The action slot has one width whether it holds a button or a check mark,
+  // so the translation column lines up in every row.
+  > :last-child {
+    flex: 0 0 32px;
+    justify-content: center;
+  }
+}
+
+.keyWordText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+
+  @include up(md) {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--space-4);
+  }
+}
+
+.keyTerm {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  font-weight: 600;
+
+  @include up(md) {
+    flex: 0 0 40%;
+  }
+}
+
+.keyTranslation {
+  color: var(--text-muted);
+}
+
+// ---------- Comprehension ----------
+.check {
+  @include card-surface;
+  padding: var(--space-5);
+  scroll-margin-top: var(--space-6);
+
+  @include up(md) {
+    padding: var(--space-6);
+  }
+}
+
+.sectionTitle {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xl);
+}
+
+.checkText {
+  margin-bottom: var(--space-4);
+  color: var(--text-muted);
+}

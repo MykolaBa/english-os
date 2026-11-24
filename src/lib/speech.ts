@@ -16,7 +16,8 @@ function pickVoice(): SpeechSynthesisVoice | undefined {
   )
 }
 
-export function speak(text: string, rate = 0.95): void {
+/** Speaks English text. `onEnd` fires when it finishes or is stopped. */
+export function speak(text: string, rate = 0.95, onEnd?: () => void): void {
   if (!isSpeechSupported()) return
   const synth = window.speechSynthesis
   synth.cancel() // stop anything still playing
@@ -25,5 +26,13 @@ export function speak(text: string, rate = 0.95): void {
   if (voice) utterance.voice = voice
   utterance.lang = voice?.lang ?? 'en-GB'
   utterance.rate = rate
+  if (onEnd) {
+    utterance.onend = onEnd
+    utterance.onerror = onEnd
+  }
   synth.speak(utterance)
+}
+
+export function stopSpeaking(): void {
+  if (isSpeechSupported()) window.speechSynthesis.cancel()
 }

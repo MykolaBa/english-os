@@ -29,7 +29,7 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   (grammar, reading, IT questions) lives in `src/content` as typed TS modules referenced by id.
   Seeded vocabulary is imported into the DB once, with stable `seed:*` ids and `source: 'seed'`.
 - **Schema changes**: never edit a released `db.version(n)`; add `version(n + 1)` + upgrade.
-  Current: v3 (v1 + `lessonProgress` in v2 + `quizResults` in v3). New tables also go into the backup schema (with a
+  Current: v4 (v1 + `lessonProgress` in v2 + `quizResults` in v3 + `readingProgress` in v4). New tables also go into the backup schema (with a
   `.default([])` so older backups still restore).
 - **Reads in components** via `useLiveQuery` (auto-refresh). Zustand only for UI/session state
   and settings (`localStorage`, key `englishos:settings`) — never a second copy of DB data.
@@ -90,6 +90,9 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 - Grammar lessons: one file per lesson in `src/content/grammar/lessons/`, listed in
   `content/grammar/index.ts`. Lesson and exercise ids are stable (saved progress uses them).
   `grammar.test.ts` must pass: every accepted answer checks as correct.
+- Reading texts: one file per text in `src/content/reading/texts/`, listed in
+  `content/reading/index.ts`; text and question ids are stable. `reading.test.ts` must pass:
+  every glossary `form` (or `term`) really appears in its text.
 - Exercises: use the shared engine (`lib/exercises`, `features/exercises/ExerciseRunner`) for
   any practice or quiz — don't build a second one.
 - AI features: only when explicitly requested, behind a service interface, never with keys

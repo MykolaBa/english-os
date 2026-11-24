@@ -7,6 +7,7 @@ import {
   type Collection,
   type LessonProgress,
   type QuizResult,
+  type ReadingProgress,
   QUIZ_SOURCES,
   VOCAB_KINDS,
   type MetaEntry,
@@ -122,6 +123,15 @@ export const lessonProgressSchema = z.object({
   completedAt: timestamp.optional(),
   updatedAt: timestamp,
 }) satisfies z.ZodType<LessonProgress>
+
+export const readingProgressSchema = z.object({
+  textId: z.string().min(1).max(200),
+  readAt: timestamp.optional(),
+  attempts: count,
+  bestScore: z.number().min(0).max(100).optional(),
+  lastScore: z.number().min(0).max(100).optional(),
+  updatedAt: timestamp,
+}) satisfies z.ZodType<ReadingProgress>
 
 export const quizResultSchema = z.object({
   id: count.optional(),
