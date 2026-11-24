@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { STARTER_COLLECTIONS } from '@/content/vocabulary/starterWords'
 import { db } from '@/lib/db/db'
 import type { Collection, Word } from '@/lib/db/types'
+import { normalizeTerm } from './model'
 import { seedCollectionId } from './seed'
 
 const STARTER_ORDER = new Map(STARTER_COLLECTIONS.map((c, i) => [seedCollectionId(c.slug), i]))
@@ -28,4 +29,12 @@ export function useCollections(): Collection[] | undefined {
 /** `undefined` while loading, `null` when the word doesn't exist. */
 export function useWord(id: string | undefined): Word | null | undefined {
   return useLiveQuery(async () => (id ? ((await db.words.get(id)) ?? null) : null), [id])
+}
+
+/** The learner's words by normalized term, to mark known words and avoid duplicates. */
+export function useVocabularyIndex(): Map<string, Word> | undefined {
+  return useLiveQuery(async () => {
+    const words = await db.words.toArray()
+    return new Map(words.map((w) => [normalizeTerm(w.term), w]))
+  }, [])
 }

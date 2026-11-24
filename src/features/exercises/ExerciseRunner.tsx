@@ -118,7 +118,7 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
           {exercise.prompt}
         </p>
       )}
-      {exercise.type === 'order' && exercise.translation && (
+      {(exercise.type === 'order' || exercise.type === 'gap') && exercise.translation && (
         <p className={styles.translation} lang="uk">
           {exercise.translation}
         </p>

@@ -8,6 +8,8 @@ import {
   type LessonProgress,
   type QuizResult,
   type ReadingProgress,
+  type InterviewAnswer,
+  INTERVIEW_STATUSES,
   QUIZ_SOURCES,
   VOCAB_KINDS,
   type MetaEntry,
@@ -132,6 +134,16 @@ export const readingProgressSchema = z.object({
   lastScore: z.number().min(0).max(100).optional(),
   updatedAt: timestamp,
 }) satisfies z.ZodType<ReadingProgress>
+
+export const interviewAnswerSchema = z.object({
+  questionId: z.string().min(1).max(200),
+  answer: z.string().max(20_000),
+  status: z.enum(INTERVIEW_STATUSES),
+  answeredAt: timestamp.optional(),
+  confidentAt: timestamp.optional(),
+  createdAt: timestamp,
+  updatedAt: timestamp,
+}) satisfies z.ZodType<InterviewAnswer>
 
 export const quizResultSchema = z.object({
   id: count.optional(),

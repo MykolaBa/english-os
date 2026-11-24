@@ -161,6 +161,21 @@ export interface ReadingProgress {
   updatedAt: number
 }
 
+export const INTERVIEW_STATUSES = ['practising', 'confident'] as const
+export type InterviewStatus = (typeof INTERVIEW_STATUSES)[number]
+
+/** The learner's own answer to an interview question (the question lives in src/content/it). */
+export interface InterviewAnswer {
+  questionId: string
+  answer: string
+  status: InterviewStatus
+  /** When an answer was first written / first marked confident: XP is given once for each. */
+  answeredAt?: number
+  confidentAt?: number
+  createdAt: number
+  updatedAt: number
+}
+
 export const QUIZ_SOURCES = ['mixed', 'vocabulary', 'grammar', 'mistakes'] as const
 export type QuizSource = (typeof QUIZ_SOURCES)[number]
 

@@ -88,6 +88,23 @@ describe('backup compatibility', () => {
     if (parsed.ok) expect(parsed.backup.data.readingProgress).toEqual([])
   })
 
+  it('round-trips interview answers and accepts v4 backups without them', async () => {
+    await db.interviewAnswers.put({
+      questionId: 'q1',
+      answer: 'Hi',
+      status: 'confident',
+      createdAt: 1,
+      updatedAt: 2,
+    })
+    const backup = await createBackup()
+    const { interviewAnswers: _dropped, ...dataV4 } = backup.data
+    const old = parseBackup(JSON.stringify({ ...backup, data: dataV4 }))
+    expect(old.ok && old.backup.data.interviewAnswers).toEqual([])
+    await db.interviewAnswers.clear()
+    await restoreBackup(backup)
+    expect(await db.interviewAnswers.get('q1')).toMatchObject({ answer: 'Hi' })
+  })
+
   it('round-trips reading progress', async () => {
     await db.readingProgress.put({
       textId: 'r1',

@@ -11,10 +11,23 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 4 | Dashboard polish, JSON backup/restore, CSV/JSON vocabulary import/export (zod-validated), deploy as PWA | ✅ Done — live at https://english-os-henna.vercel.app |
 | 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | ✅ Done (6 lessons; more to add) |
 | 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | ✅ Done |
-| 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | ⏳ Next |
-| 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | |
+| 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | ✅ Done |
+| 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | ⏳ Next |
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
+
+## Done in phase 7 (part 2: IT English)
+- Phrasebook for a developer's day (`src/content/it/phrases.ts`): stand-up, asking for help,
+  code review, estimates, meetings, bug reports — 35 phrases with Ukrainian equivalents and
+  usage notes; pronounce or save any phrase to the vocabulary
+- Phrase practice on the shared engine, mixing two skills: pick the phrase for its meaning
+  and type its key word (seeded generator, `features/itEnglish/drill.ts`)
+- Interview practice: 8 common questions (about you and technical) with what the
+  interviewer wants to hear, an outline, a model answer and useful phrases; write and keep
+  your own answer and mark it confident (database v5, `interviewAnswers`, in backups)
+- Mock interview: random questions read aloud, two minutes each with a timer and hints,
+  then a summary linking to each question to write the answer down
+- Progress on the overview and a link to the IT & Programming words
 
 ## Done in phase 7 (part 1: reading)
 - Six graded texts as code (`src/content/reading`, A2–B2: everyday, work, IT), each with a

@@ -33,6 +33,8 @@ export interface GapExercise extends Base {
   prompt: string
   /** Accepted answers for the gap (contractions are matched automatically). */
   answers: string[]
+  /** Ukrainian meaning of the whole sentence, shown as a hint under it. */
+  translation?: string
 }
 
 /** Rewrite a sentence following an instruction. */

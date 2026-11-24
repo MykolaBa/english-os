@@ -4,6 +4,7 @@ import type {
   Collection,
   LessonProgress,
   MetaEntry,
+  InterviewAnswer,
   QuizResult,
   ReadingProgress,
   ReviewLog,
@@ -26,6 +27,7 @@ export class EnglishOSDatabase extends Dexie {
   lessonProgress!: EntityTable<LessonProgress, 'lessonId'>
   quizResults!: EntityTable<QuizResult, 'id'>
   readingProgress!: EntityTable<ReadingProgress, 'textId'>
+  interviewAnswers!: EntityTable<InterviewAnswer, 'questionId'>
 
   constructor(name = 'englishos') {
     super(name)
@@ -48,6 +50,10 @@ export class EnglishOSDatabase extends Dexie {
     // v4 (phase 7): reading progress.
     this.version(4).stores({
       readingProgress: 'textId, readAt, updatedAt',
+    })
+    // v5 (phase 7): your answers to interview questions.
+    this.version(5).stores({
+      interviewAnswers: 'questionId, status, updatedAt',
     })
   }
 }
