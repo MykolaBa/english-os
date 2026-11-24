@@ -12,12 +12,14 @@ const ReviewPage = lazy(() => import('@/features/review/ReviewPage'))
 const GrammarPage = lazy(() => import('@/features/grammar/GrammarPage'))
 const LessonPage = lazy(() => import('@/features/grammar/LessonPage'))
 const QuizzesPage = lazy(() => import('@/features/quizzes/QuizzesPage'))
+const StatisticsPage = lazy(() => import('@/features/statistics/StatisticsPage'))
 const ComingSoonPage = lazy(() => import('@/features/placeholder/ComingSoonPage'))
 const NotFoundPage = lazy(() => import('@/features/placeholder/NotFoundPage'))
 
 /** Implemented modules. Anything in the nav but not here renders the roadmap placeholder. */
 const PAGES: Record<string, RouteObject['element']> = {
   '/': <DashboardPage />,
+  '/statistics': <StatisticsPage />,
   '/vocabulary': <VocabularyPage />,
   '/review': <ReviewPage />,
   '/grammar': <GrammarPage />,

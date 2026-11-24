@@ -1,0 +1,303 @@
+@use '@/styles/mixins' as *;
+
+.layout {
+  display: grid;
+  gap: var(--space-4);
+
+  @include up(lg) {
+    gap: var(--space-5);
+  }
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+
+  @include up(lg) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+}
+
+// ---------- Summary ----------
+// One surface split by hairlines (the box-shadow trick draws dividers between cells
+// whatever the column count), rather than six identical cards.
+.summary {
+  @include card-surface;
+  overflow: hidden;
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+
+  @include up(md) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @include up(xl) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--space-4) var(--space-5);
+  box-shadow:
+    -1px 0 0 var(--border),
+    0 -1px 0 var(--border);
+
+  dt {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.figureValue {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.figureHint {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+// ---------- Charts ----------
+.chart {
+  // Recharts draws an SVG; keep its focus outline (keyboard layer) visible but on-brand.
+  :global(.recharts-surface):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+  :global(.recharts-wrapper) {
+    outline: none;
+  }
+}
+
+.chartEmpty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-6) var(--space-4);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+
+  p {
+    margin: 0;
+  }
+}
+
+.tooltip {
+  min-width: 140px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+
+  p {
+    margin: 0;
+  }
+}
+
+.tooltipTitle {
+  margin-bottom: 2px !important;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tooltipValue {
+  font-size: var(--text-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+// ---------- Table alternative ----------
+.tableToggle {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+
+  summary {
+    width: fit-content;
+    padding: var(--space-1) 0;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    @include focus-ring;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+}
+
+.tableScroll {
+  max-height: 320px;
+  margin-top: var(--space-2);
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: var(--space-2) var(--space-3);
+    border-top: 1px solid var(--border);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  th:first-child {
+    text-align: left;
+    font-weight: 400;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    color: var(--text-muted);
+    font-weight: 500;
+    border-top: 0;
+  }
+}
+
+// ---------- Bar list ----------
+.barList {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: var(--space-1);
+  column-gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.barLabel {
+  @include truncate;
+}
+
+.barValue {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.barTrack {
+  grid-column: 1 / -1;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+}
+
+// ---------- Weak spots ----------
+.listTitle {
+  margin: var(--space-2) 0 var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+
+  & ~ & {
+    margin-top: var(--space-5);
+  }
+}
+
+.listEmpty {
+  margin: 0;
+  padding: var(--space-2) 0;
+  font-size: var(--text-sm);
+  color: var(--text-subtle);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 calc(-1 * var(--space-2));
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: inherit;
+  text-decoration: none;
+  @include focus-ring;
+
+  li + li & {
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+  }
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+.listText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.term {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  @include truncate;
+}
+
+.listName {
+  font-family: var(--font-serif);
+  @include truncate;
+}
+
+.listMeta {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  @include truncate;
+}
+
+.listStat {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}

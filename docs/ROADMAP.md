@@ -10,11 +10,21 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 3 | Review: SRS algorithm (SM-2-lite, tested), flashcard session (Again/Hard/Good/Easy), typing mode, review logs, XP | ✅ Done |
 | 4 | Dashboard polish, JSON backup/restore, CSV/JSON vocabulary import/export (zod-validated), deploy as PWA | ✅ Done — live at https://english-os-henna.vercel.app |
 | 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | ✅ Done (6 lessons; more to add) |
-| 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | ⏳ Next |
-| 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | |
+| 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | ✅ Done |
+| 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | ⏳ Next |
 | 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | |
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
+
+## Done in phase 6 (part 2: statistics)
+- Statistics page with a 7 days / 30 days / 3 months period (3 months is grouped by week);
+  everything is derived from `activity`, `reviewLogs`, `quizResults` and `lessonProgress` by
+  pure, tested functions (`features/statistics/stats.ts`) — no stored counters
+- Period summary, XP per day/week (bar chart) and review accuracy (line chart with gaps for
+  days off) built with Recharts (lazy chunk, only loaded on this page); hover and keyboard
+  tooltips, and every chart can be shown as a table
+- Where your XP comes from, vocabulary by learning stage, and "needs attention": the words you
+  forget most and grammar lessons below the pass mark, each linking to the fix
 
 ## Done in phase 6 (part 1: quizzes)
 - Seeded quiz generator (`features/quizzes/generate.ts`): vocabulary questions built from your

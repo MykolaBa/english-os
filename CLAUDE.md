@@ -10,7 +10,7 @@ key concepts/how to test. Don't dump huge explanations. Chat with the owner in U
 ## Stack
 React 19 · TypeScript (strict) · Vite · SCSS modules · React Router (`react-router`) ·
 Dexie (IndexedDB) + `dexie-react-hooks` · Zustand · zod · lucide-react · vite-plugin-pwa ·
-Vitest + Testing Library + fake-indexeddb. Recharts will be added with Statistics (phase 6).
+Vitest + Testing Library + fake-indexeddb · Recharts (Statistics page only, lazy-loaded).
 No backend, no paid APIs, no API keys. Ask before adding any dependency.
 
 ## Commands
