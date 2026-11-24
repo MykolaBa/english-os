@@ -1,5 +1,13 @@
 import Dexie, { type EntityTable } from 'dexie'
-import type { ActivityEvent, Collection, LessonProgress, MetaEntry, ReviewLog, Word } from './types'
+import type {
+  ActivityEvent,
+  Collection,
+  LessonProgress,
+  MetaEntry,
+  QuizResult,
+  ReviewLog,
+  Word,
+} from './types'
 
 /**
  * The single IndexedDB database of the app.
@@ -15,6 +23,7 @@ export class EnglishOSDatabase extends Dexie {
   activity!: EntityTable<ActivityEvent, 'id'>
   meta!: EntityTable<MetaEntry, 'key'>
   lessonProgress!: EntityTable<LessonProgress, 'lessonId'>
+  quizResults!: EntityTable<QuizResult, 'id'>
 
   constructor(name = 'englishos') {
     super(name)
@@ -29,6 +38,10 @@ export class EnglishOSDatabase extends Dexie {
     // untouched, so users upgrade in place without losing anything.
     this.version(2).stores({
       lessonProgress: 'lessonId, status, updatedAt',
+    })
+    // v3 (phase 6): quiz history.
+    this.version(3).stores({
+      quizResults: '++id, at',
     })
   }
 }

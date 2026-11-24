@@ -149,6 +149,38 @@ export interface LessonProgress {
   updatedAt: number
 }
 
+export const QUIZ_SOURCES = ['mixed', 'vocabulary', 'grammar', 'mistakes'] as const
+export type QuizSource = (typeof QUIZ_SOURCES)[number]
+
+/** meaning: EN word → pick UA; word: UA → pick EN; typing: UA → type EN; context: fill the example. */
+export const VOCAB_KINDS = ['meaning', 'word', 'typing', 'context'] as const
+export type VocabKind = (typeof VOCAB_KINDS)[number]
+
+/** Everything needed to rebuild a quiz exactly (generation is seeded). */
+export interface QuizConfig {
+  source: QuizSource
+  count: number
+  /** Vocabulary questions only from this collection (null = all words). */
+  collectionId: string | null
+  /** Grammar questions only from these lessons (empty = all lessons). */
+  lessonIds: string[]
+  vocabKinds: VocabKind[]
+  seed: string
+}
+
+export interface QuizResult {
+  id?: number
+  at: number
+  config: QuizConfig
+  correct: number
+  total: number
+  /** Exercise ids answered wrongly. */
+  mistakes: string[]
+  durationSec: number
+  /** The exact questions, so "repeat" gives the same quiz even after your data changed. */
+  exerciseIds?: string[]
+}
+
 export interface MetaEntry {
   key: string
   value: unknown

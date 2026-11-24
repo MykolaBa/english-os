@@ -29,7 +29,7 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   (grammar, reading, IT questions) lives in `src/content` as typed TS modules referenced by id.
   Seeded vocabulary is imported into the DB once, with stable `seed:*` ids and `source: 'seed'`.
 - **Schema changes**: never edit a released `db.version(n)`; add `version(n + 1)` + upgrade.
-  Current: v2 (v1 + `lessonProgress`). New tables also go into the backup schema (with a
+  Current: v3 (v1 + `lessonProgress` in v2 + `quizResults` in v3). New tables also go into the backup schema (with a
   `.default([])` so older backups still restore).
 - **Reads in components** via `useLiveQuery` (auto-refresh). Zustand only for UI/session state
   and settings (`localStorage`, key `englishos:settings`) — never a second copy of DB data.

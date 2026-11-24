@@ -5,8 +5,13 @@
  * Prompts are English; `explanation` / `instruction` are Ukrainian.
  */
 
+/** Prompts and options are English unless marked; generated quiz questions may be Ukrainian. */
+export type ContentLang = 'en' | 'uk'
+
 interface Base {
   id: string
+  /** Language of the prompt text (default English). */
+  promptLang?: ContentLang
   /** Why the answer is right (Ukrainian), shown after checking. */
   explanation: string
 }
@@ -16,6 +21,8 @@ export interface ChoiceExercise extends Base {
   type: 'choice'
   prompt: string
   options: string[]
+  /** Language of the options (default English). */
+  optionsLang?: ContentLang
   /** Index into `options`. */
   answer: number
 }

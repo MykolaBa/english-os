@@ -6,6 +6,9 @@ import {
   type ActivityEvent,
   type Collection,
   type LessonProgress,
+  type QuizResult,
+  QUIZ_SOURCES,
+  VOCAB_KINDS,
   type MetaEntry,
   type ReviewLog,
   type Word,
@@ -119,3 +122,21 @@ export const lessonProgressSchema = z.object({
   completedAt: timestamp.optional(),
   updatedAt: timestamp,
 }) satisfies z.ZodType<LessonProgress>
+
+export const quizResultSchema = z.object({
+  id: count.optional(),
+  at: timestamp,
+  config: z.object({
+    source: z.enum(QUIZ_SOURCES),
+    count: z.number().int().min(1).max(200),
+    collectionId: z.string().nullable(),
+    lessonIds: z.array(z.string()),
+    vocabKinds: z.array(z.enum(VOCAB_KINDS)),
+    seed: z.string().max(100),
+  }),
+  correct: count,
+  total: count,
+  mistakes: z.array(z.string()),
+  durationSec: z.number().nonnegative(),
+  exerciseIds: z.array(z.string()).optional(),
+}) satisfies z.ZodType<QuizResult>

@@ -11,6 +11,7 @@ const WordDetailPage = lazy(() => import('@/features/vocabulary/WordDetailPage')
 const ReviewPage = lazy(() => import('@/features/review/ReviewPage'))
 const GrammarPage = lazy(() => import('@/features/grammar/GrammarPage'))
 const LessonPage = lazy(() => import('@/features/grammar/LessonPage'))
+const QuizzesPage = lazy(() => import('@/features/quizzes/QuizzesPage'))
 const ComingSoonPage = lazy(() => import('@/features/placeholder/ComingSoonPage'))
 const NotFoundPage = lazy(() => import('@/features/placeholder/NotFoundPage'))
 
@@ -20,6 +21,7 @@ const PAGES: Record<string, RouteObject['element']> = {
   '/vocabulary': <VocabularyPage />,
   '/review': <ReviewPage />,
   '/grammar': <GrammarPage />,
+  '/quizzes': <QuizzesPage />,
   '/settings': <SettingsPage />,
 }
 

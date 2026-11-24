@@ -21,7 +21,7 @@ export function ChoiceInput({ exercise, selected, revealed, onSelect }: ChoiceIn
         <button
           key={option}
           type="button"
-          lang="en"
+          lang={exercise.optionsLang ?? 'en'}
           className={cx(
             styles.choice,
             selected === i && styles.choiceSelected,

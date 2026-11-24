@@ -1,3 +1,4 @@
+import { createRng, shuffleWith } from './random'
 import type { Exercise, ExerciseResponse, OrderExercise } from './types'
 
 /**
@@ -78,22 +79,8 @@ export const scorePercent = ({ correct, total }: AttemptResult) =>
  * Deterministic shuffle (same seed → same order), so word-order exercises don't reshuffle
  * on every render but differ between exercises.
  */
-export function seededShuffle<T>(items: readonly T[], seed: string): T[] {
-  let h = 2166136261
-  for (const ch of seed) h = Math.imul(h ^ ch.charCodeAt(0), 16777619)
-  const next = () => {
-    h = Math.imul(h ^ (h >>> 15), 2246822507)
-    h = Math.imul(h ^ (h >>> 13), 3266489909)
-    h ^= h >>> 16
-    return (h >>> 0) / 4294967296
-  }
-  const list = [...items]
-  for (let i = list.length - 1; i > 0; i--) {
-    const j = Math.floor(next() * (i + 1))
-    ;[list[i], list[j]] = [list[j]!, list[i]!]
-  }
-  return list
-}
+export const seededShuffle = <T>(items: readonly T[], seed: string): T[] =>
+  shuffleWith(items, createRng(seed))
 
 /** The tiles of a word-order exercise, in their (stable) shuffled order. */
 export const orderTiles = (exercise: OrderExercise) => seededShuffle(exercise.tokens, exercise.id)

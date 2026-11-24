@@ -16,6 +16,16 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
 
+## Done in phase 6 (part 1: quizzes)
+- Seeded quiz generator (`features/quizzes/generate.ts`): vocabulary questions built from your
+  words (meaning, word for a translation, typing, word in context; distractors of the same part
+  of speech) plus grammar exercises from lessons; learned words first
+- Quick quizzes (mixed, words, grammar, my mistakes) and a custom quiz builder with a live
+  "N questions ready" preview; all run on the shared `ExerciseRunner`
+- Quiz history (database v3, `quizResults`) with exact "repeat" from stored question ids
+- Mistakes stay in sync: missed words join My Mistakes, missed grammar joins the lesson's
+  mistakes; a correct answer in the "My mistakes" quiz clears them
+
 ## Done in phase 5
 - Exercise engine (`lib/exercises`): choice, gap, transform and word-order exercises as a typed
   union; strict grammar checking that forgives case, punctuation and contractions

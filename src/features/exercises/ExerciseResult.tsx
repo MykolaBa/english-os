@@ -8,7 +8,7 @@ import styles from './Exercises.module.scss'
 interface ExerciseResultProps {
   result: AttemptResult
   exercises: readonly Exercise[]
-  passScore: number
+  passScore?: number
   onRetry: () => void
   onClose: () => void
 }
@@ -32,7 +32,7 @@ export function ExerciseResult({
       <h3 className={styles.resultTitle}>{t.resultTitle(pct)}</h3>
       <p className={styles.resultText}>
         {t.resultText(result.correct, result.total)}{' '}
-        {pct >= passScore ? t.passed : t.notPassed(passScore)}
+        {passScore === undefined ? null : pct >= passScore ? t.passed : t.notPassed(passScore)}
       </p>
       {missed.length > 0 && (
         <div className={styles.missed}>
@@ -40,7 +40,7 @@ export function ExerciseResult({
           <ul>
             {missed.map((e) => (
               <li key={e.id}>
-                <p lang="en">{promptOf(e)}</p>
+                <p lang={e.type === 'order' ? 'en' : (e.promptLang ?? 'en')}>{promptOf(e)}</p>
                 <p className={styles.explanation}>{e.explanation}</p>
               </li>
             ))}

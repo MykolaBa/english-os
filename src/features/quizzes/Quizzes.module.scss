@@ -1,0 +1,127 @@
+@use '@/styles/mixins' as *;
+
+.layout {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+.column {
+  display: grid;
+  gap: var(--space-4);
+
+  @include up(lg) {
+    gap: var(--space-5);
+  }
+}
+
+.cardPad {
+  padding: var(--space-5) var(--space-5) 0;
+}
+
+.rows {
+  margin: 0;
+  padding: 0 var(--space-5) var(--space-2);
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+
+.rowText {
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-weight: 600;
+}
+
+.rowMeta {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.score {
+  width: 3.25rem;
+  font-size: var(--text-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.good {
+  color: var(--success);
+}
+
+.weak {
+  color: var(--danger);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.formRow {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+
+  legend {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.ready {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.session {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+
+  @include up(md) {
+    padding: var(--space-8);
+  }
+}
+
+.sessionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+
+  h1 {
+    font-size: var(--text-xl);
+  }
+}

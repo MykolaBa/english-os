@@ -16,7 +16,8 @@ import styles from './Exercises.module.scss'
 
 interface ExerciseRunnerProps {
   exercises: readonly Exercise[]
-  passScore: number
+  /** Score that completes a lesson; omit for quizzes (no pass/fail message). */
+  passScore?: number
   /** Called once when the last exercise is answered (save progress, XP…). */
   onComplete: (result: AttemptResult) => void
   onClose: () => void
@@ -113,7 +114,7 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
         {exercise.type === 'transform' ? exercise.instruction : t.types[exercise.type]}
       </p>
       {exercise.type !== 'order' && (
-        <p className={styles.prompt} lang="en">
+        <p className={styles.prompt} lang={exercise.promptLang ?? 'en'}>
           {exercise.prompt}
         </p>
       )}

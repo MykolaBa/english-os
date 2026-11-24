@@ -550,7 +550,58 @@ export const en = {
       `Score ${pass}% or more to complete the lesson. Try again whenever you like.`,
     mistakesTitle: 'Worth another look',
     tryAgain: 'Try again',
-    close: 'Back to the lesson',
+    close: 'Done',
+  },
+
+  quizzes: {
+    title: 'Quizzes',
+    subtitle: 'Check what you know: your words, grammar, or both.',
+    quickTitle: 'Quick start',
+    presets: {
+      mixed: { title: 'Mixed quiz', text: 'Your words and grammar lessons together.' },
+      vocabulary: {
+        title: 'Words',
+        text: 'Questions about your words, the ones you have learned first.',
+      },
+      grammar: { title: 'Grammar', text: 'Exercises from all grammar lessons.' },
+      mistakes: {
+        title: 'My mistakes',
+        text: 'Words from My Mistakes and lesson questions you missed.',
+      },
+    },
+    questions: (n: number) => `${n} ${plural(n, 'question', 'questions')}`,
+    start: 'Start',
+    customTitle: 'Build your own',
+    customText: 'Choose what to practise and how many questions.',
+    source: 'Questions from',
+    sources: {
+      mixed: 'Words and grammar',
+      vocabulary: 'Words',
+      grammar: 'Grammar',
+      mistakes: 'My mistakes',
+    },
+    collection: 'Words from',
+    allWords: 'All collections',
+    lessons: 'Lessons',
+    allLessons: 'All lessons',
+    kinds: 'Question types',
+    kindLabels: {
+      meaning: 'Meaning of a word',
+      word: 'Word for a translation',
+      typing: 'Type the word',
+      context: 'Word in a sentence',
+    },
+    count: 'Length',
+    available: (n: number) =>
+      `${n} ${plural(n, 'question', 'questions')} ready with these settings.`,
+    startCustom: 'Start quiz',
+    notEnough:
+      'There isn’t enough material for this quiz yet. Learn some words or take a lesson first.',
+    historyTitle: 'Recent quizzes',
+    historyEmpty: 'Finished quizzes will appear here, ready to repeat.',
+    historyScore: (correct: number, total: number) => `${correct} of ${total} correct`,
+    repeat: 'Repeat',
+    end: 'End quiz',
   },
 
   settings: {
