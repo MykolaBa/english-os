@@ -34,7 +34,8 @@ export async function saveInterviewAnswer(
   change: { answer?: string; status?: InterviewStatus },
   now = Date.now(),
 ): Promise<InterviewAnswer> {
-  const { before, after } = await db.transaction('rw', db.interviewAnswers, async () => {
+  // The answer and its XP are one change: if either write fails, neither is kept.
+  return db.transaction('rw', db.interviewAnswers, db.activity, async () => {
     const current = await db.interviewAnswers.get(questionId)
     const answer = change.answer ?? current?.answer ?? ''
     const status = change.status ?? current?.status ?? 'practising'
@@ -48,16 +49,15 @@ export async function saveInterviewAnswer(
       updatedAt: now,
     }
     await db.interviewAnswers.put(next)
-    return { before: current, after: next }
-  })
 
-  const firstAnswer = before?.answeredAt === undefined && after.answeredAt !== undefined
-  const becameConfident = before?.confidentAt === undefined && after.confidentAt !== undefined
-  const xp = (firstAnswer ? XP_ANSWER_WRITTEN : 0) + (becameConfident ? XP_ANSWER_CONFIDENT : 0)
-  if (xp > 0) {
-    await logActivity({ type: 'it_english', xp, subject: question, refId: questionId, at: now })
-  }
-  return after
+    const firstAnswer = current?.answeredAt === undefined && next.answeredAt !== undefined
+    const becameConfident = current?.confidentAt === undefined && next.confidentAt !== undefined
+    const xp = (firstAnswer ? XP_ANSWER_WRITTEN : 0) + (becameConfident ? XP_ANSWER_CONFIDENT : 0)
+    if (xp > 0) {
+      await logActivity({ type: 'it_english', xp, subject: question, refId: questionId, at: now })
+    }
+    return next
+  })
 }
 
 /** A finished mock interview: XP for every question answered. */

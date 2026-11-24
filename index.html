@@ -16,16 +16,8 @@
       rel="stylesheet"
     />
     <title>EnglishOS</title>
-    <script>
-      // Apply the saved theme before first paint to avoid a flash of the wrong theme.
-      try {
-        const saved = JSON.parse(localStorage.getItem('englishos:settings') || '{}')
-        if (saved.state && saved.state.theme)
-          document.documentElement.dataset.theme = saved.state.theme
-        if (saved.state && saved.state.uiLanguage)
-          document.documentElement.lang = saved.state.uiLanguage
-      } catch {}
-    </script>
+    <!-- Applies the saved theme before first paint (no flash). A file, not inline, so the CSP needs no unsafe-inline. -->
+    <script src="/theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>

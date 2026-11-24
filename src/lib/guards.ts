@@ -21,6 +21,11 @@ export function parseOneOf<const T extends readonly unknown[]>(
   return isOneOf(options, value) ? value : null
 }
 
+/** A plain object (or array) whose properties can be read safely. */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
 export function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string')
 }

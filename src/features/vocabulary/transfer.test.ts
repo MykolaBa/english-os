@@ -77,6 +77,16 @@ describe('planning and applying', () => {
     expect(await db.activity.count()).toBe(0) // no XP for importing
   })
 
+  it('gives a word each collection once, even when the file repeats it', async () => {
+    await seedStarterVocabulary()
+    const rows = parseCsvImport(
+      'term,translation,collections\nsprint,спринт,Travel|travel|Travel',
+    ).rows
+    await applyImport(planImport(rows, [], await db.collections.toArray()))
+    const word = (await db.words.toArray()).find((w) => w.term === 'sprint')
+    expect(word?.collectionIds).toEqual(['seed:collection:travel'])
+  })
+
   it('round-trips through CSV and JSON exports', async () => {
     await seedStarterVocabulary()
     const words = await db.words.toArray()

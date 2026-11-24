@@ -30,6 +30,9 @@ export function Dialog({
   size = 'md',
 }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
+  // Where the press began: selecting text in a field and releasing over the backdrop
+  // fires a click on the backdrop too, which must not close (and lose) the form.
+  const pressedBackdrop = useRef(false)
   const titleId = useId()
   const t = useT()
 
@@ -50,9 +53,13 @@ export function Dialog({
       ref={ref}
       className={`${styles.dialog} ${styles[size]}`}
       onClose={onClose}
+      onPointerDown={(e) => {
+        pressedBackdrop.current = e.target === e.currentTarget
+      }}
       onClick={(e) => {
-        // Click on the backdrop (the dialog element itself, outside the panel) closes it.
-        if (e.target === e.currentTarget) onClose()
+        // A full click on the backdrop (the dialog element itself, outside the panel) closes it.
+        if (e.target === e.currentTarget && pressedBackdrop.current) onClose()
+        pressedBackdrop.current = false
       }}
       aria-labelledby={titleId}
     >

@@ -29,4 +29,12 @@ describe('csv', () => {
     ]
     expect(parseCsv(toCsv(rows))).toEqual(rows)
   })
+
+  it('neutralises spreadsheet formulas on export and restores them on import', () => {
+    const rows = [['=HYPERLINK("http://x")', '+1', '-ing', '@user', 'normal']]
+    const csv = toCsv(rows)
+    expect(csv).toContain(`"'=HYPERLINK(""http://x"")"`)
+    expect(csv).toContain("'-ing")
+    expect(parseCsv(csv)).toEqual(rows)
+  })
 })

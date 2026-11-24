@@ -1,11 +1,13 @@
-import { z } from 'zod'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { CEFR_LEVELS, type CefrLevel } from '@/lib/db/types'
+import { isOneOf, isRecord } from '@/lib/guards'
 import { DEFAULT_SRS_CONFIG, type SrsConfig } from '@/lib/srs/scheduler'
 
-export type ThemePreference = 'dark' | 'light' | 'system'
-export type UiLanguage = 'en' | 'uk'
+export const THEMES = ['dark', 'light', 'system'] as const
+export type ThemePreference = (typeof THEMES)[number]
+export const UI_LANGUAGES = ['en', 'uk'] as const
+export type UiLanguage = (typeof UI_LANGUAGES)[number]
 export const REVIEW_MODES = ['flashcards', 'reverse', 'typing'] as const
 export type ReviewMode = (typeof REVIEW_MODES)[number]
 
@@ -48,6 +50,62 @@ interface SettingsState extends Settings {
   reset: () => void
 }
 
+/**
+ * Field-by-field validation for settings from outside the app's control: localStorage
+ * (may be stale or edited by hand) and backup files. Plain guards instead of zod keep
+ * the schema library out of the startup bundle.
+ */
+const isText =
+  (max: number) =>
+  (v: unknown): v is string =>
+    typeof v === 'string' && v.length <= max
+const isInt =
+  (min: number, max: number) =>
+  (v: unknown): v is number =>
+    Number.isInteger(v) && typeof v === 'number' && v >= min && v <= max
+const isPositive =
+  (max: number) =>
+  (v: unknown): v is number =>
+    typeof v === 'number' && Number.isFinite(v) && v > 0 && v <= max
+const isBool = (v: unknown): v is boolean => typeof v === 'boolean'
+
+const isSrsConfig = (v: unknown): v is SrsConfig =>
+  isRecord(v) &&
+  isPositive(1440)(v.againMinutes) &&
+  isPositive(365)(v.hardDays) &&
+  isPositive(365)(v.goodDays) &&
+  isPositive(365)(v.easyDays)
+
+const SETTINGS_GUARDS: { [K in keyof Settings]: (v: unknown) => v is Settings[K] } = {
+  displayName: isText(40),
+  currentLevel: (v) => isOneOf(CEFR_LEVELS, v),
+  targetLevel: (v) => isOneOf(CEFR_LEVELS, v),
+  dailyXpGoal: isInt(1, 1000),
+  theme: (v) => isOneOf(THEMES, v),
+  uiLanguage: (v) => isOneOf(UI_LANGUAGES, v),
+  showTranslations: isBool,
+  autoPronounce: isBool,
+  newWordsPerDay: isInt(0, 200),
+  srs: isSrsConfig,
+  reviewMode: (v) => isOneOf(REVIEW_MODES, v),
+}
+
+const SETTING_KEYS = Object.keys(SETTINGS_GUARDS).filter(
+  (k): k is keyof Settings => k in SETTINGS_GUARDS,
+)
+
+/** Keeps only valid known fields — one bad value doesn't discard the rest. */
+export function sanitizeSettings(raw: unknown): Partial<Settings> {
+  if (!isRecord(raw)) return {}
+  const out: Partial<Settings> = {}
+  const take = <K extends keyof Settings>(key: K) => {
+    const value = raw[key]
+    if (SETTINGS_GUARDS[key](value)) out[key] = value
+  }
+  SETTING_KEYS.forEach(take)
+  return out
+}
+
 /** Lightweight preferences → localStorage. Learning data goes to IndexedDB. */
 export const useSettings = create<SettingsState>()(
   persist(
@@ -56,40 +114,15 @@ export const useSettings = create<SettingsState>()(
       update: (patch) => set(patch),
       reset: () => set(DEFAULT_SETTINGS),
     }),
-    { name: 'englishos:settings', version: 1 },
+    {
+      name: 'englishos:settings',
+      version: 1,
+      // Stored values are untrusted: only valid fields override the defaults.
+      merge: (persisted, current) => ({ ...current, ...sanitizeSettings(persisted) }),
+      migrate: (persisted) => sanitizeSettings(persisted),
+    },
   ),
 )
-
-/** Field-by-field schema for settings coming from outside (a backup file). */
-const settingsFields = {
-  displayName: z.string().max(40),
-  currentLevel: z.enum(CEFR_LEVELS),
-  targetLevel: z.enum(CEFR_LEVELS),
-  dailyXpGoal: z.number().int().min(1).max(1000),
-  theme: z.enum(['dark', 'light', 'system']),
-  uiLanguage: z.enum(['en', 'uk']),
-  showTranslations: z.boolean(),
-  autoPronounce: z.boolean(),
-  newWordsPerDay: z.number().int().min(0).max(200),
-  srs: z.object({
-    againMinutes: z.number().positive().max(1440),
-    hardDays: z.number().positive().max(365),
-    goodDays: z.number().positive().max(365),
-    easyDays: z.number().positive().max(365),
-  }),
-  reviewMode: z.enum(REVIEW_MODES),
-} satisfies { [K in keyof Settings]: z.ZodType<Settings[K]> }
-
-/** Keeps only valid known fields — one bad value doesn't discard the rest. */
-export function sanitizeSettings(raw: unknown): Partial<Settings> {
-  if (typeof raw !== 'object' || raw === null) return {}
-  const result: Record<string, unknown> = {}
-  for (const [key, schema] of Object.entries(settingsFields)) {
-    const parsed = schema.safeParse((raw as Record<string, unknown>)[key])
-    if (parsed.success) result[key] = parsed.data
-  }
-  return result as Partial<Settings>
-}
 
 /** The persisted settings, without the store's actions. */
 export function currentSettings(): Settings {

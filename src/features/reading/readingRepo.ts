@@ -14,7 +14,8 @@ export async function recordReading(
   now = Date.now(),
 ): Promise<ReadingProgress> {
   const score = scorePercent(result)
-  const { before, after } = await db.transaction('rw', db.readingProgress, async () => {
+  // Progress and XP are one change: if either write fails, neither is kept.
+  return db.transaction('rw', db.readingProgress, db.activity, async () => {
     const current = await db.readingProgress.get(textId)
     const next: ReadingProgress = {
       textId,
@@ -25,14 +26,13 @@ export async function recordReading(
       updatedAt: now,
     }
     await db.readingProgress.put(next)
-    return { before: current, after: next }
+    await logActivity({
+      type: 'reading',
+      xp: result.correct + (current?.readAt === undefined ? XP_FIRST_READ : 0),
+      subject: title,
+      refId: textId,
+      at: now,
+    })
+    return next
   })
-  await logActivity({
-    type: 'reading',
-    xp: result.correct + (before?.readAt === undefined ? XP_FIRST_READ : 0),
-    subject: title,
-    refId: textId,
-    at: now,
-  })
-  return after
 }

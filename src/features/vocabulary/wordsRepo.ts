@@ -24,33 +24,39 @@ async function findByTerm(term: string): Promise<Word | undefined> {
 
 export async function addWord(draft: WordDraft, now = Date.now()): Promise<Word> {
   const fields = draftToFields(draft)
-  if (await findByTerm(fields.term)) throw new DuplicateError(fields.term)
+  // Duplicate check, the word and its XP in one transaction: no half-added words, and two
+  // quick saves of the same term can't both pass the check.
+  return db.transaction('rw', db.words, db.activity, async () => {
+    if (await findByTerm(fields.term)) throw new DuplicateError(fields.term)
 
-  const word: Word = {
-    ...fields,
-    id: createId(),
-    favorite: false,
-    source: 'user',
-    createdAt: now,
-    updatedAt: now,
-    srs: createInitialSrs(now),
-  }
-  await db.words.add(word)
-  await logActivity({
-    type: 'word_added',
-    xp: XP_WORD_ADDED,
-    subject: word.term,
-    refId: word.id,
-    at: now,
+    const word: Word = {
+      ...fields,
+      id: createId(),
+      favorite: false,
+      source: 'user',
+      createdAt: now,
+      updatedAt: now,
+      srs: createInitialSrs(now),
+    }
+    await db.words.add(word)
+    await logActivity({
+      type: 'word_added',
+      xp: XP_WORD_ADDED,
+      subject: word.term,
+      refId: word.id,
+      at: now,
+    })
+    return word
   })
-  return word
 }
 
 export async function updateWord(id: string, draft: WordDraft): Promise<void> {
   const fields = draftToFields(draft)
-  const existing = await findByTerm(fields.term)
-  if (existing && existing.id !== id) throw new DuplicateError(fields.term)
-  await db.words.update(id, { ...fields, updatedAt: Date.now() })
+  await db.transaction('rw', db.words, async () => {
+    const existing = await findByTerm(fields.term)
+    if (existing && existing.id !== id) throw new DuplicateError(fields.term)
+    await db.words.update(id, { ...fields, updatedAt: Date.now() })
+  })
 }
 
 /** Deletes the word together with its review history. */

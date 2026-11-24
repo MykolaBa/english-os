@@ -1,7 +1,7 @@
 import { parseCsv, toCsv } from '@/lib/csv'
 import { db } from '@/lib/db/db'
 import { CEFR_LEVELS, type Collection, type Word } from '@/lib/db/types'
-import { parseOneOf } from '@/lib/guards'
+import { isRecord, parseOneOf } from '@/lib/guards'
 import { createId } from '@/lib/id'
 import {
   createInitialSrs,
@@ -152,13 +152,13 @@ export function parseJsonImport(text: string): ParsedImport {
   } catch {
     return { rows: [], invalid: [], unreadable: true }
   }
-  const items = Array.isArray(json) ? json : (json as { words?: unknown })?.words
+  const items = Array.isArray(json) ? json : isRecord(json) ? json.words : undefined
   if (!Array.isArray(items)) return { rows: [], invalid: [], unreadable: true }
 
   return validate(
     items.map((item, i) => {
       const record: Partial<Record<Field, string>> = {}
-      if (typeof item === 'object' && item !== null) {
+      if (isRecord(item)) {
         for (const [key, value] of Object.entries(item)) {
           const field = FIELD_BY_ALIAS.get(normalizeKey(key))
           if (!field) continue
@@ -230,7 +230,10 @@ export async function applyImport(plan: ImportPlan, now = Date.now()): Promise<n
     }
     const words: Word[] = plan.toAdd.map((row, i) => {
       const createdAt = now - i // keep file order under "newest first"
-      const collectionIds = row.collections.flatMap((name) => byName.get(name.toLowerCase()) ?? [])
+      // A collection named twice in one row must not give the word the same id twice.
+      const collectionIds = [
+        ...new Set(row.collections.flatMap((name) => byName.get(name.toLowerCase()) ?? [])),
+      ]
       return {
         ...draftToFields({ ...row.draft, collectionIds }),
         id: createId(),

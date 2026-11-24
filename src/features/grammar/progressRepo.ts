@@ -48,31 +48,34 @@ export async function recordAttempt(
   now = Date.now(),
 ): Promise<LessonProgress> {
   const score = scorePercent(result)
-  const { before, after } = await upsert(
-    lessonId,
-    (p) => {
-      const passed = score >= PASS_SCORE
-      return {
-        ...p,
-        attempts: p.attempts + 1,
-        lastScore: score,
-        bestScore: Math.max(p.bestScore ?? 0, score),
-        lastMistakes: result.mistakes,
-        status: passed || p.status === 'completed' ? 'completed' : 'in_progress',
-        completedAt: p.completedAt ?? (passed ? now : undefined),
-      }
-    },
-    now,
-  )
-  const firstCompletion = before.status !== 'completed' && after.status === 'completed'
-  await logActivity({
-    type: 'grammar_lesson',
-    xp: result.correct + (firstCompletion ? XP_FIRST_COMPLETION : 0),
-    subject: title,
-    refId: lessonId,
-    at: now,
+  // Progress and XP are one change: if either write fails, neither is kept.
+  return db.transaction('rw', db.lessonProgress, db.activity, async () => {
+    const { before, after } = await upsert(
+      lessonId,
+      (p) => {
+        const passed = score >= PASS_SCORE
+        return {
+          ...p,
+          attempts: p.attempts + 1,
+          lastScore: score,
+          bestScore: Math.max(p.bestScore ?? 0, score),
+          lastMistakes: result.mistakes,
+          status: passed || p.status === 'completed' ? 'completed' : 'in_progress',
+          completedAt: p.completedAt ?? (passed ? now : undefined),
+        }
+      },
+      now,
+    )
+    const firstCompletion = before.status !== 'completed' && after.status === 'completed'
+    await logActivity({
+      type: 'grammar_lesson',
+      xp: result.correct + (firstCompletion ? XP_FIRST_COMPLETION : 0),
+      subject: title,
+      refId: lessonId,
+      at: now,
+    })
+    return after
   })
-  return after
 }
 
 export async function setCompleted(lessonId: string, completed: boolean, now = Date.now()) {

@@ -3,7 +3,10 @@
  * The delimiter is detected, because Excel with a Ukrainian locale saves with ";".
  */
 
-export type CsvDelimiter = ',' | ';' | '\t'
+import { isOneOf } from './guards'
+
+const DELIMITERS = [',', ';', '\t'] as const
+export type CsvDelimiter = (typeof DELIMITERS)[number]
 
 /** Picks the delimiter that occurs most often in the first line (outside quotes). */
 export function detectDelimiter(text: string): CsvDelimiter {
@@ -12,9 +15,9 @@ export function detectDelimiter(text: string): CsvDelimiter {
   for (const ch of text) {
     if (ch === '"') quoted = !quoted
     else if (!quoted && (ch === '\n' || ch === '\r')) break
-    else if (!quoted && ch in counts) counts[ch as CsvDelimiter]++
+    else if (!quoted && isOneOf(DELIMITERS, ch)) counts[ch]++
   }
-  const best = (Object.keys(counts) as CsvDelimiter[]).toSorted((a, b) => counts[b] - counts[a])[0]
+  const best = DELIMITERS.toSorted((a, b) => counts[b] - counts[a])[0]
   return best && counts[best] > 0 ? best : ','
 }
 
@@ -59,8 +62,18 @@ export function parseCsv(
     rows.push(row)
   }
   // Drop fully empty lines (common at the end of files).
-  return rows.filter((r) => r.some((cell) => cell.trim() !== ''))
+  return rows.filter((r) => r.some((cell) => cell.trim() !== '')).map((r) => r.map(unescapeFormula))
 }
+
+/**
+ * Spreadsheet apps run a cell that starts with = + - @ (or a tab / CR) as a formula —
+ * "CSV injection". Exported cells like that get a leading apostrophe, which Excel and
+ * Sheets show as plain text; our own import removes it again.
+ */
+const FORMULA_START = /^[=+\-@\t\r]/
+const escapeFormula = (text: string) => (FORMULA_START.test(text) ? `'${text}` : text)
+const unescapeFormula = (text: string) =>
+  text.startsWith("'") && FORMULA_START.test(text.slice(1)) ? text.slice(1) : text
 
 const needsQuotes = /[",;\t\r\n]/
 
@@ -68,7 +81,7 @@ export function toCsv(rows: ReadonlyArray<ReadonlyArray<string | number | undefi
   const line = (cells: ReadonlyArray<string | number | undefined>) =>
     cells
       .map((cell) => {
-        const text = cell === undefined ? '' : String(cell)
+        const text = escapeFormula(cell === undefined ? '' : String(cell))
         return needsQuotes.test(text) ? `"${text.replace(/"/g, '""')}"` : text
       })
       .join(',')
