@@ -62,6 +62,7 @@ export default function DashboardPage() {
             steps={buildTodayPlan({
               totalWords: data.totalWords,
               dueCount: data.dueCount,
+              reviewedToday: data.reviewedToday,
               todayXp: data.todayXp,
               dailyXpGoal,
               backupDue: data.backupDue,

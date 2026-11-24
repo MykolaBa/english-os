@@ -1,4 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useNow } from '@/lib/useNow'
 import { db } from '@/lib/db/db'
 import { getLastBackupAt } from '@/features/backup/backup'
 import { groupFeed, type FeedItem } from '@/lib/activity/feed'
@@ -24,6 +25,8 @@ export interface DashboardData {
   spotlight: Word | null
   masteredWords: number
   dueCount: number
+  /** Answers given in review sessions today. */
+  reviewedToday: number
   todayXp: number
   currentStreak: number
   longestStreak: number
@@ -61,29 +64,33 @@ async function findSpotlight(now = Date.now()): Promise<Word | null> {
   return fresh ?? null
 }
 
-async function loadDashboard(): Promise<DashboardData> {
-  const weekStart = startOfDay(addDays(new Date(), -6)).getTime()
+async function loadDashboard(now: number): Promise<DashboardData> {
+  const weekStart = startOfDay(addDays(new Date(now), -6)).getTime()
+  const todayStart = startOfDay(new Date(now)).getTime()
 
   const [totalWords, newWords, masteredWords, dueCount, weekEvents, activeDays, recent, spotlight] =
     await Promise.all([
       db.words.count(),
       db.words.where('srs.status').equals('new').count(),
       db.words.where('srs.status').equals('mastered').count(),
-      countDue(),
+      countDue(now),
       getActivitySince(weekStart),
       getActiveDays(),
       getRecentActivity(80),
-      findSpotlight(),
+      findSpotlight(now),
     ])
-  const [lastBackupAt, reviewCount] = await Promise.all([getLastBackupAt(), db.reviewLogs.count()])
-  const backupDays =
-    lastBackupAt === null ? null : Math.floor((Date.now() - lastBackupAt) / 86_400_000)
+  const [lastBackupAt, reviewCount, reviewedToday] = await Promise.all([
+    getLastBackupAt(),
+    db.reviewLogs.count(),
+    db.reviewLogs.where('at').aboveOrEqual(todayStart).count(),
+  ])
+  const backupDays = lastBackupAt === null ? null : Math.floor((now - lastBackupAt) / 86_400_000)
   const backupDue =
     reviewCount > 0 && (backupDays === null || backupDays >= 14) ? { days: backupDays } : null
 
   const xpByDay = new Map<DayKey, number>()
   for (const e of weekEvents) xpByDay.set(e.day, (xpByDay.get(e.day) ?? 0) + e.xp)
-  const today = toDayKey()
+  const today = toDayKey(now)
 
   return {
     totalWords,
@@ -91,11 +98,12 @@ async function loadDashboard(): Promise<DashboardData> {
     spotlight,
     masteredWords,
     dueCount,
+    reviewedToday,
     todayXp: sumXp(weekEvents.filter((e) => e.day === today)),
     currentStreak: computeCurrentStreak(activeDays),
     longestStreak: computeLongestStreak(activeDays),
     totalStudyDays: activeDays.length,
-    week: lastDays(7).map((day) => ({ day, xp: xpByDay.get(day) ?? 0 })),
+    week: lastDays(7, new Date(now)).map((day) => ({ day, xp: xpByDay.get(day) ?? 0 })),
     recent: groupFeed(recent, 6),
     backupDue,
   }
@@ -103,9 +111,11 @@ async function loadDashboard(): Promise<DashboardData> {
 
 /** Live dashboard data: re-renders automatically when any underlying table changes. `undefined` while loading. */
 export function useDashboardData(): DashboardData | undefined {
-  return useLiveQuery(loadDashboard, [])
+  const now = useNow()
+  return useLiveQuery(() => loadDashboard(now), [now])
 }
 
 export function useDueCount(): number {
-  return useLiveQuery(() => countDue(), []) ?? 0
+  const now = useNow()
+  return useLiveQuery(() => countDue(now), [now]) ?? 0
 }

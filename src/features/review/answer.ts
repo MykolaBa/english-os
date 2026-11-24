@@ -38,7 +38,8 @@ export function checkAnswer(input: string, expected: string): AnswerVerdict {
   const target = normalizeAnswer(expected)
   if (!given) return 'wrong'
   if (given === target) return 'correct'
-  const allowed = target.length >= 8 ? 2 : 1
+  // Short words: one changed letter usually makes another word (lend → send), so be exact.
+  const allowed = target.length <= 4 ? 0 : target.length >= 8 ? 2 : 1
   return levenshtein(given, target) <= allowed ? 'typo' : 'wrong'
 }
 

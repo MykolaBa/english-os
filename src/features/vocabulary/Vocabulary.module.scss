@@ -181,8 +181,9 @@
     border-radius: var(--radius-md);
   }
 
+  // Inset: `.entry` uses content-visibility (paint containment), which clips outer shadows.
   &:focus-visible::after {
-    box-shadow: var(--focus-ring);
+    box-shadow: inset 0 0 0 2px var(--accent);
   }
 }
 

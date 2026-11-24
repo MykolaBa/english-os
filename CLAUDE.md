@@ -16,6 +16,8 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 ## Commands
 - `npm run dev` — dev server
 - `npm run check` — typecheck + lint (oxlint) + tests. **Run before every commit.**
+- **After every step (feature/phase)**: run a code review of the changes (`/code-review`), fix
+  the findings, then commit. The owner asked for this review loop on every step.
 - `npm run build` — production build (also typechecks)
 - `npm run format` — Prettier
 

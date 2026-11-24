@@ -28,12 +28,15 @@ export function PracticeCard({ words, collectionId, onStart }: PracticeCardProps
     [words, collectionId],
   )
 
+  // The chosen size may not be offered (e.g. 20 with only 15 learned words): fall back to "all".
+  const effectiveSize: Size = size === 'all' || Number(size) < available ? size : 'all'
+
   const start = () =>
     onStart(
       buildPracticeQueue(words, {
         order,
         collectionId,
-        limit: size === 'all' ? null : Number(size),
+        limit: effectiveSize === 'all' ? null : Number(effectiveSize),
       }),
     )
 
@@ -58,7 +61,7 @@ export function PracticeCard({ words, collectionId, onStart }: PracticeCardProps
             <Select<Size>
               variant="pill"
               aria-label={p.size}
-              value={size}
+              value={effectiveSize}
               onChange={setSize}
               options={[
                 ...SIZES.filter((n) => n < available).map((n) => ({

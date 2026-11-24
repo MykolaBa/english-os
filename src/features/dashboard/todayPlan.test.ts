@@ -13,9 +13,13 @@ describe('buildTodayPlan', () => {
     expect(plan.find((s) => s.id === 'goal')?.done).toBe(true)
   })
 
-  it('marks reviews done when nothing is due', () => {
-    const plan = buildTodayPlan({ totalWords: 10, dueCount: 0, todayXp: 0, dailyXpGoal: 50 })
-    expect(plan[0]?.done).toBe(true)
+  it('marks reviews done only after reviewing, and hides the step when nothing was due', () => {
+    const base = { totalWords: 10, dueCount: 0, todayXp: 0, dailyXpGoal: 50 }
+    expect(buildTodayPlan(base).some((s) => s.id === 'review')).toBe(false)
+    expect(buildTodayPlan({ ...base, reviewedToday: 5 })[0]).toMatchObject({
+      id: 'review',
+      done: true,
+    })
   })
 })
 

@@ -19,6 +19,9 @@ describe('answer checking', () => {
     expect(checkAnswer('acommodation', 'accommodation')).toBe('typo')
     expect(checkAnswer('merge', 'deploy')).toBe('wrong')
     expect(checkAnswer('', 'deploy')).toBe('wrong')
+    expect(checkAnswer('send', 'lend')).toBe('wrong')
+    expect(checkAnswer('land', 'lend')).toBe('wrong')
+    expect(checkAnswer('Lend', 'lend')).toBe('correct')
   })
 
   it('masks the word in its example sentence', () => {

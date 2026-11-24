@@ -40,6 +40,14 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
     if (checked) formRef.current?.querySelector<HTMLButtonElement>('button[type="submit"]')?.focus()
   }, [checked])
 
+  /** Clears everything that belongs to the exercise on screen. */
+  const resetStep = () => {
+    setText('')
+    setChoice(null)
+    setPicked([])
+    setChecked(null)
+  }
+
   const exercise = exercises[index]
   if (result) {
     return (
@@ -51,6 +59,7 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
           setIndex(0)
           setMistakes([])
           setResult(null)
+          resetStep()
         }}
         onClose={onClose}
       />
@@ -84,10 +93,7 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
       return
     }
     setIndex(index + 1)
-    setText('')
-    setChoice(null)
-    setPicked([])
-    setChecked(null)
+    resetStep()
   }
 
   const submit = (e: FormEvent) => {

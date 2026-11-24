@@ -10,6 +10,8 @@ export interface PlanStep {
 export interface PlanInput {
   totalWords: number
   dueCount: number
+  /** Reviews answered today; with nothing due *and* nothing reviewed there is no review step. */
+  reviewedToday?: number
   todayXp: number
   dailyXpGoal: number
   /** Set when a backup is overdue; `days` is null when there has never been one. */
@@ -23,6 +25,7 @@ export interface PlanInput {
 export function buildTodayPlan({
   totalWords,
   dueCount,
+  reviewedToday = 0,
   todayXp,
   dailyXpGoal,
   backupDue,
@@ -33,8 +36,10 @@ export function buildTodayPlan({
       { id: 'set-goal', to: '/settings', done: false },
     ]
   }
+  const hasReviewWork = dueCount > 0 || reviewedToday > 0
   return [
-    { id: 'review', to: '/review', done: dueCount === 0 },
+    // Done only when something was actually reviewed and nothing is left.
+    ...(hasReviewWork ? [{ id: 'review' as const, to: '/review', done: dueCount === 0 }] : []),
     { id: 'new-words', to: '/vocabulary', done: false },
     { id: 'goal', to: '/review', done: todayXp >= dailyXpGoal },
     ...(backupDue ? [{ id: 'backup' as const, to: '/settings', done: false }] : []),

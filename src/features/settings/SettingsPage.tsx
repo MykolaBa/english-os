@@ -149,7 +149,9 @@ export default function SettingsPage() {
           <SelectField
             label={s.goalLabel}
             hint={s.goalHint}
-            options={GOALS.map((xp) => ({ value: String(xp), label: s.goalOption(xp) }))}
+            options={[...new Set([...GOALS, settings.dailyXpGoal])]
+              .toSorted((a, b) => a - b)
+              .map((xp) => ({ value: String(xp), label: s.goalOption(xp) }))}
             value={String(settings.dailyXpGoal)}
             onChange={(v) => settings.update({ dailyXpGoal: Number(v) })}
           />

@@ -65,11 +65,10 @@ export function Select<T extends string>({
   const [active, setActive] = useState(0)
   const [position, setPosition] = useState<CSSProperties>({})
 
-  const selectedIndex = Math.max(
-    0,
-    options.findIndex((o) => o.value === value),
-  )
-  const selected = options[selectedIndex]
+  const foundIndex = options.findIndex((o) => o.value === value)
+  const selectedIndex = Math.max(0, foundIndex)
+  // A value missing from the options is shown as-is, never as some other option.
+  const selected = foundIndex >= 0 ? options[foundIndex] : { label: value, icon: undefined }
 
   const openList = () => {
     setActive(selectedIndex)

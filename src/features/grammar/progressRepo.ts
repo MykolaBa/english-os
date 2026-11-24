@@ -35,7 +35,10 @@ async function upsert(
 /** Opening a lesson marks it as started (once). */
 export async function markOpened(lessonId: string, now = Date.now()): Promise<void> {
   if (await db.lessonProgress.get(lessonId)) return
-  await db.lessonProgress.add(blank(lessonId, now)).catch(() => {}) // already added in parallel
+  await db.lessonProgress.add(blank(lessonId, now)).catch((err: unknown) => {
+    // Another call added it in the meantime — fine. Anything else is a real failure.
+    if (!(err instanceof Error && err.name === 'ConstraintError')) throw err
+  })
 }
 
 export async function recordAttempt(
