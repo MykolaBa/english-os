@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ArrowLeft, Headphones, SearchX, Square } from 'lucide-react'
-import { Link, useParams } from 'react-router'
-import { Badge, Button, Card, EmptyState, Skeleton } from '@/components/ui'
+import { Headphones, Square } from 'lucide-react'
+import { useParams } from 'react-router'
+import { BackLink, Badge, Button, Card, NotFoundCard, Skeleton } from '@/components/ui'
 import { getReadingText } from '@/content/reading'
 import { useT } from '@/i18n'
 import { isSpeechSupported, speak, stopSpeaking } from '@/lib/speech'
@@ -36,19 +36,13 @@ function TextView({ textId }: { textId: string | undefined }) {
   // Leaving the page stops the narration (the browser would keep talking otherwise).
   useEffect(() => stopSpeaking, [])
 
-  const back = (
-    <Link to="/reading" className={styles.backLink}>
-      <ArrowLeft aria-hidden /> {r.back}
-    </Link>
-  )
+  const back = <BackLink to="/reading">{r.back}</BackLink>
 
   if (!text) {
     return (
       <>
         {back}
-        <Card padding="lg">
-          <EmptyState icon={<SearchX />} title={r.notFoundTitle} description={r.notFoundText} />
-        </Card>
+        <NotFoundCard title={r.notFoundTitle} description={r.notFoundText} />
       </>
     )
   }

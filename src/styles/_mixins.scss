@@ -48,3 +48,38 @@ $breakpoints: (
   white-space: nowrap;
   border: 0;
 }
+
+/// One surface holding a list, rows split by hairlines — the app's alternative to a
+/// stack of identical cards.
+@mixin list-surface {
+  @include card-surface;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+
+  > li + li {
+    border-top: 1px solid var(--border);
+  }
+}
+
+/// A link that fills a whole row of a list surface.
+@mixin row-link {
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--ease-out);
+  @include focus-ring;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+}
+
+/// A page title set in the English reading serif (lesson, text and question titles).
+@mixin serif-title($size) {
+  font-family: var(--font-serif);
+  font-size: $size;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}

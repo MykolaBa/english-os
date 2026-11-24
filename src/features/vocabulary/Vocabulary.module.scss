@@ -314,24 +314,8 @@
 }
 
 // ---------- Detail page ----------
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
+.backSpacing {
   margin-bottom: var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  border-radius: var(--radius-sm);
-  @include focus-ring;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  &:hover {
-    color: var(--text);
-  }
 }
 
 .detailLayout {

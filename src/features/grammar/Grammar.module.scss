@@ -165,24 +165,8 @@
   max-width: 780px;
 }
 
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
+.backSpacing {
   margin-bottom: var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  border-radius: var(--radius-sm);
-  @include focus-ring;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  &:hover {
-    color: var(--text);
-  }
 }
 
 .hero {
@@ -204,11 +188,7 @@
 // The bold element of the page: the name of the structure, in the language's own voice.
 .heroTitle {
   margin-top: var(--space-5);
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 4vw + 1rem, 3.25rem);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  @include serif-title(clamp(2rem, 4vw + 1rem, 3.25rem));
 }
 
 .heroSummary {
@@ -369,18 +349,6 @@
 
 .practice {
   margin-top: var(--space-10);
-  scroll-margin-top: calc(var(--topbar-height) + var(--space-4));
-  padding: var(--space-6) var(--space-5);
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-
-  @include up(md) {
-    padding: var(--space-8);
-  }
-
-  > button {
-    margin-top: var(--space-5);
-  }
 }
 
 .lastResult {

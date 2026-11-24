@@ -3,15 +3,7 @@
 // ---------- Text list ----------
 // One surface with dividers — a table of contents, not a grid of cards.
 .texts {
-  @include card-surface;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  overflow: hidden;
-
-  li + li {
-    border-top: 1px solid var(--border);
-  }
+  @include list-surface;
 }
 
 .textRow {
@@ -19,14 +11,7 @@
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-5);
-  color: inherit;
-  text-decoration: none;
-  transition: background var(--duration-fast) var(--ease-out);
-  @include focus-ring;
-
-  &:hover {
-    background: var(--surface-hover);
-  }
+  @include row-link;
 
   @include up(md) {
     flex-direction: row;
@@ -90,26 +75,6 @@
   gap: var(--space-4);
 }
 
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  width: fit-content;
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  border-radius: var(--radius-sm);
-  @include focus-ring;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  &:hover {
-    color: var(--text);
-  }
-}
-
 .hero {
   display: grid;
   justify-items: start;
@@ -118,11 +83,7 @@
 }
 
 .heroTitle {
-  font-family: var(--font-serif);
-  font-size: clamp(1.875rem, 3vw + 1rem, 2.75rem);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.015em;
+  @include serif-title(clamp(1.875rem, 3vw + 1rem, 2.75rem));
 }
 
 .heroSummary {
@@ -350,26 +311,5 @@
 }
 
 .keyTranslation {
-  color: var(--text-muted);
-}
-
-// ---------- Comprehension ----------
-.check {
-  @include card-surface;
-  padding: var(--space-5);
-  scroll-margin-top: var(--space-6);
-
-  @include up(md) {
-    padding: var(--space-6);
-  }
-}
-
-.sectionTitle {
-  margin-bottom: var(--space-3);
-  font-size: var(--text-xl);
-}
-
-.checkText {
-  margin-bottom: var(--space-4);
   color: var(--text-muted);
 }

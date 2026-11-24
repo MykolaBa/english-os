@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { X } from 'lucide-react'
-import { Button } from '@/components/ui'
+import { BackLink, Button } from '@/components/ui'
 import { INTERVIEW_QUESTIONS, type InterviewQuestion } from '@/content/it'
 import { useT } from '@/i18n'
 import { newSeed } from '@/lib/exercises/random'
 import { toast } from '@/stores/toastStore'
-import { BackLink } from './components/BackLink'
 import { MockQuestion } from './components/MockQuestion'
 import { MockSetup, type MockSettings } from './components/MockSetup'
 import { MockSummary } from './components/MockSummary'
@@ -44,7 +43,7 @@ export default function MockInterviewPage() {
 
   return (
     <article className={styles.page}>
-      <BackLink />
+      <BackLink to="/it-english">{t.itEnglish.back}</BackLink>
       <header className={styles.mockHeader}>
         <h1 className={styles.pageTitle}>{m.title}</h1>
         {stage.name === 'running' && (

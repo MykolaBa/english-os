@@ -1,10 +1,9 @@
-import { Lightbulb, SearchX } from 'lucide-react'
+import { Lightbulb } from 'lucide-react'
 import { useParams } from 'react-router'
-import { Badge, Card, EmptyState, Skeleton, SpeakButton } from '@/components/ui'
+import { BackLink, Badge, NotFoundCard, Skeleton, SpeakButton } from '@/components/ui'
 import { getInterviewQuestion } from '@/content/it'
 import { useT } from '@/i18n'
 import { AnswerEditor } from './components/AnswerEditor'
-import { BackLink } from './components/BackLink'
 import { ModelAnswer } from './components/ModelAnswer'
 import { useInterviewAnswer } from './hooks'
 import styles from './ItEnglish.module.scss'
@@ -20,17 +19,15 @@ export default function InterviewPage() {
   if (!question) {
     return (
       <div className={styles.page}>
-        <BackLink />
-        <Card padding="lg">
-          <EmptyState icon={<SearchX />} title={s.notFoundTitle} description={s.notFoundText} />
-        </Card>
+        <BackLink to="/it-english">{s.back}</BackLink>
+        <NotFoundCard title={s.notFoundTitle} description={s.notFoundText} />
       </div>
     )
   }
 
   return (
     <article className={styles.page}>
-      <BackLink />
+      <BackLink to="/it-english">{s.back}</BackLink>
       <header className={styles.hero}>
         <div className={styles.heroMeta}>
           <Badge tone="accent">{question.level}</Badge>

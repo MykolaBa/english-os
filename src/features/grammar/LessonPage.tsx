@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { ArrowLeft, Bookmark, BookmarkCheck, CircleCheck, SearchX } from 'lucide-react'
-import { Link, useParams } from 'react-router'
-import { Badge, Button, ButtonLink, Card, EmptyState } from '@/components/ui'
+import { Bookmark, BookmarkCheck, CircleCheck } from 'lucide-react'
+import { useParams } from 'react-router'
+import { BackLink, Badge, Button, ButtonLink, NotFoundCard } from '@/components/ui'
 import { GRAMMAR_LESSONS, getLesson } from '@/content/grammar'
 import { useT } from '@/i18n'
 import { LessonSections } from './components/LessonSections'
@@ -25,18 +25,16 @@ export default function LessonPage() {
   }, [lesson])
 
   const back = (
-    <Link to="/grammar" className={styles.backLink}>
-      <ArrowLeft aria-hidden /> {l.back}
-    </Link>
+    <BackLink to="/grammar" className={styles.backSpacing}>
+      {l.back}
+    </BackLink>
   )
 
   if (!lesson) {
     return (
       <>
         {back}
-        <Card padding="lg">
-          <EmptyState icon={<SearchX />} title={l.notFoundTitle} description={l.notFoundText} />
-        </Card>
+        <NotFoundCard title={l.notFoundTitle} description={l.notFoundText} />
       </>
     )
   }

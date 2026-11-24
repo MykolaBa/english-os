@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import { ArrowLeft, Pencil, SearchX, Star, Trash2 } from 'lucide-react'
+import { Pencil, Star, Trash2 } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
 import {
+  BackLink,
   Badge,
   Button,
-  ButtonLink,
   Card,
   CardHeader,
   ConfirmDialog,
-  EmptyState,
+  NotFoundCard,
   Skeleton,
   SpeakButton,
 } from '@/components/ui'
@@ -55,9 +55,9 @@ export default function WordDetailPage() {
   const [now] = useState(() => Date.now())
 
   const back = (
-    <Link to="/vocabulary" className={styles.backLink}>
-      <ArrowLeft aria-hidden /> {d.back}
-    </Link>
+    <BackLink to="/vocabulary" className={styles.backSpacing}>
+      {d.back}
+    </BackLink>
   )
 
   if (word === undefined) {
@@ -73,14 +73,7 @@ export default function WordDetailPage() {
     return (
       <>
         {back}
-        <Card padding="lg">
-          <EmptyState
-            icon={<SearchX />}
-            title={d.notFoundTitle}
-            description={d.notFoundText}
-            action={<ButtonLink to="/vocabulary">{d.back}</ButtonLink>}
-          />
-        </Card>
+        <NotFoundCard title={d.notFoundTitle} description={d.notFoundText} />
       </>
     )
   }

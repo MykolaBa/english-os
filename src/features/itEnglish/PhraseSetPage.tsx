@@ -1,35 +1,30 @@
 import { useState } from 'react'
-import { SearchX } from 'lucide-react'
 import { useParams } from 'react-router'
-import { Card, EmptyState } from '@/components/ui'
+import { BackLink, Card, NotFoundCard } from '@/components/ui'
 import { getPhraseSet } from '@/content/it'
 import { useT } from '@/i18n'
-import { BackLink } from './components/BackLink'
 import { PhraseList } from './components/PhraseList'
 import { PhrasePractice } from './components/PhrasePractice'
-import type { DrillExercise } from './drill'
 import styles from './ItEnglish.module.scss'
 
 export default function PhraseSetPage() {
   const { setId } = useParams()
   const set = setId ? getPhraseSet(setId) : undefined
   const s = useT().itEnglish
-  const [drill, setDrill] = useState<DrillExercise[] | null>(null)
+  const [practising, setPractising] = useState(false)
 
   if (!set) {
     return (
       <div className={styles.page}>
-        <BackLink />
-        <Card padding="lg">
-          <EmptyState icon={<SearchX />} title={s.notFoundTitle} description={s.notFoundText} />
-        </Card>
+        <BackLink to="/it-english">{s.back}</BackLink>
+        <NotFoundCard title={s.notFoundTitle} description={s.notFoundText} />
       </div>
     )
   }
 
   return (
     <article className={styles.page}>
-      <BackLink />
+      <BackLink to="/it-english">{s.back}</BackLink>
       <header className={styles.hero}>
         <h1 className={styles.heroTitle} lang="en">
           {set.title}
@@ -37,12 +32,12 @@ export default function PhraseSetPage() {
         <p className={styles.muted}>{set.summary}</p>
       </header>
       {/* The list holds the answers: hidden while a practice round runs. */}
-      {!drill && (
+      {!practising && (
         <Card>
           <PhraseList phrases={set.phrases} collectionSlug="work" />
         </Card>
       )}
-      <PhrasePractice set={set} drill={drill} onDrillChange={setDrill} />
+      <PhrasePractice set={set} onRunningChange={setPractising} />
     </article>
   )
 }
