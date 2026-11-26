@@ -24,7 +24,8 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 ## Architecture rules
 - **Feature folders**: `src/features/<module>/` own their pages, components, hooks and repo
   functions. Shared UI in `src/components/ui` (import from `@/components/ui`). Cross-cutting
-  logic in `src/lib`. Use the `@/` alias.
+  logic in `src/lib`. Use the `@/` alias. `src/lib` never imports from `src/features`
+  (shared limits/value lists live in `lib/db/limits.ts`).
 - **Data**: only *user data* goes to IndexedDB (`src/lib/db`). Static learning content
   (grammar, reading, IT questions) lives in `src/content` as typed TS modules referenced by id.
   Seeded vocabulary is imported into the DB once, with stable `seed:*` ids and `source: 'seed'`.
@@ -57,7 +58,8 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 ## Design system
 - Tokens are CSS variables in `src/styles/_tokens.scss` (dark default, light, system). Never
   hardcode colors/radii/spacing in components — use tokens. Mixins in `_mixins.scss`
-  (`up(md)`, `focus-ring`, `card-surface`, `truncate`).
+  (`up(md)`, `focus-ring`, `card-surface`, `truncate`, `list-surface`, `row-link`,
+  `serif-title`) — reuse them instead of copying list/row/title styles.
 - Concept: **a personal dictionary**. The most characteristic object is the dictionary entry
   (headword, IPA, part of speech in italics, sense, example). Screens open with real content
   (e.g. the dashboard opens with the next word to learn), not with stat widgets.
@@ -98,7 +100,15 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   (questions); ids are stable (saved answers use them). `it.test.ts` and `drill.test.ts`
   must pass: phrases are unique and every phrase can be turned into a gap exercise.
 - Exercises: use the shared engine (`lib/exercises`, `features/exercises/ExerciseRunner`) for
-  any practice or quiz — don't build a second one.
+  any practice or quiz — don't build a second one. A "start practising" block is
+  `PracticeSection` (same folder).
+- Detail pages: `BackLink` to the list, `NotFoundCard` (an `h1`) when the id doesn't exist.
+- Writes that earn XP put the change and `logActivity()` in one Dexie transaction (include
+  `db.activity`), so progress is never saved without its XP or the other way round.
+- Bundle: keep zod and content off the startup path (layout, dashboard, `main.tsx`); it
+  belongs to backup/import code and lazily loaded pages. Settings use plain guards.
+- Security: CSV exports go through `toCsv` (neutralises formulas); headers/CSP live in
+  `vercel.json` — no inline scripts (the theme bootstrap is `public/theme-init.js`).
 - AI features: only when explicitly requested, behind a service interface, never with keys
   in the frontend.
 

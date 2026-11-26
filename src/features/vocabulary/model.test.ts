@@ -24,6 +24,10 @@ describe('vocabulary model', () => {
     expect(validateDraft({ ...EMPTY_DRAFT, term: 'a'.repeat(121), translation: 'x' })).toEqual({
       term: 'termTooLong',
     })
+    // Over the backup schema's limit: would save, then break every future restore.
+    expect(
+      validateDraft({ ...EMPTY_DRAFT, term: 'a', translation: 'b', notes: 'n'.repeat(5001) }),
+    ).toEqual({ details: 'textTooLong' })
   })
 
   it('turns empty optional fields into undefined', () => {

@@ -287,6 +287,7 @@ export const uk: Dictionary = {
       translationRequired: 'Введи переклад',
       termTooLong: 'Не довше 120 символів',
       translationTooLong: 'Не довше 300 символів',
+      textTooLong: 'Одне з полів довше за 5000 символів. Скоротіть його, щоб зберегти.',
       duplicate: (term: string) => `«${term}» вже є у словнику`,
       added: (term: string) => `«${term}» додано`,
       saved: 'Зміни збережено',
@@ -308,6 +309,7 @@ export const uk: Dictionary = {
       reviews: 'Повторень',
       correctAnswers: 'Правильних відповідей',
       correctOf: (correct: number, total: number) => `${correct} з ${total}`,
+      noAnswers: 'Ще немає відповідей',
       added: 'Додано',
       starter: 'Стартове слово',
       deleteTitle: (term: string) => `Видалити «${term}»?`,
@@ -460,7 +462,7 @@ export const uk: Dictionary = {
       missingTerm: (line: number) => `рядок ${line}: немає слова`,
       missingTranslation: (line: number) => `рядок ${line}: немає перекладу`,
       tooLong: (line: number) =>
-        `рядок ${line}: задовгий запис (слово до 120 символів, переклад до 300)`,
+        `рядок ${line}: задовгий запис (слово до 120 символів, переклад до 300, інші поля до 5000)`,
     },
     planCollections: (names: string) => `Буде створено нові колекції: ${names}.`,
     importConfirm: (n: number) => `Імпортувати ${n} ${words(n)}`,
@@ -816,6 +818,7 @@ export const uk: Dictionary = {
     declinedToast: 'Браузер відмовив',
     declinedText:
       'Встанови застосунок або користуйся ним частіше — браузери дають це довіреним сайтам.',
+    unknown: 'Невідомо',
     used: 'Використано',
     about: 'Про застосунок',
     version: 'Версія',

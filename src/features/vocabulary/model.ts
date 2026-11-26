@@ -1,18 +1,7 @@
+import { TEXT_MAX, TERM_MAX, TRANSLATION_MAX } from '@/lib/db/limits'
 import type { CefrLevel, PartOfSpeech, SrsState, Word } from '@/lib/db/types'
 
-export const PARTS_OF_SPEECH = [
-  'noun',
-  'verb',
-  'adjective',
-  'adverb',
-  'phrasal verb',
-  'phrase',
-  'idiom',
-  'preposition',
-  'conjunction',
-  'pronoun',
-  'other',
-] as const satisfies readonly PartOfSpeech[]
+export { PARTS_OF_SPEECH, TEXT_MAX, TERM_MAX, TRANSLATION_MAX } from '@/lib/db/limits'
 
 /** A word that has never been reviewed. The review session (phase 3) moves it forward. */
 export function createInitialSrs(now: number): SrsState {
@@ -75,18 +64,26 @@ export const EMPTY_DRAFT: WordDraft = {
   notes: '',
 }
 
-/** Limits shared by the form (maxLength), imports and backups. */
-export const TERM_MAX = 120
-export const TRANSLATION_MAX = 300
+const LONG_TEXT_FIELDS = [
+  'definition',
+  'phonetic',
+  'example',
+  'exampleTranslation',
+  'synonyms',
+  'antonyms',
+  'collocations',
+  'notes',
+] as const satisfies readonly (keyof WordDraft)[]
 
 export const DRAFT_ERROR_KEYS = [
   'termRequired',
   'termTooLong',
   'translationRequired',
   'translationTooLong',
+  'textTooLong',
 ] as const
 export type WordDraftErrorKey = (typeof DRAFT_ERROR_KEYS)[number]
-export type WordDraftErrors = Partial<Record<'term' | 'translation', WordDraftErrorKey>>
+export type WordDraftErrors = Partial<Record<'term' | 'translation' | 'details', WordDraftErrorKey>>
 
 /**
  * Required fields and length limits. Errors are i18n keys, so the form shows them in the
@@ -100,6 +97,8 @@ export function validateDraft(draft: WordDraft): WordDraftErrors {
   else if (term.length > TERM_MAX) errors.term = 'termTooLong'
   if (!translation) errors.translation = 'translationRequired'
   else if (translation.length > TRANSLATION_MAX) errors.translation = 'translationTooLong'
+  if (LONG_TEXT_FIELDS.some((field) => draft[field].length > TEXT_MAX))
+    errors.details = 'textTooLong'
   return errors
 }
 

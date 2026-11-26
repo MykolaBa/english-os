@@ -1,7 +1,6 @@
-import { useId, useState, type FormEvent } from 'react'
+import { useId } from 'react'
 import {
   Button,
-  Chip,
   Dialog,
   SelectField,
   TextAreaField,
@@ -16,19 +15,9 @@ import {
   type PartOfSpeech,
   type Word,
 } from '@/lib/db/types'
-import { toast } from '@/stores/toastStore'
-import {
-  EMPTY_DRAFT,
-  PARTS_OF_SPEECH,
-  TERM_MAX,
-  TRANSLATION_MAX,
-  validateDraft,
-  wordToDraft,
-  type WordDraft,
-  type WordDraftErrors,
-} from '../model'
-import { addWord, DuplicateError, updateWord } from '../wordsRepo'
-import { CollectionIcon } from './CollectionIcon'
+import { PARTS_OF_SPEECH, TERM_MAX, TEXT_MAX, TRANSLATION_MAX, type WordDraft } from '../model'
+import { useWordForm } from '../useWordForm'
+import { WordFormExtras } from './WordFormExtras'
 import styles from '../Vocabulary.module.scss'
 
 interface WordFormDialogProps {
@@ -43,7 +32,7 @@ interface WordFormDialogProps {
   initial?: Partial<WordDraft>
 }
 
-/** Mount with a `key` that changes per opening, so the draft state starts fresh. */
+/** Mount it only while open (or with a new `key` per opening): the draft starts fresh. */
 export function WordFormDialog({
   open,
   onClose,
@@ -55,56 +44,12 @@ export function WordFormDialog({
   const t = useT()
   const f = t.vocabulary.form
   const formId = useId()
-  const [draft, setDraft] = useState<WordDraft>(() =>
-    word
-      ? wordToDraft(word)
-      : {
-          ...EMPTY_DRAFT,
-          collectionIds: defaultCollectionId ? [defaultCollectionId] : [],
-          ...initial,
-        },
-  )
-  const [errors, setErrors] = useState<WordDraftErrors>({})
-  const [duplicate, setDuplicate] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
-
-  const set = <K extends keyof WordDraft>(key: K, value: WordDraft[K]) => {
-    setDraft((d) => ({ ...d, [key]: value }))
-    if (key === 'term') setDuplicate(null)
-    if (key in errors) setErrors((e) => ({ ...e, [key]: undefined }))
-  }
-
-  const toggleCollection = (id: string) =>
-    set(
-      'collectionIds',
-      draft.collectionIds.includes(id)
-        ? draft.collectionIds.filter((c) => c !== id)
-        : [...draft.collectionIds, id],
-    )
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault()
-    const found = validateDraft(draft)
-    setErrors(found)
-    if (Object.keys(found).length > 0) return
-
-    setSaving(true)
-    try {
-      if (word) {
-        await updateWord(word.id, draft)
-        toast.success(f.saved)
-      } else {
-        const created = await addWord(draft)
-        toast.success(f.added(created.term))
-      }
-      onClose()
-    } catch (err) {
-      if (err instanceof DuplicateError) setDuplicate(err.value)
-      else toast.error(t.errors.title, String(err))
-    } finally {
-      setSaving(false)
-    }
-  }
+  const { draft, set, toggleCollection, errors, duplicate, saving, submit } = useWordForm({
+    word,
+    defaultCollectionId,
+    initial,
+    onSaved: onClose,
+  })
 
   const levelOptions: SelectOption<CefrLevel | ''>[] = [
     { value: '', label: f.noValue },
@@ -114,7 +59,6 @@ export function WordFormDialog({
     { value: '', label: f.noValue },
     ...PARTS_OF_SPEECH.map((p) => ({ value: p, label: t.partOfSpeech[p] })),
   ]
-  const hasExtras = Boolean(draft.synonyms || draft.antonyms || draft.collocations || draft.notes)
 
   return (
     <Dialog
@@ -167,6 +111,7 @@ export function WordFormDialog({
           onChange={(e) => set('definition', e.target.value)}
           rows={2}
           lang="en"
+          maxLength={TEXT_MAX}
         />
         <div className={styles.formRow3}>
           <SelectField
@@ -187,6 +132,7 @@ export function WordFormDialog({
             value={draft.phonetic}
             onChange={(e) => set('phonetic', e.target.value)}
             autoComplete="off"
+            maxLength={TEXT_MAX}
           />
         </div>
         <div className={styles.formRow}>
@@ -197,6 +143,7 @@ export function WordFormDialog({
             onChange={(e) => set('example', e.target.value)}
             rows={2}
             lang="en"
+            maxLength={TEXT_MAX}
           />
           <TextAreaField
             label={f.exampleTranslation}
@@ -204,60 +151,15 @@ export function WordFormDialog({
             onChange={(e) => set('exampleTranslation', e.target.value)}
             rows={2}
             lang="uk"
+            maxLength={TEXT_MAX}
           />
         </div>
-        {collections.length > 0 && (
-          <fieldset className={styles.fieldset}>
-            <legend>{f.collections}</legend>
-            <div className={styles.chipWrap}>
-              {collections.map((c) => (
-                <Chip
-                  key={c.id}
-                  selected={draft.collectionIds.includes(c.id)}
-                  icon={<CollectionIcon name={c.icon} />}
-                  onClick={() => toggleCollection(c.id)}
-                >
-                  {c.name}
-                </Chip>
-              ))}
-            </div>
-          </fieldset>
-        )}
-        <details className={styles.more} open={hasExtras || undefined}>
-          <summary>{f.more}</summary>
-          <div className={styles.moreBody}>
-            <div className={styles.formRow3}>
-              <TextField
-                label={f.synonyms}
-                hint={f.listHint}
-                value={draft.synonyms}
-                onChange={(e) => set('synonyms', e.target.value)}
-                lang="en"
-              />
-              <TextField
-                label={f.antonyms}
-                hint={f.listHint}
-                value={draft.antonyms}
-                onChange={(e) => set('antonyms', e.target.value)}
-                lang="en"
-              />
-              <TextField
-                label={f.collocations}
-                hint={f.listHint}
-                value={draft.collocations}
-                onChange={(e) => set('collocations', e.target.value)}
-                lang="en"
-              />
-            </div>
-            <TextAreaField
-              label={f.notes}
-              placeholder={f.notesPlaceholder}
-              value={draft.notes}
-              onChange={(e) => set('notes', e.target.value)}
-              rows={3}
-            />
-          </div>
-        </details>
+        <WordFormExtras
+          draft={draft}
+          set={set}
+          collections={collections}
+          onToggleCollection={toggleCollection}
+        />
       </form>
     </Dialog>
   )

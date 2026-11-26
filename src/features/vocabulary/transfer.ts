@@ -118,7 +118,8 @@ function validate(rows: ImportRow[]): ParsedImport {
     if (errors.term === 'termRequired') invalid.push({ line: row.line, problem: 'missingTerm' })
     else if (errors.translation === 'translationRequired')
       invalid.push({ line: row.line, problem: 'missingTranslation' })
-    else if (errors.term || errors.translation) invalid.push({ line: row.line, problem: 'tooLong' })
+    else if (errors.term || errors.translation || errors.details)
+      invalid.push({ line: row.line, problem: 'tooLong' })
     else valid.push(row)
   }
   return { rows: valid, invalid, unreadable: valid.length === 0 && invalid.length === 0 }

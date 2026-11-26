@@ -33,7 +33,7 @@ export interface ForecastDay {
 }
 
 /** How many words become due on each of the next `days` days (today includes overdue). */
-export function forecast(words: Word[], now: number, days = 7): ForecastDay[] {
+export function forecast(words: readonly Word[], now: number, days = 7): ForecastDay[] {
   const today = startOfDay(new Date(now))
   const result = Array.from({ length: days }, (_, i) => ({
     day: toDayKey(addDays(today, i)),

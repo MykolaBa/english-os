@@ -7,6 +7,7 @@ export default function NotFoundPage() {
   return (
     <Card padding="lg">
       <EmptyState
+        headingAs="h1"
         icon={<Compass />}
         title={t.notFoundTitle}
         description={t.notFoundDescription}

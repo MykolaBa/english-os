@@ -88,3 +88,37 @@ export function OrderInput({ exercise, picked, revealed, onChange }: OrderInputP
     </div>
   )
 }
+
+interface TextAnswerProps {
+  value: string
+  onChange: (value: string) => void
+  /** null before checking; then whether the answer was right. */
+  correct: boolean | null
+  label: string
+}
+
+/** The typed answer of gap and transform exercises. */
+export function TextAnswer({ value, onChange, correct, label }: TextAnswerProps) {
+  return (
+    <input
+      className={cx(
+        styles.answer,
+        correct === true && styles.answerRight,
+        correct === false && styles.answerWrong,
+      )}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      readOnly={correct !== null}
+      aria-label={label}
+      placeholder={label}
+      lang="en"
+      autoComplete="off"
+      autoCapitalize="off"
+      autoCorrect="off"
+      spellCheck={false}
+      enterKeyHint="done"
+      // The single field of this step; focusing it is what the learner wants.
+      autoFocus
+    />
+  )
+}

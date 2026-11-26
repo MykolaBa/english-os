@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { PARTS_OF_SPEECH } from '@/features/vocabulary/model'
+import { PARTS_OF_SPEECH, TEXT_MAX } from './limits'
 import { REVIEW_RATINGS } from '@/lib/srs/scheduler'
 import {
   CEFR_LEVELS,
@@ -37,7 +37,7 @@ const ACTIVITY_TYPES = [
   'it_english',
 ] as const satisfies readonly ActivityEvent['type'][]
 
-const text = z.string().max(5000)
+const text = z.string().max(TEXT_MAX)
 const optionalText = text.optional()
 const timestamp = z.number().finite().nonnegative()
 const count = z.number().int().nonnegative()

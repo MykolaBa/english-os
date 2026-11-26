@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Check, X } from 'lucide-react'
 import { Button, ProgressBar } from '@/components/ui'
 import { useT } from '@/i18n'
-import { cx } from '@/lib/cx'
 import {
   checkExercise,
   orderedSentence,
@@ -10,7 +8,8 @@ import {
   type CheckResult,
 } from '@/lib/exercises/check'
 import type { Exercise, ExerciseResponse } from '@/lib/exercises/types'
-import { ChoiceInput, OrderInput } from './ExerciseInputs'
+import { ExerciseFeedback } from './ExerciseFeedback'
+import { ChoiceInput, OrderInput, TextAnswer } from './ExerciseInputs'
 import { ExerciseResult } from './ExerciseResult'
 import styles from './Exercises.module.scss'
 
@@ -136,25 +135,12 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
         />
       )}
       {(exercise.type === 'gap' || exercise.type === 'transform') && (
-        <input
+        <TextAnswer
           key={exercise.id}
-          className={cx(
-            styles.answer,
-            checked && (checked.correct ? styles.answerRight : styles.answerWrong),
-          )}
           value={text}
-          onChange={(e) => setText(e.target.value)}
-          readOnly={checked !== null}
-          aria-label={t.answerLabel}
-          placeholder={t.answerLabel}
-          lang="en"
-          autoComplete="off"
-          autoCapitalize="off"
-          autoCorrect="off"
-          spellCheck={false}
-          enterKeyHint="done"
-          // The single field of this step; focusing it is what the learner wants.
-          autoFocus
+          onChange={setText}
+          correct={checked ? checked.correct : null}
+          label={t.answerLabel}
         />
       )}
       {exercise.type === 'order' && (
@@ -166,26 +152,7 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
         />
       )}
 
-      {checked && (
-        <div
-          className={cx(
-            styles.feedback,
-            checked.correct ? styles.feedbackRight : styles.feedbackWrong,
-          )}
-          role="status"
-        >
-          <p className={styles.verdict}>
-            {checked.correct ? <Check aria-hidden /> : <X aria-hidden />}
-            {checked.correct ? t.correct : t.incorrect}
-          </p>
-          {!checked.correct && (
-            <p>
-              {t.answerIs}: <strong lang="en">{checked.expected}</strong>
-            </p>
-          )}
-          <p className={styles.explanation}>{exercise.explanation}</p>
-        </div>
-      )}
+      {checked && <ExerciseFeedback exercise={exercise} checked={checked} />}
 
       <div className={styles.actions}>
         {checked ? (

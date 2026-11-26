@@ -1,15 +1,15 @@
 import {
+  useCallback,
   useEffect,
   useId,
-  useLayoutEffect,
   useRef,
   useState,
-  type CSSProperties,
   type KeyboardEvent,
   type ReactNode,
 } from 'react'
 import { Check, ChevronDown } from 'lucide-react'
 import { cx } from '@/lib/cx'
+import { findByPrefix, LIST_MOVES, useDismiss, useListPosition } from './useFloatingList'
 import styles from './Select.module.scss'
 
 export interface SelectOption<T extends string> {
@@ -31,9 +31,6 @@ interface SelectProps<T extends string> {
   variant?: 'field' | 'pill'
   className?: string
 }
-
-const LIST_GAP = 6
-const LIST_MAX = 300
 
 /**
  * A select whose open list matches the app (a native <select> list is drawn by the OS).
@@ -63,7 +60,9 @@ export function Select<T extends string>({
   const typeahead = useRef({ text: '', at: 0 })
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
-  const [position, setPosition] = useState<CSSProperties>({})
+  const close = useCallback(() => setOpen(false), [])
+  const position = useListPosition(open, triggerRef)
+  useDismiss(open, { list: listRef, trigger: triggerRef }, close)
 
   const foundIndex = options.findIndex((o) => o.value === value)
   const selectedIndex = Math.max(0, foundIndex)
@@ -74,57 +73,12 @@ export function Select<T extends string>({
     setActive(selectedIndex)
     setOpen(true)
   }
-  const close = () => setOpen(false)
   const choose = (i: number) => {
     const option = options[i]
     if (option && option.value !== value) onChange(option.value)
     close()
     triggerRef.current?.focus()
   }
-
-  // Place the list under the trigger, or above it when there's more room there.
-  useLayoutEffect(() => {
-    if (!open) return
-    const place = () => {
-      const rect = triggerRef.current?.getBoundingClientRect()
-      if (!rect) return
-      // On phones the bottom tab bar covers the end of the viewport; keep the list above it.
-      const bar = document.querySelector('nav[data-bottom-nav]')?.getBoundingClientRect()
-      const floor = bar && bar.height > 0 ? bar.top : window.innerHeight
-      const below = floor - rect.bottom - LIST_GAP
-      const above = rect.top - LIST_GAP
-      const up = below < Math.min(LIST_MAX, 200) && above > below
-      setPosition({
-        left: Math.min(rect.left, window.innerWidth - Math.max(rect.width, 180) - 8),
-        minWidth: rect.width,
-        maxHeight: Math.min(LIST_MAX, up ? above : below) - 8,
-        ...(up
-          ? { bottom: window.innerHeight - rect.top + LIST_GAP }
-          : { top: rect.bottom + LIST_GAP }),
-      })
-    }
-    place()
-    window.addEventListener('resize', place)
-    return () => window.removeEventListener('resize', place)
-  }, [open])
-
-  // Close on a press outside, or when the page (not the list itself) scrolls.
-  useEffect(() => {
-    if (!open) return
-    const onPointerDown = (e: PointerEvent) => {
-      const target = e.target as Node
-      if (!listRef.current?.contains(target) && !triggerRef.current?.contains(target)) close()
-    }
-    const onScroll = (e: Event) => {
-      if (!listRef.current?.contains(e.target as Node)) close()
-    }
-    document.addEventListener('pointerdown', onPointerDown)
-    document.addEventListener('scroll', onScroll, true)
-    return () => {
-      document.removeEventListener('pointerdown', onPointerDown)
-      document.removeEventListener('scroll', onScroll, true)
-    }
-  }, [open])
 
   // Keep the highlighted option visible while moving with the keyboard.
   useEffect(() => {
@@ -138,14 +92,15 @@ export function Select<T extends string>({
     t.text = now - t.at < 700 ? t.text + key.toLowerCase() : key.toLowerCase()
     t.at = now
     const start = open ? active + (t.text.length === 1 ? 1 : 0) : selectedIndex + 1
-    for (let k = 0; k < options.length; k++) {
-      const i = (start + k) % options.length
-      if (options[i]?.label.toLowerCase().startsWith(t.text)) {
-        if (open) setActive(i)
-        else if (options[i]) onChange(options[i].value)
-        return
-      }
-    }
+    const i = findByPrefix(
+      options.map((o) => o.label),
+      t.text,
+      start,
+    )
+    const option = i === null ? undefined : options[i]
+    if (i === null || !option) return
+    if (open) setActive(i)
+    else onChange(option.value)
   }
 
   const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
@@ -159,39 +114,22 @@ export function Select<T extends string>({
       }
       return
     }
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault()
-        setActive((i) => Math.min(last, i + 1))
-        break
-      case 'ArrowUp':
-        e.preventDefault()
-        setActive((i) => Math.max(0, i - 1))
-        break
-      case 'Home':
-        e.preventDefault()
-        setActive(0)
-        break
-      case 'End':
-        e.preventDefault()
-        setActive(last)
-        break
-      case 'Enter':
-      case ' ':
-        e.preventDefault()
-        choose(active)
-        break
-      case 'Escape':
-        // Close only the list, not a dialog the select lives in.
-        e.preventDefault()
-        e.stopPropagation()
-        close()
-        break
-      case 'Tab':
-        close()
-        break
-      default:
-        if (e.key.length === 1 && /\S/.test(e.key)) jumpTo(e.key)
+    const move = LIST_MOVES[e.key]
+    if (move) {
+      e.preventDefault()
+      setActive((i) => move(i, last))
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      choose(active)
+    } else if (e.key === 'Escape') {
+      // Close only the list, not a dialog the select lives in.
+      e.preventDefault()
+      e.stopPropagation()
+      close()
+    } else if (e.key === 'Tab') {
+      close()
+    } else if (e.key.length === 1 && /\S/.test(e.key)) {
+      jumpTo(e.key)
     }
   }
 
