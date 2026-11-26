@@ -3,6 +3,11 @@ import {
   PARTS_OF_SPEECH,
   TEXT_MAX,
   WRITING_MAX,
+  LIBRARY_TEXT_MAX,
+  LIBRARY_TITLE_MAX,
+  LIBRARY_TAGS_MAX,
+  LIBRARY_TAG_MAX,
+  URL_MAX,
   WRITING_TITLE_MAX,
   WRITING_VERSIONS_MAX,
 } from './limits'
@@ -16,6 +21,8 @@ import {
   type ReadingProgress,
   type InterviewAnswer,
   type ListeningProgress,
+  type LibraryItem,
+  LIBRARY_STATUSES,
   type Writing,
   INTERVIEW_STATUSES,
   QUIZ_SOURCES,
@@ -175,6 +182,24 @@ export const listeningProgressSchema = z.object({
   lastScore: z.number().min(0).max(100).optional(),
   updatedAt: timestamp,
 }) satisfies z.ZodType<ListeningProgress>
+
+export const libraryItemSchema = z.object({
+  id: z.string().min(1).max(200),
+  title: z.string().min(1).max(LIBRARY_TITLE_MAX),
+  // Only web links: a backup must not smuggle in javascript: or data: URLs.
+  url: z
+    .string()
+    .max(URL_MAX)
+    .regex(/^https?:\/\//i)
+    .optional(),
+  text: z.string().max(LIBRARY_TEXT_MAX),
+  tags: z.array(z.string().min(1).max(LIBRARY_TAG_MAX)).max(LIBRARY_TAGS_MAX),
+  status: z.enum(LIBRARY_STATUSES),
+  notes: z.string().max(TEXT_MAX),
+  readAt: timestamp.optional(),
+  createdAt: timestamp,
+  updatedAt: timestamp,
+}) satisfies z.ZodType<LibraryItem>
 
 export const quizResultSchema = z.object({
   id: count.optional(),

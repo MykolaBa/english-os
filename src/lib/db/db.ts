@@ -6,6 +6,7 @@ import type {
   MetaEntry,
   InterviewAnswer,
   QuizResult,
+  LibraryItem,
   ListeningProgress,
   ReadingProgress,
   Recording,
@@ -34,6 +35,7 @@ export class EnglishOSDatabase extends Dexie {
   writings!: EntityTable<Writing, 'id'>
   recordings!: EntityTable<Recording, 'id'>
   listeningProgress!: EntityTable<ListeningProgress, 'episodeId'>
+  library!: EntityTable<LibraryItem, 'id'>
 
   constructor(name = 'englishos') {
     super(name)
@@ -72,6 +74,10 @@ export class EnglishOSDatabase extends Dexie {
     // v8 (phase 8): listening progress.
     this.version(8).stores({
       listeningProgress: 'episodeId, completedAt, updatedAt',
+    })
+    // v9 (phase 9): the personal library.
+    this.version(9).stores({
+      library: 'id, status, updatedAt, *tags',
     })
   }
 }

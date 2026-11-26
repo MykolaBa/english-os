@@ -1,13 +1,12 @@
 import { useMemo, type MouseEvent } from 'react'
-import type { ReadingText } from '@/content/reading'
 import { cx } from '@/lib/cx'
 import type { Word } from '@/lib/db/types'
-import type { WordSelection } from '../selection'
+import type { ReaderSource, WordSelection } from '../selection'
 import { findKnownWord, tokenizeParagraph } from '../tokenize'
 import styles from '../Reading.module.scss'
 
 interface ReadingArticleProps {
-  text: ReadingText
+  text: ReaderSource
   vocabulary: Map<string, Word>
   selectedId: string | null
   onSelect: (selection: WordSelection) => void

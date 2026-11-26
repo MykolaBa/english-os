@@ -1,0 +1,202 @@
+@use '@/styles/mixins' as *;
+
+.page {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+// ---------- List ----------
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1 1 16rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+
+  &:focus-within {
+    box-shadow: var(--focus-ring);
+  }
+
+  svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    color: var(--text-subtle);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-2) 0;
+    border: 0;
+    outline: none;
+    background: none;
+    color: var(--text);
+    // 16px on phones: no iOS zoom on focus.
+    font: inherit;
+    font-size: max(16px, var(--text-base));
+  }
+}
+
+.list {
+  @include list-surface;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  @include row-link;
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  font-weight: 600;
+  @include truncate;
+}
+
+.rowText {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+// ---------- Item ----------
+.hero {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.heroTitle {
+  @include serif-title(clamp(1.625rem, 2.5vw + 1rem, 2.375rem));
+  overflow-wrap: anywhere;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.external {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--accent);
+  border-radius: var(--radius-sm);
+  @include focus-ring;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.notes {
+  max-width: 68ch;
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--border-strong);
+  color: var(--text-muted);
+  white-space: pre-wrap;
+}
+
+.coverage {
+  strong {
+    color: var(--text);
+  }
+
+  color: var(--text-muted);
+}
+
+.subTitle {
+  margin: var(--space-5) 0 var(--space-1);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.unknown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding-left: var(--space-3);
+    border-radius: var(--radius-full);
+    background: var(--surface-2);
+    font-family: var(--font-serif);
+  }
+
+  small {
+    font-family: var(--font-sans);
+    color: var(--text-subtle);
+  }
+}
+
+// The reader: text and the word panel side by side, like graded reading.
+.readerLayout {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: var(--space-5);
+  }
+}

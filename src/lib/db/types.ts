@@ -197,6 +197,26 @@ export interface ListeningProgress {
   updatedAt: number
 }
 
+export const LIBRARY_STATUSES = ['toRead', 'reading', 'done'] as const
+export type LibraryStatus = (typeof LIBRARY_STATUSES)[number]
+
+/** Something the learner saved to read: their own text, optionally with its source link. */
+export interface LibraryItem {
+  id: string
+  title: string
+  /** Where it came from (http/https only); may be the only content for a saved link. */
+  url?: string
+  /** The English text to read; empty for a bare link. */
+  text: string
+  tags: string[]
+  status: LibraryStatus
+  notes: string
+  /** First time it was marked done; XP is given once. */
+  readAt?: number
+  createdAt: number
+  updatedAt: number
+}
+
 export const RECORDING_KINDS = ['shadowing', 'task'] as const
 export type RecordingKind = (typeof RECORDING_KINDS)[number]
 

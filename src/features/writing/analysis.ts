@@ -1,5 +1,6 @@
 import type { Word } from '@/lib/db/types'
 import { findKnownWord, wordKey } from '@/lib/text/lemma'
+import { STOPWORDS } from '@/lib/text/stopwords'
 
 /**
  * Plain, explainable feedback on a text — no AI: counts, long sentences, words you
@@ -9,17 +10,6 @@ import { findKnownWord, wordKey } from '@/lib/text/lemma'
 const WORD = /[A-Za-z]+(?:['’-][A-Za-z]+)*/g
 /** A sentence ends with . ! ? (optionally followed by a closing quote or bracket). */
 const SENTENCE = /[^.!?]+[.!?]*["”’)]?/g
-
-/** Short function words that are naturally frequent; never reported as overused. */
-const STOPWORDS = new Set(
-  (
-    'a an the and or but so if then than that this these those to of in on at for from with by ' +
-    'as is are was were be been being am do does did have has had i you he she it we they me ' +
-    'him her us them my your his its our their not no yes can could will would should may ' +
-    'might must just also very there here what when where which who how all any some about ' +
-    "up out into over after before i'm it's don't i've i'll can't won't"
-  ).split(' '),
-)
 
 /** Over this many words a sentence is hard to follow — worth splitting. */
 export const LONG_SENTENCE = 25

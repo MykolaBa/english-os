@@ -13,13 +13,22 @@ interface WordPanelProps {
   known?: KnownMatch
   onAdd: () => void
   onClose: () => void
+  /** What to say when there's no translation (default: the graded-reading hint). */
+  noTranslationHint?: string
 }
 
 /**
  * The selected word, like a dictionary entry. Desktop: a sticky column next to the text.
  * Phone: a sheet above the bottom navigation that appears only while a word is selected.
  */
-export function WordPanel({ headword, gloss, known, onAdd, onClose }: WordPanelProps) {
+export function WordPanel({
+  headword,
+  gloss,
+  known,
+  onAdd,
+  onClose,
+  noTranslationHint,
+}: WordPanelProps) {
   const t = useT()
   const r = t.reading
 
@@ -61,7 +70,7 @@ export function WordPanel({ headword, gloss, known, onAdd, onClose }: WordPanelP
           {translation}
         </p>
       ) : (
-        <p className={styles.panelHint}>{r.noTranslation}</p>
+        <p className={styles.panelHint}>{noTranslationHint ?? r.noTranslation}</p>
       )}
       {related && (
         <p className={styles.related}>

@@ -895,6 +895,82 @@ export const en = {
     openPlanner: 'Open the planner',
   },
 
+  library: {
+    title: 'Library',
+    subtitle:
+      'Your own texts and links: articles, docs, emails. Read them here and save new words.',
+    add: 'Add to library',
+    searchLabel: 'Search the library',
+    searchPlaceholder: 'Search titles and text',
+    anyStatus: 'Any status',
+    anyTag: 'Any tag',
+    statuses: { toRead: 'To read', reading: 'Reading', done: 'Done' },
+    rowMeta: (words: number, edited: string) =>
+      words > 0
+        ? `${words} ${words === 1 ? 'word' : 'words'}, edited ${edited}`
+        : `Link, edited ${edited}`,
+    emptyTitle: 'Your library is empty',
+    emptyText:
+      'Paste an article, a page of docs or an email you want to understand, and read it with tap-to-translate.',
+    noResultsTitle: 'Nothing matches',
+    noResultsText: 'Try another search or clear the filters.',
+    clearFilters: 'Clear filters',
+    form: {
+      addTitle: 'Add to library',
+      editTitle: 'Edit',
+      description:
+        'Paste the text, a link, or both. Only you can see it: it stays in this browser.',
+      title: 'Title',
+      titlePlaceholder: 'Leave empty to use the first words',
+      url: 'Link',
+      urlPlaceholder: 'https://…',
+      text: 'Text',
+      textPlaceholder: 'Paste the English text here',
+      importFile: 'Import a .txt file',
+      tags: 'Tags',
+      tagsHint: 'Separate with commas, e.g. react, docs',
+      notes: 'Notes',
+      errors: {
+        needContent: 'Add some text or a link.',
+        badUrl: 'Only web links (http or https) can be saved.',
+      },
+      saved: 'Saved',
+      added: 'Added to your library',
+      fileTooLarge: 'That file is too large (10 MB at most).',
+    },
+    back: 'Library',
+    notFoundTitle: 'Not in your library',
+    notFoundText: 'It may have been deleted. Go back to the library.',
+    openLink: 'Open the original',
+    edit: 'Edit',
+    delete: 'Delete',
+    deleteTitle: 'Delete from library?',
+    deleteText:
+      'The text and your notes will be deleted. Words you saved from it stay in your vocabulary.',
+    deleted: 'Deleted from your library',
+    status: 'Status',
+    doneToast: (xp: number) => `Marked as read, +${xp} XP`,
+    stats: {
+      title: 'How hard is it for you?',
+      words: (n: number) => `${n} ${n === 1 ? 'word' : 'words'}`,
+      minutes: (n: number) => `about ${n} min to read`,
+      coverage: (percent: number) => `You already know ${percent}% of the content words.`,
+      level: {
+        easy: 'Comfortable reading.',
+        ok: 'Good practice: some new words.',
+        hard: 'Challenging: lots of new words.',
+      },
+    },
+    unknownTitle: 'New words in this text',
+    unknownText: 'Content words you don’t have yet, most frequent first.',
+    unknownNone: 'You know every content word here. Nice.',
+    times: (n: number) => `×${n}`,
+    addWord: (word: string) => `Add “${word}” to vocabulary`,
+    noTranslation: 'Add it to your vocabulary and write your own translation.',
+    linkOnly: 'This item is a link. Open it, or edit it to paste the text and read it here.',
+    notes: 'Your notes',
+  },
+
   statistics: {
     title: 'Statistics',
     subtitle: 'How your learning is going, counted from your own activity.',

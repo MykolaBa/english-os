@@ -36,3 +36,10 @@ export const WRITING_VERSIONS_MAX = 30
 /** A recording stops by itself at this length; only the newest few per item are kept. */
 export const RECORDING_MAX_MS = 120_000
 export const RECORDINGS_PER_ITEM = 3
+
+/** A library item: the text you paste, its title, its tags. */
+export const LIBRARY_TEXT_MAX = 50_000
+export const LIBRARY_TITLE_MAX = 200
+export const LIBRARY_TAGS_MAX = 10
+export const LIBRARY_TAG_MAX = 30
+export const URL_MAX = 2000

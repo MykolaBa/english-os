@@ -143,6 +143,34 @@ describe('backup compatibility', () => {
     expect(await db.listeningProgress.get('e1')).toMatchObject({ bestScore: 75 })
   })
 
+  it('round-trips the library, accepts v8 backups and rejects unsafe links', async () => {
+    const item = {
+      id: 'l1',
+      title: 'Docs',
+      url: 'https://example.com',
+      text: 'Hello.',
+      tags: ['react'],
+      status: 'toRead' as const,
+      notes: '',
+      createdAt: 1,
+      updatedAt: 1,
+    }
+    await db.library.put(item)
+    const backup = await createBackup()
+    const { library: _dropped, ...dataV8 } = backup.data
+    const old = parseBackup(JSON.stringify({ ...backup, data: dataV8 }))
+    expect(old.ok && old.backup.data.library).toEqual([])
+    await db.library.clear()
+    await restoreBackup(backup)
+    expect(await db.library.get('l1')).toMatchObject({ title: 'Docs' })
+
+    const evil = {
+      ...backup,
+      data: { ...backup.data, library: [{ ...item, url: 'javascript:alert(1)' }] },
+    }
+    expect(parseBackup(JSON.stringify(evil))).toMatchObject({ ok: false, problem: 'invalidData' })
+  })
+
   it('round-trips reading progress', async () => {
     await db.readingProgress.put({
       textId: 'r1',

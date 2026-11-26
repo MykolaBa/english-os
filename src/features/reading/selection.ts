@@ -1,4 +1,7 @@
 import type { ReadingText } from '@/content/reading'
+
+/** Anything the reader can show: a graded text, or a library item (no glossary). */
+export type ReaderSource = Pick<ReadingText, 'paragraphs' | 'glossary'>
 import type { Word } from '@/lib/db/types'
 import { normalizeTerm, type WordDraft } from '@/features/vocabulary/model'
 import { findKnownWord, tokenizeParagraph, wordKey } from './tokenize'
@@ -23,7 +26,7 @@ function termFor(selection: WordSelection): string {
 }
 
 /** What "Add to vocabulary" prefills: the key word's dictionary form, or the tapped word. */
-export function draftFor(text: ReadingText, selection: WordSelection): Partial<WordDraft> {
+export function draftFor(text: ReaderSource, selection: WordSelection): Partial<WordDraft> {
   const gloss = selection.glossIndex === undefined ? undefined : text.glossary[selection.glossIndex]
   return {
     term: gloss?.term ?? termFor(selection),
@@ -34,7 +37,7 @@ export function draftFor(text: ReadingText, selection: WordSelection): Partial<W
 }
 
 /** The first sentence that uses a key word — the example saved with it. */
-export function glossSentence(text: ReadingText, index: number): string {
+export function glossSentence(text: ReaderSource, index: number): string {
   for (const p of text.paragraphs) {
     for (const s of tokenizeParagraph(p, text.glossary)) {
       if (s.tokens.some((tk) => tk.kind === 'gloss' && tk.index === index)) return s.text
@@ -51,7 +54,7 @@ export interface KnownMatch {
 
 /** The learner's saved word for the selection, if any. */
 export function knownFor(
-  text: ReadingText,
+  text: ReaderSource,
   s: WordSelection,
   vocabulary: Map<string, Word>,
 ): KnownMatch | undefined {

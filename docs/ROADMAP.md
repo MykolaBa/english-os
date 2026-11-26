@@ -16,6 +16,16 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 9 | Study planner, personal library, subtle gamification (achievements) | ⏳ Next |
 | 10 | Optional AI features behind a backend proxy | |
 
+## Done in phase 9 (part 2: personal library)
+- Save your own texts and links (database v9 `library`, in backups): paste text or import a
+  .txt (its heading becomes the title), add a link (http/https only — checked when saving,
+  restoring a backup and rendering), tags, notes and a status (to read, reading, done)
+- Read them in the same reader as graded texts: tap any word, see it in your vocabulary or
+  add it with the sentence as the example
+- "How hard is it for you?": the share of content words you already know (your vocabulary
+  plus a list of very common words) and the new words worth learning, forms grouped
+- Search and filters by status and tag; first "done" gives XP once
+
 ## Done in phase 9 (part 1: study planner)
 - A plan in Settings-backed preferences: study days, minutes a day, skills to rotate
   (validated like every setting, included in backups)
