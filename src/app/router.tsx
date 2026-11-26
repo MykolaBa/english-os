@@ -20,6 +20,9 @@ const MockInterviewPage = lazy(() => import('@/features/itEnglish/MockInterviewP
 const InterviewPage = lazy(() => import('@/features/itEnglish/InterviewPage'))
 const WritingPage = lazy(() => import('@/features/writing/WritingPage'))
 const WritingEditorPage = lazy(() => import('@/features/writing/WritingEditorPage'))
+const SpeakingPage = lazy(() => import('@/features/speaking/SpeakingPage'))
+const ShadowingPage = lazy(() => import('@/features/speaking/ShadowingPage'))
+const SpeakingTaskPage = lazy(() => import('@/features/speaking/SpeakingTaskPage'))
 const StatisticsPage = lazy(() => import('@/features/statistics/StatisticsPage'))
 const ComingSoonPage = lazy(() => import('@/features/placeholder/ComingSoonPage'))
 const NotFoundPage = lazy(() => import('@/features/placeholder/NotFoundPage'))
@@ -35,6 +38,7 @@ const PAGES: Record<string, RouteObject['element']> = {
   '/reading': <ReadingPage />,
   '/it-english': <ItEnglishPage />,
   '/writing': <WritingPage />,
+  '/speaking': <SpeakingPage />,
   '/settings': <SettingsPage />,
 }
 
@@ -55,6 +59,8 @@ export const router = createBrowserRouter([
       { path: '/it-english/interview/:questionId', element: <InterviewPage /> },
       { path: '/it-english/mock', element: <MockInterviewPage /> },
       { path: '/writing/:writingId', element: <WritingEditorPage /> },
+      { path: '/speaking/shadow/:setId', element: <ShadowingPage /> },
+      { path: '/speaking/task/:taskId', element: <SpeakingTaskPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

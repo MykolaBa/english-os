@@ -185,6 +185,29 @@ export interface Writing {
   updatedAt: number
 }
 
+export const RECORDING_KINDS = ['shadowing', 'task'] as const
+export type RecordingKind = (typeof RECORDING_KINDS)[number]
+
+/** How close a shadowing attempt was, in the learner's own judgement. */
+export const SELF_RATINGS = ['again', 'almost', 'good'] as const
+export type SelfRating = (typeof SELF_RATINGS)[number]
+
+/**
+ * A voice recording, kept only on this device. Audio is not part of JSON backups
+ * (it would make them huge); the activity log keeps the XP and history.
+ */
+export interface Recording {
+  id: string
+  kind: RecordingKind
+  /** Sentence id (shadowing) or speaking task id (src/content/speaking). */
+  itemId: string
+  audio: Blob
+  mimeType: string
+  durationMs: number
+  rating?: SelfRating
+  createdAt: number
+}
+
 export const INTERVIEW_STATUSES = ['practising', 'confident'] as const
 export type InterviewStatus = (typeof INTERVIEW_STATUSES)[number]
 

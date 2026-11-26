@@ -51,6 +51,7 @@ export function BackupSection() {
   return (
     <div className={styles.backup}>
       <p className={styles.backupText}>{b.description}</p>
+      <p className={styles.backupLast}>{b.audioNote}</p>
       <p className={styles.backupLast}>
         {b.last(lastBackupAt ? formatRelative(lastBackupAt, t.locale, t.common.justNow) : null)}
       </p>

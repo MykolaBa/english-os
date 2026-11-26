@@ -7,6 +7,7 @@ import type {
   InterviewAnswer,
   QuizResult,
   ReadingProgress,
+  Recording,
   Writing,
   ReviewLog,
   Word,
@@ -30,6 +31,7 @@ export class EnglishOSDatabase extends Dexie {
   readingProgress!: EntityTable<ReadingProgress, 'textId'>
   interviewAnswers!: EntityTable<InterviewAnswer, 'questionId'>
   writings!: EntityTable<Writing, 'id'>
+  recordings!: EntityTable<Recording, 'id'>
 
   constructor(name = 'englishos') {
     super(name)
@@ -60,6 +62,10 @@ export class EnglishOSDatabase extends Dexie {
     // v6 (phase 8): the learner's writing (drafts and versions).
     this.version(6).stores({
       writings: 'id, promptId, updatedAt',
+    })
+    // v7 (phase 8): voice recordings (audio Blobs; not included in JSON backups).
+    this.version(7).stores({
+      recordings: 'id, itemId, kind, createdAt',
     })
   }
 }

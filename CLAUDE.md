@@ -30,9 +30,10 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   (grammar, reading, IT questions) lives in `src/content` as typed TS modules referenced by id.
   Seeded vocabulary is imported into the DB once, with stable `seed:*` ids and `source: 'seed'`.
 - **Schema changes**: never edit a released `db.version(n)`; add `version(n + 1)` + upgrade.
-  Current: v6 (v1 + `lessonProgress` v2 + `quizResults` v3 + `readingProgress` v4 +
-  `interviewAnswers` v5 + `writings` v6). New tables also go into the backup schema (with a
-  `.default([])` so older backups still restore).
+  Current: v7 (v1 + `lessonProgress` v2 + `quizResults` v3 + `readingProgress` v4 +
+  `interviewAnswers` v5 + `writings` v6 + `recordings` v7). New tables also go into the
+  backup schema (with a `.default([])` so older backups still restore) — except
+  `recordings`: audio Blobs stay on the device and the UI says so.
 - **Reads in components** via `useLiveQuery` (auto-refresh). Zustand only for UI/session state
   and settings (`localStorage`, key `englishos:settings`) — never a second copy of DB data.
 - **Activity log**: every meaningful learning action calls `logActivity()` (with XP). Dashboard,
@@ -101,6 +102,9 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   must pass: phrases are unique and every phrase can be turned into a gap exercise.
 - Writing tasks: `src/content/writing/prompts.ts`; task and checklist ids are stable (saved
   writing uses them). `writing.test.ts` must pass: each sample fits its own word range.
+- Speaking content: `src/content/speaking` (shadowing sets, speaking tasks); sentence ids
+  are `<set>:<n>` and stable (recordings use them). Record only through `useRecorder` (it
+  releases the mic) and play Blobs with `RecordingPlayer` (it revokes object URLs).
 - Exercises: use the shared engine (`lib/exercises`, `features/exercises/ExerciseRunner`) for
   any practice or quiz — don't build a second one. A "start practising" block is
   `PracticeSection` (same folder).

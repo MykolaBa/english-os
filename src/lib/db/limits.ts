@@ -32,3 +32,7 @@ export const TEXT_MAX = 5000
 export const WRITING_MAX = 20_000
 export const WRITING_TITLE_MAX = 120
 export const WRITING_VERSIONS_MAX = 30
+
+/** A recording stops by itself at this length; only the newest few per item are kept. */
+export const RECORDING_MAX_MS = 120_000
+export const RECORDINGS_PER_ITEM = 3

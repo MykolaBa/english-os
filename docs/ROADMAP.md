@@ -16,6 +16,20 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
 
+## Done in phase 8 (part 2: speaking)
+- Shadowing (`src/content/speaking`): four sets of five sentences — the th sounds, word
+  stress in tech words, question intonation, linking — with notes on what to listen for;
+  listen at normal or slow speed, record yourself, play back and rate the take
+- Speaking tasks (A2–B2, 60–90 s): situation, plan, phrases, a countdown that starts with
+  the recording, and your saved takes to listen back to
+- `useRecorder` on MediaRecorder: picks a format the browser records (WebM or MP4/Safari),
+  stops by itself at 2 minutes, shows a live loudness meter, releases the microphone as
+  soon as it stops (also when you leave mid-permission or mid-recording)
+- Recordings in database v7 (`recordings`), newest 3 per sentence/task; audio stays on
+  the device and is not in JSON backups (said in Speaking and in Settings); XP is saved
+  with the take in one transaction
+- No speech recognition on purpose: in Chrome it sends audio to a server
+
 ## Done in phase 8 (part 1: writing)
 - Six writing tasks as content (`src/content/writing`, A2–B2: introduce yourself, weekend
   plans, move a meeting, stand-up update, bug report, pull request), each with phrases to

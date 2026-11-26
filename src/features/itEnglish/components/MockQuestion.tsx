@@ -6,7 +6,7 @@ import { useT } from '@/i18n'
 import { cx } from '@/lib/cx'
 import { speak, stopSpeaking } from '@/lib/speech'
 import { ANSWER_SECONDS, formatClock } from '../mock'
-import { useCountdown } from '../useCountdown'
+import { useCountdown } from '@/lib/useCountdown'
 import styles from '../ItEnglish.module.scss'
 
 interface MockQuestionProps {
