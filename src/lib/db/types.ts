@@ -185,6 +185,18 @@ export interface Writing {
   updatedAt: number
 }
 
+/** Progress in one listening episode (the episode lives in src/content/listening). */
+export interface ListeningProgress {
+  episodeId: string
+  /** First time the questions were answered — the episode counts as done. */
+  completedAt?: number
+  attempts: number
+  /** Percent, 0–100, of the dictation and questions together. */
+  bestScore?: number
+  lastScore?: number
+  updatedAt: number
+}
+
 export const RECORDING_KINDS = ['shadowing', 'task'] as const
 export type RecordingKind = (typeof RECORDING_KINDS)[number]
 

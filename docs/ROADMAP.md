@@ -12,9 +12,20 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 5 | Grammar lessons A2/B1 (content as code) + shared exercise engine | ✅ Done (6 lessons; more to add) |
 | 6 | Quizzes (custom, mistakes tracking) + Statistics (Recharts) | ✅ Done |
 | 7 | Reading (tap word → add to vocabulary) + IT English (terms, questions, interview prep) | ✅ Done |
-| 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | ⏳ Next |
-| 9 | Study planner, personal library, subtle gamification (achievements) | |
+| 8 | Writing (drafts, versions), Speaking (MediaRecorder), Listening (player + transcript) | ✅ Done |
+| 9 | Study planner, personal library, subtle gamification (achievements) | ⏳ Next |
 | 10 | Optional AI features behind a backend proxy | |
+
+## Done in phase 8 (part 3: listening)
+- Five episodes (`src/content/listening`, A2–B2): ordering a coffee, booking a doctor, a
+  stand-up, an onboarding call, a short talk on caching — transcript with translations
+- A script player on the browser's speech synthesis: line by line with the current line
+  highlighted, two different voices for a dialogue (or a higher pitch when the device has
+  one), three speeds, pause/resume that works on Android too, tap a line to play from it
+- Listen first: the transcript is hidden until you open it; translations are a switch
+- Check: dictation (hear the line, type the missing word — exercises now support `audio`)
+  and comprehension questions on the shared engine; progress in database v8, XP once per
+  first completion plus one per correct answer
 
 ## Done in phase 8 (part 2: speaking)
 - Shadowing (`src/content/speaking`): four sets of five sentences — the th sounds, word

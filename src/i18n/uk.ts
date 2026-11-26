@@ -544,6 +544,8 @@ export const uk: Dictionary = {
 
   exercises: {
     label: 'Вправи',
+    listen: 'Прослухати ще раз',
+    listenSlow: 'Повільно',
     progress: (i: number, n: number) => `${i} з ${n}`,
     types: {
       choice: 'Обери правильний варіант',
@@ -836,6 +838,39 @@ export const uk: Dictionary = {
       noMicrophone: 'Мікрофон не знайдено. Підключіть його й спробуйте ще раз.',
       error: 'Не вдалося увімкнути мікрофон. Закрийте інші програми, які ним користуються, і спробуйте ще раз.',
     },
+  },
+
+  listening: {
+    title: 'Аудіювання',
+    subtitle: 'Діалоги й короткі розповіді, озвучені репліка за реплікою. Спершу слухайте, потім читайте й перевіряйте себе.',
+    topics: { everyday: 'Побут', work: 'Робота', it: 'IT' },
+    meta: (topic: string, lines: number) => `${topic}, ${lines} ${plural(lines, 'репліка', 'репліки', 'реплік')}`,
+    notDone: 'Ще не пройдено',
+    done: (best: number) => `Пройдено, найкращий результат ${best}%`,
+    back: 'Усі епізоди',
+    notFoundTitle: 'Епізод не знайдено',
+    notFoundText: 'Можливо, його перейменували. Оберіть інший епізод зі списку.',
+    noSpeech: 'Цей браузер не вміє озвучувати текст, тому епізод показано як стенограму.',
+    voiceNote: 'Озвучує ваш пристрій. Голоси та якість залежать від системи.',
+    play: 'Слухати',
+    pause: 'Пауза',
+    resume: 'Продовжити',
+    previous: 'Попередня репліка',
+    next: 'Наступна репліка',
+    speed: 'Швидкість',
+    speeds: { slow: 'Повільно', normal: 'Звичайно', natural: 'Природно' },
+    position: (line: number, total: number) => `Репліка ${line} з ${total}`,
+    ready: (total: number) => `${total} ${plural(total, 'репліка', 'репліки', 'реплік')}. Спершу слухайте, не читаючи.`,
+    transcript: 'Стенограма',
+    transcriptHint: 'Спробуйте зрозуміти на слух, а потім відкрийте текст для перевірки.',
+    showTranscript: 'Показати стенограму',
+    hideTranscript: 'Сховати стенограму',
+    showTranslation: 'Показати переклад',
+    check: 'Перевірте, що почули',
+    checkText: (words: number, questions: number) =>
+      `${words} ${plural(words, 'слово', 'слова', 'слів')} на слух, потім ${questions} ${plural(questions, 'питання', 'питання', 'питань')} за епізодом.`,
+    checkStart: 'Почати',
+    lastResult: (last: number, best: number) => `Останній результат ${last}%, найкращий ${best}%.`,
   },
 
   statistics: {

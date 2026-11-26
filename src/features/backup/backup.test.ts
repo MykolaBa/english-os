@@ -125,6 +125,24 @@ describe('backup compatibility', () => {
     expect(await db.writings.get('w1')).toMatchObject({ text: 'Hello there.' })
   })
 
+  it('round-trips listening progress and accepts v7 backups without it', async () => {
+    await db.listeningProgress.put({
+      episodeId: 'e1',
+      attempts: 1,
+      bestScore: 75,
+      lastScore: 75,
+      completedAt: 3,
+      updatedAt: 3,
+    })
+    const backup = await createBackup()
+    const { listeningProgress: _dropped, ...dataV7 } = backup.data
+    const old = parseBackup(JSON.stringify({ ...backup, data: dataV7 }))
+    expect(old.ok && old.backup.data.listeningProgress).toEqual([])
+    await db.listeningProgress.clear()
+    await restoreBackup(backup)
+    expect(await db.listeningProgress.get('e1')).toMatchObject({ bestScore: 75 })
+  })
+
   it('round-trips reading progress', async () => {
     await db.readingProgress.put({
       textId: 'r1',

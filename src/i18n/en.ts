@@ -534,6 +534,8 @@ export const en = {
 
   exercises: {
     label: 'Exercises',
+    listen: 'Listen again',
+    listenSlow: 'Slowly',
     progress: (i: number, n: number) => `${i} of ${n}`,
     types: {
       choice: 'Choose the right option',
@@ -827,6 +829,39 @@ export const en = {
       noMicrophone: 'No microphone found. Connect one and try again.',
       error: 'The microphone couldn’t start. Close other apps using it and try again.',
     },
+  },
+
+  listening: {
+    title: 'Listening',
+    subtitle: 'Dialogues and short talks, voiced line by line. Listen first, then read and check.',
+    topics: { everyday: 'Everyday', work: 'Work', it: 'IT' },
+    meta: (topic: string, lines: number) => `${topic}, ${lines} lines`,
+    notDone: 'Not done yet',
+    done: (best: number) => `Done, best score ${best}%`,
+    back: 'All episodes',
+    notFoundTitle: 'Episode not found',
+    notFoundText: 'It may have been renamed. Pick another episode from the list.',
+    noSpeech: 'This browser can’t speak text aloud, so the episode is shown as a transcript.',
+    voiceNote: 'Voiced by your device. Voices and quality depend on the system.',
+    play: 'Play',
+    pause: 'Pause',
+    resume: 'Resume',
+    previous: 'Previous line',
+    next: 'Next line',
+    speed: 'Speed',
+    speeds: { slow: 'Slow', normal: 'Normal', natural: 'Natural' },
+    position: (line: number, total: number) => `Line ${line} of ${total}`,
+    ready: (total: number) => `${total} lines. Listen without reading first.`,
+    transcript: 'Transcript',
+    transcriptHint: 'Try to understand it by ear first, then open the text to check.',
+    showTranscript: 'Show transcript',
+    hideTranscript: 'Hide transcript',
+    showTranslation: 'Show translation',
+    check: 'Check what you heard',
+    checkText: (words: number, questions: number) =>
+      `${words} words to catch by ear, then ${questions} questions about the episode.`,
+    checkStart: 'Start',
+    lastResult: (last: number, best: number) => `Last result ${last}%, best ${best}%.`,
   },
 
   statistics: {

@@ -31,7 +31,7 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
   Seeded vocabulary is imported into the DB once, with stable `seed:*` ids and `source: 'seed'`.
 - **Schema changes**: never edit a released `db.version(n)`; add `version(n + 1)` + upgrade.
   Current: v7 (v1 + `lessonProgress` v2 + `quizResults` v3 + `readingProgress` v4 +
-  `interviewAnswers` v5 + `writings` v6 + `recordings` v7). New tables also go into the
+  `interviewAnswers` v5 + `writings` v6 + `recordings` v7 + `listeningProgress` v8). New tables also go into the
   backup schema (with a `.default([])` so older backups still restore) — except
   `recordings`: audio Blobs stay on the device and the UI says so.
 - **Reads in components** via `useLiveQuery` (auto-refresh). Zustand only for UI/session state
@@ -105,6 +105,10 @@ No backend, no paid APIs, no API keys. Ask before adding any dependency.
 - Speaking content: `src/content/speaking` (shadowing sets, speaking tasks); sentence ids
   are `<set>:<n>` and stable (recordings use them). Record only through `useRecorder` (it
   releases the mic) and play Blobs with `RecordingPlayer` (it revokes object URLs).
+- Listening: `src/content/listening/episodes.ts`; ids stable; `listening.test.ts` must pass
+  (each dictation word appears once, as a whole word, in its line). Play scripts through
+  `useScriptPlayer` (it stops the voice when you leave); an exercise with `audio` gets
+  Listen buttons in the runner.
 - Exercises: use the shared engine (`lib/exercises`, `features/exercises/ExerciseRunner`) for
   any practice or quiz — don't build a second one. A "start practising" block is
   `PracticeSection` (same folder).

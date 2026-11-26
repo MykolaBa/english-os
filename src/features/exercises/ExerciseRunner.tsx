@@ -9,6 +9,7 @@ import {
 } from '@/lib/exercises/check'
 import type { Exercise, ExerciseResponse } from '@/lib/exercises/types'
 import { ExerciseFeedback } from './ExerciseFeedback'
+import { ListenButtons } from './ListenButtons'
 import { ChoiceInput, OrderInput, TextAnswer } from './ExerciseInputs'
 import { ExerciseResult } from './ExerciseResult'
 import styles from './Exercises.module.scss'
@@ -112,6 +113,7 @@ export function ExerciseRunner({ exercises, passScore, onComplete, onClose }: Ex
       <p className={styles.task}>
         {exercise.type === 'transform' ? exercise.instruction : t.types[exercise.type]}
       </p>
+      {exercise.audio && <ListenButtons key={`${exercise.id}:audio`} text={exercise.audio} />}
       {exercise.type !== 'order' && (
         <p className={styles.prompt} lang={exercise.promptLang ?? 'en'}>
           {exercise.prompt}

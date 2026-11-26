@@ -1,0 +1,204 @@
+@use '@/styles/mixins' as *;
+
+.page {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 860px;
+}
+
+// ---------- List ----------
+.list {
+  @include list-surface;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  @include row-link;
+
+  @include up(md) {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-6);
+  }
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.rowTitle {
+  font-family: var(--font-serif);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.rowText {
+  color: var(--text-muted);
+}
+
+.status,
+.statusDone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.status {
+  color: var(--text-subtle);
+}
+
+.statusDone {
+  color: var(--success);
+}
+
+// ---------- Episode ----------
+.hero {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.heroMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.heroTitle {
+  @include serif-title(clamp(1.75rem, 2.5vw + 1rem, 2.5rem));
+}
+
+.summary {
+  color: var(--text-muted);
+}
+
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--info-soft);
+}
+
+// The player is the bold element of this page.
+.player {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.position {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.voiceNote {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+}
+
+// ---------- Transcript ----------
+.lines {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.line {
+  border-radius: var(--radius-md);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.lineCurrent {
+  background: var(--accent-soft);
+}
+
+// The whole line is a button: name and text side by side, stacked on a phone.
+.lineButton {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  @include focus-ring;
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  @include down(sm) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+
+.speaker {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+// Speakers are told apart by name and position first; color only helps.
+.speaker-A {
+  color: var(--accent);
+}
+
+.speaker-B {
+  color: var(--info);
+}
+
+.speaker-N {
+  color: var(--text-muted);
+}
+
+.lineText {
+  display: grid;
+  gap: 2px;
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: 1.55;
+}
+
+.lineUk {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}

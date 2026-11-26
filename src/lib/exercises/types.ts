@@ -14,6 +14,8 @@ interface Base {
   promptLang?: ContentLang
   /** Why the answer is right (Ukrainian), shown after checking. */
   explanation: string
+  /** English text the learner can hear (dictation): the runner shows a Listen button. */
+  audio?: string
 }
 
 /** Pick one option. */

@@ -15,6 +15,7 @@ import {
   type QuizResult,
   type ReadingProgress,
   type InterviewAnswer,
+  type ListeningProgress,
   type Writing,
   INTERVIEW_STATUSES,
   QUIZ_SOURCES,
@@ -165,6 +166,15 @@ export const writingSchema = z.object({
   createdAt: timestamp,
   updatedAt: timestamp,
 }) satisfies z.ZodType<Writing>
+
+export const listeningProgressSchema = z.object({
+  episodeId: z.string().min(1).max(200),
+  completedAt: timestamp.optional(),
+  attempts: count,
+  bestScore: z.number().min(0).max(100).optional(),
+  lastScore: z.number().min(0).max(100).optional(),
+  updatedAt: timestamp,
+}) satisfies z.ZodType<ListeningProgress>
 
 export const quizResultSchema = z.object({
   id: count.optional(),
