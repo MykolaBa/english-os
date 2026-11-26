@@ -123,17 +123,6 @@ export const en = {
       addWordsDetail: 'Start with 5–10 words you met recently — that’s the core of EnglishOS.',
       setGoalTitle: 'Set your daily goal',
       setGoalDetail: 'Pick a goal you can keep even on a busy day.',
-      reviewTitle: (n: number) => `Review ${n} due ${plural(n, 'word', 'words')}`,
-      reviewDetail: (min: number) => `About ${min} min with flashcards.`,
-      reviewDoneTitle: 'Reviews are done',
-      reviewDoneDetail: 'Nothing is due right now. Nice work.',
-      newWordsTitle: 'Learn 5 new words',
-      newWordsDetail: (n: number) =>
-        n > 0
-          ? `${n} new ${plural(n, 'word is', 'words are')} waiting in your vocabulary.`
-          : 'Add words from today’s reading, work or videos.',
-      goalTitle: (goal: number) => `Reach ${goal} XP`,
-      goalDetail: (xp: number, goal: number) => `${xp} / ${goal} XP so far today.`,
     },
     week: {
       title: 'This week',
@@ -760,7 +749,8 @@ export const en = {
       avgSentence: 'Words per sentence',
       variety: 'Word variety',
       longTitle: 'Long sentences',
-      longText: (max: number) => `Over ${max} words. Splitting them makes the text easier to follow.`,
+      longText: (max: number) =>
+        `Over ${max} words. Splitting them makes the text easier to follow.`,
       overusedTitle: 'Words you repeat',
       overusedText: 'Try a synonym or rephrase some of them.',
       times: (n: number) => `${n} times`,
@@ -795,9 +785,13 @@ export const en = {
     tasksText: 'Plan with the points, then talk for a minute or more.',
     setProgress: (good: number, total: number) => `${good} of ${total} sounding good`,
     taskMeta: (minutes: string, takes: number) =>
-      takes === 0 ? `About ${minutes}` : `About ${minutes}, ${takes} ${takes === 1 ? 'take' : 'takes'} saved`,
+      takes === 0
+        ? `About ${minutes}`
+        : `About ${minutes}, ${takes} ${takes === 1 ? 'take' : 'takes'} saved`,
     minutes: (seconds: number) =>
-      seconds % 60 === 0 ? `${seconds / 60} min` : `${Math.floor(seconds / 60)} min ${seconds % 60} s`,
+      seconds % 60 === 0
+        ? `${seconds / 60} min`
+        : `${Math.floor(seconds / 60)} min ${seconds % 60} s`,
     back: 'Speaking',
     notFoundTitle: 'Not found',
     notFoundText: 'It may have been renamed. Go back to Speaking and pick another one.',
@@ -825,7 +819,8 @@ export const en = {
     level: 'Microphone level',
     problems: {
       unsupported: 'This browser can’t record audio. Try a recent Chrome, Safari or Firefox.',
-      denied: 'Microphone access is blocked. Allow it in the browser’s site settings, then try again.',
+      denied:
+        'Microphone access is blocked. Allow it in the browser’s site settings, then try again.',
       noMicrophone: 'No microphone found. Connect one and try again.',
       error: 'The microphone couldn’t start. Close other apps using it and try again.',
     },
@@ -862,6 +857,42 @@ export const en = {
       `${words} words to catch by ear, then ${questions} questions about the episode.`,
     checkStart: 'Start',
     lastResult: (last: number, best: number) => `Last result ${last}%, best ${best}%.`,
+  },
+
+  planner: {
+    title: 'Study planner',
+    subtitle: 'A plan for today that fits your time, and your week at a glance.',
+    today: 'Today',
+    todaySummary: (minutes: number, budget: number) =>
+      `About ${minutes} min planned. Your plan is ${budget} min a day.`,
+    chooseNext: 'Choose what to do next',
+    restTitle: 'A day off',
+    restText: 'No study is planned today. Rest is part of learning too.',
+    studyAnyway: 'Study anyway',
+    empty: 'Nothing to suggest right now. Add a few words to your vocabulary to get started.',
+    reviewTitle: 'Review your words',
+    minutes: (n: number) => `${n} min`,
+    week: 'This week',
+    weekSummary: (met: number, planned: number) =>
+      planned === 0
+        ? 'No study days planned so far this week.'
+        : `${met} of ${planned} planned days so far`,
+    dayStatus: {
+      studied: 'studied',
+      missed: 'missed',
+      planned: 'planned',
+      off: 'day off',
+      rested: 'rest day',
+    },
+    dayLabel: (day: string, status: string, xp: number) =>
+      `${day}: ${status}${xp ? `, ${xp} XP` : ''}`,
+    planTitle: 'Your plan',
+    planText: 'Changes apply right away, here and on the dashboard.',
+    days: 'Study days',
+    minutesLabel: 'Minutes a day',
+    focus: 'Skills to rotate',
+    focusHint: 'Each study day starts with a different one. Review is always part of the day.',
+    openPlanner: 'Open the planner',
   },
 
   statistics: {

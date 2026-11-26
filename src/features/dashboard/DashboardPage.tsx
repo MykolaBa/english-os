@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { PageHeader, Skeleton } from '@/components/ui'
 import { useT } from '@/i18n'
@@ -11,9 +11,12 @@ import { TodayEntry } from './components/TodayEntry'
 import { TodayPlan } from './components/TodayPlan'
 import { WeeklyActivity } from './components/WeeklyActivity'
 import { greetingFor } from './greeting'
-import { buildTodayPlan } from './todayPlan'
+import { onboardingSteps } from './todayPlan'
 import { useDashboardData } from './useDashboardData'
 import styles from './Dashboard.module.scss'
+
+// The agenda reads all learning content: loaded after the dashboard, not with it.
+const DashboardAgenda = lazy(() => import('@/features/planner/components/DashboardAgenda'))
 
 export default function DashboardPage() {
   const data = useDashboardData()
@@ -58,23 +61,13 @@ export default function DashboardPage() {
           <div className={styles.spanAll}>
             <StatTiles data={data} />
           </div>
-          <TodayPlan
-            steps={buildTodayPlan({
-              totalWords: data.totalWords,
-              dueCount: data.dueCount,
-              reviewedToday: data.reviewedToday,
-              todayXp: data.todayXp,
-              dailyXpGoal,
-              backupDue: data.backupDue,
-            })}
-            context={{
-              dueCount: data.dueCount,
-              newWords: data.newWords,
-              todayXp: data.todayXp,
-              dailyXpGoal,
-              backupDays: data.backupDue?.days ?? null,
-            }}
-          />
+          {data.totalWords === 0 ? (
+            <TodayPlan steps={onboardingSteps()} />
+          ) : (
+            <Suspense fallback={<Skeleton height={240} />}>
+              <DashboardAgenda backupDays={data.backupDue ? data.backupDue.days : undefined} />
+            </Suspense>
+          )}
           <WeeklyActivity week={data.week} goal={dailyXpGoal} />
           <RecentActivity events={data.recent} />
           <div className={styles.stack}>

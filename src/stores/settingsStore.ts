@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { CEFR_LEVELS, type CefrLevel } from '@/lib/db/types'
 import { isOneOf, isRecord } from '@/lib/guards'
+import { PLAN_AREAS, PLAN_MINUTES, WEEKDAYS, type PlanArea, type Weekday } from '@/lib/plan'
 import { DEFAULT_SRS_CONFIG, type SrsConfig } from '@/lib/srs/scheduler'
 
 export const THEMES = ['dark', 'light', 'system'] as const
@@ -29,6 +30,10 @@ export interface Settings {
   srs: SrsConfig
   /** flashcards = English → Ukrainian, reverse = Ukrainian → English, typing = type the word. */
   reviewMode: ReviewMode
+  /** Study plan: the days you study, minutes per day, and the skills to rotate through. */
+  studyDays: Weekday[]
+  studyMinutes: number
+  studyFocus: PlanArea[]
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -43,6 +48,9 @@ export const DEFAULT_SETTINGS: Settings = {
   newWordsPerDay: 10,
   srs: DEFAULT_SRS_CONFIG,
   reviewMode: 'flashcards',
+  studyDays: [1, 2, 3, 4, 5],
+  studyMinutes: 20,
+  studyFocus: [...PLAN_AREAS],
 }
 
 interface SettingsState extends Settings {
@@ -68,6 +76,9 @@ const isPositive =
   (v: unknown): v is number =>
     typeof v === 'number' && Number.isFinite(v) && v > 0 && v <= max
 const isBool = (v: unknown): v is boolean => typeof v === 'boolean'
+/** An array of known values without repeats (order doesn't matter). */
+const isSetOf = <T>(options: readonly T[], v: unknown): v is T[] =>
+  Array.isArray(v) && new Set(v).size === v.length && v.every((x) => isOneOf(options, x))
 
 const isSrsConfig = (v: unknown): v is SrsConfig =>
   isRecord(v) &&
@@ -88,6 +99,9 @@ const SETTINGS_GUARDS: { [K in keyof Settings]: (v: unknown) => v is Settings[K]
   newWordsPerDay: isInt(0, 200),
   srs: isSrsConfig,
   reviewMode: (v) => isOneOf(REVIEW_MODES, v),
+  studyDays: (v): v is Weekday[] => isSetOf(WEEKDAYS, v),
+  studyMinutes: (v): v is number => isOneOf(PLAN_MINUTES, v),
+  studyFocus: (v): v is PlanArea[] => isSetOf(PLAN_AREAS, v),
 }
 
 const SETTING_KEYS = Object.keys(SETTINGS_GUARDS).filter(

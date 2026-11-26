@@ -25,6 +25,7 @@ const ShadowingPage = lazy(() => import('@/features/speaking/ShadowingPage'))
 const SpeakingTaskPage = lazy(() => import('@/features/speaking/SpeakingTaskPage'))
 const ListeningPage = lazy(() => import('@/features/listening/ListeningPage'))
 const EpisodePage = lazy(() => import('@/features/listening/EpisodePage'))
+const PlannerPage = lazy(() => import('@/features/planner/PlannerPage'))
 const StatisticsPage = lazy(() => import('@/features/statistics/StatisticsPage'))
 const ComingSoonPage = lazy(() => import('@/features/placeholder/ComingSoonPage'))
 const NotFoundPage = lazy(() => import('@/features/placeholder/NotFoundPage'))
@@ -32,6 +33,7 @@ const NotFoundPage = lazy(() => import('@/features/placeholder/NotFoundPage'))
 /** Implemented modules. Anything in the nav but not here renders the roadmap placeholder. */
 const PAGES: Record<string, RouteObject['element']> = {
   '/': <DashboardPage />,
+  '/planner': <PlannerPage />,
   '/statistics': <StatisticsPage />,
   '/vocabulary': <VocabularyPage />,
   '/review': <ReviewPage />,

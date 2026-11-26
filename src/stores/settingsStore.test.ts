@@ -33,4 +33,17 @@ describe('sanitizeSettings', () => {
     expect(sanitizeSettings(null)).toEqual({})
     expect(sanitizeSettings('x')).toEqual({})
   })
+
+  it('accepts a valid study plan and rejects a broken one', () => {
+    expect(
+      sanitizeSettings({ studyDays: [1, 3, 5], studyMinutes: 30, studyFocus: ['reading', 'it'] }),
+    ).toEqual({
+      studyDays: [1, 3, 5],
+      studyMinutes: 30,
+      studyFocus: ['reading', 'it'],
+    })
+    expect(
+      sanitizeSettings({ studyDays: [1, 1], studyMinutes: 25, studyFocus: ['cooking'] }),
+    ).toEqual({})
+  })
 })

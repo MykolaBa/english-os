@@ -16,6 +16,17 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 9 | Study planner, personal library, subtle gamification (achievements) | ⏳ Next |
 | 10 | Optional AI features behind a backend proxy | |
 
+## Done in phase 9 (part 1: study planner)
+- A plan in Settings-backed preferences: study days, minutes a day, skills to rotate
+  (validated like every setting, included in backups)
+- Today's agenda, derived from the plan and the app's state (`features/planner`): review
+  first when words are due, then skills in a daily rotation within your minutes — the next
+  lesson, unread text, episode, a speaking set that isn't right yet, your unfinished draft,
+  an interview question you're not confident with; items tick off from today's activity
+- Day off with "study anyway", and this week's planned days against days studied
+- The dashboard's "Today's plan" is now the same agenda (lazy-loaded, so learning content
+  stays off the startup path); the old static plan remains only for an empty vocabulary
+
 ## Done in phase 8 (part 3: listening)
 - Five episodes (`src/content/listening`, A2–B2): ordering a coffee, booking a doctor, a
   stand-up, an onboarding call, a short talk on caching — transcript with translations
