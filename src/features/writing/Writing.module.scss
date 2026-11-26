@@ -1,0 +1,478 @@
+@use '@/styles/mixins' as *;
+
+// ---------- Overview ----------
+.overview {
+  display: grid;
+  gap: var(--space-8);
+  align-items: start;
+
+  @include up(xl) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+}
+
+.sectionTitle {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-xl);
+}
+
+.subTitle {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.muted {
+  margin-bottom: var(--space-3);
+  color: var(--text-muted);
+}
+
+.list {
+  @include list-surface;
+}
+
+// Rows are links (your writing) or buttons (start a task): reset the button look.
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  @include row-link;
+}
+
+.rowIcon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rowTitle {
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.rowTitleSans {
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.rowMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.rowText {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.status,
+.statusDone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.status {
+  color: var(--text-subtle);
+}
+
+.statusDone {
+  color: var(--success);
+}
+
+// ---------- Editor page ----------
+.page {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.editorLayout {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: var(--space-5);
+  }
+}
+
+.editorMain {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  order: 2;
+
+  @include up(lg) {
+    grid-column: 1;
+    grid-row: 1;
+    gap: var(--space-5);
+  }
+}
+
+// Phone: the aside dissolves (display: contents) so its two cards join the page grid —
+// brief above the editor, tools below it. Desktop: one sticky side column.
+.taskAside {
+  display: contents;
+
+  @include up(lg) {
+    display: grid;
+    gap: var(--space-4);
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    top: var(--space-6);
+    max-height: calc(100vh - var(--space-12));
+    overflow: auto;
+  }
+}
+
+.brief {
+  order: 1;
+}
+
+.tools {
+  order: 3;
+}
+
+.toolsTitle {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.taskText {
+  line-height: 1.6;
+}
+
+.editor {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.titleInput,
+.textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--text);
+  @include focus-ring;
+
+  &::placeholder {
+    color: var(--text-subtle);
+  }
+}
+
+.titleInput {
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+// The text is English: the reading serif, at a size that never triggers iOS zoom.
+.textarea {
+  min-height: 18rem;
+  padding: var(--space-4);
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.statusBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.length {
+  color: var(--text-muted);
+}
+
+.length-good strong {
+  color: var(--success);
+}
+
+.length-long strong {
+  color: var(--warning);
+}
+
+.saveState {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-subtle);
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.completed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--success);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.deleteButton {
+  margin-left: auto;
+}
+
+// ---------- Task panel ----------
+.phrases,
+.checklist,
+.quotes,
+.versions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phrase {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+
+  & + & {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.phraseText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-serif);
+}
+
+.phraseUk {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.checklist {
+  display: grid;
+  gap: var(--space-2);
+
+  label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    cursor: pointer;
+  }
+
+  input {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--accent);
+  }
+}
+
+// ---------- Feedback ----------
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  div {
+    padding: var(--space-3);
+  }
+
+  div + div {
+    border-left: 1px solid var(--border);
+  }
+
+  dt {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--text-xl);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.feedbackBlock {
+  margin-top: var(--space-2);
+}
+
+.quotes li {
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--warning);
+  font-family: var(--font-serif);
+
+  & + li {
+    margin-top: var(--space-2);
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-full);
+    background: var(--surface-2);
+    font-family: var(--font-serif);
+  }
+
+  small {
+    font-family: var(--font-sans);
+    color: var(--text-muted);
+  }
+
+  a {
+    color: inherit;
+    border-radius: var(--radius-sm);
+    @include focus-ring;
+  }
+}
+
+// ---------- Versions ----------
+.version {
+  padding: var(--space-3) 0;
+
+  & + & {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.versionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+
+  .muted {
+    margin: 0;
+  }
+}
+
+.versionActions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.diff {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+}
+
+.diffLegend {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+// Added / removed are told apart by underline vs strike-through, not by color alone.
+.diffText {
+  font-family: var(--font-serif);
+  line-height: 1.7;
+  white-space: pre-wrap;
+
+  ins {
+    text-decoration: underline 2px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: var(--success);
+    background: var(--success-soft);
+  }
+
+  del {
+    text-decoration: line-through 2px;
+    text-decoration-color: var(--danger);
+    color: var(--text-muted);
+    background: var(--danger-soft);
+  }
+}
+
+// ---------- Sample answer ----------
+.sample {
+  @include card-surface;
+
+  summary {
+    padding: var(--space-4) var(--space-5);
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: var(--radius-lg);
+    @include focus-ring;
+  }
+}
+
+.sampleBody {
+  padding: 0 var(--space-5) var(--space-5);
+}
+
+.sampleText {
+  max-width: 66ch;
+  font-family: var(--font-serif);
+  font-size: var(--text-md);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}

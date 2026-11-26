@@ -105,6 +105,26 @@ describe('backup compatibility', () => {
     expect(await db.interviewAnswers.get('q1')).toMatchObject({ answer: 'Hi' })
   })
 
+  it('round-trips writing and accepts v5 backups without it', async () => {
+    await db.writings.put({
+      id: 'w1',
+      promptId: null,
+      title: 'Notes',
+      text: 'Hello there.',
+      versions: [{ at: 1, text: 'Hello.', words: 1 }],
+      checked: [],
+      createdAt: 1,
+      updatedAt: 2,
+    })
+    const backup = await createBackup()
+    const { writings: _dropped, ...dataV5 } = backup.data
+    const old = parseBackup(JSON.stringify({ ...backup, data: dataV5 }))
+    expect(old.ok && old.backup.data.writings).toEqual([])
+    await db.writings.clear()
+    await restoreBackup(backup)
+    expect(await db.writings.get('w1')).toMatchObject({ text: 'Hello there.' })
+  })
+
   it('round-trips reading progress', async () => {
     await db.readingProgress.put({
       textId: 'r1',

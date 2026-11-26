@@ -161,6 +161,30 @@ export interface ReadingProgress {
   updatedAt: number
 }
 
+/** A saved snapshot of a piece of writing ("Save version"). */
+export interface WritingVersion {
+  at: number
+  text: string
+  words: number
+}
+
+/** A piece of the learner's own writing: a draft that autosaves, plus saved versions. */
+export interface Writing {
+  id: string
+  /** The writing task it answers (src/content/writing), or null for free writing. */
+  promptId: string | null
+  title: string
+  text: string
+  /** Oldest first; capped (see WRITING_VERSIONS_MAX). */
+  versions: WritingVersion[]
+  /** Ids of the task's checklist items the learner ticked. */
+  checked: string[]
+  /** First time it was marked done; XP is given once. */
+  completedAt?: number
+  createdAt: number
+  updatedAt: number
+}
+
 export const INTERVIEW_STATUSES = ['practising', 'confident'] as const
 export type InterviewStatus = (typeof INTERVIEW_STATUSES)[number]
 

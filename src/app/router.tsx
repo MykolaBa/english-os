@@ -18,6 +18,8 @@ const ItEnglishPage = lazy(() => import('@/features/itEnglish/ItEnglishPage'))
 const PhraseSetPage = lazy(() => import('@/features/itEnglish/PhraseSetPage'))
 const MockInterviewPage = lazy(() => import('@/features/itEnglish/MockInterviewPage'))
 const InterviewPage = lazy(() => import('@/features/itEnglish/InterviewPage'))
+const WritingPage = lazy(() => import('@/features/writing/WritingPage'))
+const WritingEditorPage = lazy(() => import('@/features/writing/WritingEditorPage'))
 const StatisticsPage = lazy(() => import('@/features/statistics/StatisticsPage'))
 const ComingSoonPage = lazy(() => import('@/features/placeholder/ComingSoonPage'))
 const NotFoundPage = lazy(() => import('@/features/placeholder/NotFoundPage'))
@@ -32,6 +34,7 @@ const PAGES: Record<string, RouteObject['element']> = {
   '/quizzes': <QuizzesPage />,
   '/reading': <ReadingPage />,
   '/it-english': <ItEnglishPage />,
+  '/writing': <WritingPage />,
   '/settings': <SettingsPage />,
 }
 
@@ -51,6 +54,7 @@ export const router = createBrowserRouter([
       { path: '/it-english/phrases/:setId', element: <PhraseSetPage /> },
       { path: '/it-english/interview/:questionId', element: <InterviewPage /> },
       { path: '/it-english/mock', element: <MockInterviewPage /> },
+      { path: '/writing/:writingId', element: <WritingEditorPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

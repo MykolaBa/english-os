@@ -27,3 +27,8 @@ export const TRANSLATION_MAX = 300
  * save fine but make the whole backup fail to restore.
  */
 export const TEXT_MAX = 5000
+
+/** A piece of writing, its title, and how many versions are kept (oldest are dropped). */
+export const WRITING_MAX = 20_000
+export const WRITING_TITLE_MAX = 120
+export const WRITING_VERSIONS_MAX = 30

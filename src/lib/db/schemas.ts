@@ -1,5 +1,11 @@
 import { z } from 'zod'
-import { PARTS_OF_SPEECH, TEXT_MAX } from './limits'
+import {
+  PARTS_OF_SPEECH,
+  TEXT_MAX,
+  WRITING_MAX,
+  WRITING_TITLE_MAX,
+  WRITING_VERSIONS_MAX,
+} from './limits'
 import { REVIEW_RATINGS } from '@/lib/srs/scheduler'
 import {
   CEFR_LEVELS,
@@ -9,6 +15,7 @@ import {
   type QuizResult,
   type ReadingProgress,
   type InterviewAnswer,
+  type Writing,
   INTERVIEW_STATUSES,
   QUIZ_SOURCES,
   VOCAB_KINDS,
@@ -144,6 +151,20 @@ export const interviewAnswerSchema = z.object({
   createdAt: timestamp,
   updatedAt: timestamp,
 }) satisfies z.ZodType<InterviewAnswer>
+
+export const writingSchema = z.object({
+  id: z.string().min(1).max(200),
+  promptId: z.string().max(200).nullable(),
+  title: z.string().max(WRITING_TITLE_MAX),
+  text: z.string().max(WRITING_MAX),
+  versions: z
+    .array(z.object({ at: timestamp, text: z.string().max(WRITING_MAX), words: count }))
+    .max(WRITING_VERSIONS_MAX),
+  checked: z.array(z.string().max(200)),
+  completedAt: timestamp.optional(),
+  createdAt: timestamp,
+  updatedAt: timestamp,
+}) satisfies z.ZodType<Writing>
 
 export const quizResultSchema = z.object({
   id: count.optional(),

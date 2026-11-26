@@ -16,6 +16,18 @@ MVP = phases 0–4: after phase 4 EnglishOS is usable every day on desktop and p
 | 9 | Study planner, personal library, subtle gamification (achievements) | |
 | 10 | Optional AI features behind a backend proxy | |
 
+## Done in phase 8 (part 1: writing)
+- Six writing tasks as content (`src/content/writing`, A2–B2: introduce yourself, weekend
+  plans, move a meeting, stand-up update, bug report, pull request), each with phrases to
+  insert at the cursor, a checklist and a model answer; a blank page for free writing
+- Editor with autosave (debounced, flushed before any action and when leaving), live word
+  count against the task's range, versions (capped, restorable — restoring keeps the current
+  text as a version) and a word-level diff against any version
+- Feedback without AI (`features/writing/analysis.ts`): sentences, words per sentence,
+  word variety, long sentences, repeated words, and which of your vocabulary words you used
+- Database v6 (`writings`, in backups); "Mark as done" saves a version and gives XP once,
+  in one transaction; untouched drafts are removed when you leave them
+
 ## Done in phase 7 (part 2: IT English)
 - Phrasebook for a developer's day (`src/content/it/phrases.ts`): stand-up, asking for help,
   code review, estimates, meetings, bug reports — 35 phrases with Ukrainian equivalents and

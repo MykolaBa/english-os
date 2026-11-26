@@ -7,6 +7,7 @@ import {
   quizResultSchema,
   readingProgressSchema,
   interviewAnswerSchema,
+  writingSchema,
   metaSchema,
   reviewLogSchema,
   wordSchema,
@@ -34,6 +35,8 @@ const backupSchema = z.object({
     readingProgress: z.array(readingProgressSchema).default([]),
     /** Added with database v5. */
     interviewAnswers: z.array(interviewAnswerSchema).default([]),
+    /** Added with database v6. */
+    writings: z.array(writingSchema).default([]),
   }),
   settings: z.unknown().optional(),
 })
@@ -51,6 +54,7 @@ export async function createBackup(now = new Date()): Promise<Backup> {
     quizResults,
     readingProgress,
     interviewAnswers,
+    writings,
   ] = await Promise.all([
     db.words.toArray(),
     db.collections.toArray(),
@@ -61,6 +65,7 @@ export async function createBackup(now = new Date()): Promise<Backup> {
     db.quizResults.toArray(),
     db.readingProgress.toArray(),
     db.interviewAnswers.toArray(),
+    db.writings.toArray(),
   ])
   return {
     app: 'englishos',
@@ -76,6 +81,7 @@ export async function createBackup(now = new Date()): Promise<Backup> {
       quizResults,
       readingProgress,
       interviewAnswers,
+      writings,
     },
     settings: currentSettings(),
   }
@@ -138,6 +144,7 @@ export async function restoreBackup(backup: Backup): Promise<void> {
     db.quizResults,
     db.readingProgress,
     db.interviewAnswers,
+    db.writings,
   ]
   await db.transaction('rw', tables, async () => {
     await Promise.all(tables.map((table) => table.clear()))
@@ -150,6 +157,7 @@ export async function restoreBackup(backup: Backup): Promise<void> {
     await db.quizResults.bulkAdd(data.quizResults)
     await db.readingProgress.bulkAdd(data.readingProgress)
     await db.interviewAnswers.bulkAdd(data.interviewAnswers)
+    await db.writings.bulkAdd(data.writings)
   })
   useSettings.getState().update(sanitizeSettings(backup.settings))
 }

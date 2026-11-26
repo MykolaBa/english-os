@@ -7,6 +7,7 @@ import type {
   InterviewAnswer,
   QuizResult,
   ReadingProgress,
+  Writing,
   ReviewLog,
   Word,
 } from './types'
@@ -28,6 +29,7 @@ export class EnglishOSDatabase extends Dexie {
   quizResults!: EntityTable<QuizResult, 'id'>
   readingProgress!: EntityTable<ReadingProgress, 'textId'>
   interviewAnswers!: EntityTable<InterviewAnswer, 'questionId'>
+  writings!: EntityTable<Writing, 'id'>
 
   constructor(name = 'englishos') {
     super(name)
@@ -54,6 +56,10 @@ export class EnglishOSDatabase extends Dexie {
     // v5 (phase 7): your answers to interview questions.
     this.version(5).stores({
       interviewAnswers: 'questionId, status, updatedAt',
+    })
+    // v6 (phase 8): the learner's writing (drafts and versions).
+    this.version(6).stores({
+      writings: 'id, promptId, updatedAt',
     })
   }
 }
